@@ -27,7 +27,7 @@ La respuesta es: únicamente aquellos medidos por la **métrica de Fisher–Rao*
 
 ---
 
-## 2) ♾️ Una dualidad incorporada que rechaza el monólogo óntico
+## 2) ♾️ Una dualidad integrada que no se queda con una sola versión de la realidad
 
 Las **α-conexiones de Amari** dotan a toda variedad estadística de un **par dual de geodésicas**.
 La dualidad no es una curiosidad matemática; es la **sombra formal** del hecho de que no hay una «línea recta» única entre **creencias parciales**.
@@ -39,12 +39,12 @@ Elegir una u otra revela un **interés pragmático**, no la lectura de un hecho 
 ## 3) 🧠 De la inferencia estadística a la neutralidad metafísica
 
 Como la misma **estructura dual** reaparece en **termodinámica**, **redes neuronales** y **elección económica**, la geometría de la información se convierte en una **lengua franca** para sistemas cuyo estado es la **incertidumbre**.
-El shock filosófico es que la incertidumbre se trata como una **sustancia primaria**, no como una carencia secundaria de conocimiento sobre un estado **óntico** subyacente.
+El giro es este: la incertidumbre no es un defecto, es el punto de partida; no se reduce a ignorar una realidad subyacente.
 Las «entradas» a la teoría no son partículas, campos ni funciones de onda, sino **medidas de probabilidad** —objetos cuya identidad está **entrelazada** con la situación epistémica del observador.
 
 ---
 
-## 4) 🔮 La ética implícita: minimizar lo erróneo de la propia sorpresa
+## 4) 🔮 **Ética implícita del aprendizaje: principio de mínima sorpresa y mínima divergencia futura**
 
 Toda **geodésica** es un camino que **minimiza una divergencia de información**.
 Por tanto, el movimiento en una **variedad estadística** es, literalmente, el proyecto continuo de **volverse menos sorprendido** por la experiencia.
