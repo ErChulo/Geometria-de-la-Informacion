@@ -1,7 +1,3 @@
-# Geometria-de-la-Informacion
-Repositorio para mi libro de Teoria de la Informacion Aplicada
----
-
 # 🌀 **Geometría de la Información**
 
 ![status](https://img.shields.io/badge/filosofía-epistemología-ff5fd2)
