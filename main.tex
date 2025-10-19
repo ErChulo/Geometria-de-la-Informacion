@@ -1,0 +1,40 @@
+% src/main.tex — archivo principal (pdfLaTeX, oneside)
+\documentclass[12pt,oneside]{book}
+
+% Márgenes
+\usepackage{geometry}
+\geometry{letterpaper, margin=1in}
+
+% Versión del libro (define \BookVersion y \BookDate)
+\input{version}
+
+% Estilo general (tipos, colores, títulos, encabezados)
+\usepackage{style-book}
+
+% Carpeta de imágenes para todo el libro
+\usepackage{graphicx}
+\graphicspath{{assets/}}
+
+\begin{document}
+	
+	\frontmatter
+	\input{frontmatter/titlepage}
+	
+	\tableofcontents
+	\cleardoublepage
+	\markboth{}{}    % limpia marcas de TOC
+	\pagestyle{fancy}
+	
+	\mainmatter
+	
+	% Prólogo (sin número)
+	\include{Prologo}
+	
+	% Asegura que el siguiente capítulo sea el 0 y muestre número grande
+	\setcounter{chapter}{0}
+	\include{capitulo0}
+	
+	\backmatter
+	% Bibliografía / apéndices (si aplica)
+	
+\end{document}

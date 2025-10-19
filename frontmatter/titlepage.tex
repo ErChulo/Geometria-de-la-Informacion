@@ -1,0 +1,99 @@
+\begin{titlepage}
+	% Evita anclas duplicadas de hyperref en esta página
+	\hypersetup{pageanchor=false}
+	\newgeometry{margin=0pt}
+	
+	% Paleta específica de la portada (roja y dramática)
+	\definecolor{CanvasDark}{HTML}{0A0F1A} % fondo muy oscuro (casi negro azulado)
+	\definecolor{SunCore}{HTML}{DC2626}    % rojo cálido (núcleo)
+	\definecolor{SunRing}{HTML}{FCA5A5}    % halo claro rojizo
+	
+	% ---- Parámetros fáciles de ajustar ----
+	\def\SunXShift{-2.2cm}          % +derecha / -izquierda (desde el borde derecho)
+	\def\SunYShift{-0.2cm}          % +arriba / -abajo   (desde el centro vertical)
+	\def\SunWidth {.46\paperwidth}  % ancho del disco/imagen
+	\def\GlowInner{.30\paperwidth}  % halo interno (más visible)
+	\def\GlowOuter{.48\paperwidth}  % halo externo (MÁS grande)
+	
+	\begin{tikzpicture}[remember picture,overlay]
+		
+		% Fondo completo: “mundo oscuro y vacío”
+		\fill[CanvasDark] (current page.south west) rectangle (current page.north east);
+		
+		% Centro del “sol”
+		\coordinate (SunCenter) at ($(current page.east)+(\SunXShift,\SunYShift)$);
+		
+		% ===== CAPA DE FONDO: halos y aura (detrás del arte) =====
+		% Halo interno (muy intenso, rojo)
+		\shade[shading=radial, inner color=SunCore!95!white, outer color=CanvasDark, opacity=0.98]
+		(SunCenter) circle (\GlowInner);
+		
+		% Halo externo (amplio, integra con el fondo)
+		\shade[shading=radial, inner color=SunRing!88!SunCore, outer color=CanvasDark, opacity=0.88]
+		(SunCenter) circle (\GlowOuter);
+		
+		% Aura difusa sutil (blur). Queda detrás del arte.
+		\fill[SunCore!26,
+		blur shadow={shadow blur steps=30, shadow blur radius=12pt,
+			shadow opacity=0.33, shadow xshift=0pt, shadow yshift=0pt}]
+		(SunCenter) circle (0.48*\SunWidth);
+		
+		% ===== ARTE (ENCIMA): el disco colorido, sin nada cubriéndolo =====
+		\IfFileExists{assets/cover-figure.pdf}{%
+			\node[anchor=center] at (SunCenter)
+			{\includegraphics[width=\SunWidth]{assets/cover-figure.pdf}};
+		}{%
+			\IfFileExists{assets/cover.pdf}{%
+				\node[anchor=center] at (SunCenter)
+				{\includegraphics[width=\SunWidth]{assets/cover.pdf}};
+			}{%
+				\IfFileExists{assets/cover-figure.png}{%
+					\node[anchor=center] at (SunCenter)
+					{\includegraphics[width=\SunWidth]{assets/cover-figure.png}};
+				}{%
+					\IfFileExists{assets/cover.png}{%
+						\node[anchor=center] at (SunCenter)
+						{\includegraphics[width=\SunWidth]{assets/cover.png}};
+					}{%
+						% Placeholder si no hay imagen
+						\draw[SunRing, line width=1pt] ($(SunCenter)+(-3cm,-3cm)$) rectangle ($(SunCenter)+(3cm,3cm)$);
+						\node[anchor=center, text=SunRing] at (SunCenter)
+						{\small \sffamily Coloca aquí tu figura (PDF/PNG)};
+					}%
+				}%
+			}%
+		}
+		
+		% ===== ANILLO EXTERIOR (ENCIMA, y solo fuera del disco) =====
+		% Definimos un anillo fino entre r_in y r_out, usando 'even odd rule'
+		\pgfmathsetmacro{\rin}{0.505}   % radio interior ~ justo fuera del borde
+		\pgfmathsetmacro{\rout}{0.525}  % radio exterior ~ ancho del anillo
+		\path[fill=SunRing, opacity=0.92, even odd rule]
+		(SunCenter) circle (\rout*\SunWidth)
+		(SunCenter) circle (\rin*\SunWidth);
+		
+		% ===== Título y subtítulo (izquierda, blanco) =====
+		\node[anchor=west, xshift=2cm, yshift=-2.6cm, text=white, align=left]
+		at (current page.north west) {%
+			\sffamily\bfseries\fontsize{30}{34}\selectfont Geometría de la Información\\[3pt]
+			\normalsize Un mapa para comparar modelos};
+		
+		% Filete sutil bajo el título
+		\draw[SunRing, line width=0.6pt, opacity=0.9]
+		($(current page.north west)+(2cm,-3.35cm)$)
+		-- ($(current page.north west)+(12.8cm,-3.35cm)$);
+		
+		% Versión/fecha (abajo-izquierda)
+		\node[anchor=west, xshift=1.6cm, yshift=1.6cm, text=SunRing]
+		at (current page.south west) {\small \textit{Edición} \BookVersion\ (\BookDate)};
+		
+		% Cita (abajo-derecha), en tono cálido
+		\node[anchor=east, xshift=-1.6cm, yshift=1.6cm, text=SunRing, align=right]
+		at (current page.south east) {\footnotesize\itshape ``El sol es nuevo cada día.''\\— Heráclito};
+		
+	\end{tikzpicture}
+	
+	\vfill
+	\restoregeometry
+	\hypersetup{pageanchor=true}
+\end{titlepage}

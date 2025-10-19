@@ -1,0 +1,367 @@
+% !TeX root = main.tex
+	
+	\begin{center}
+		{\LARGE \textbf{Capítulo 0: Ejercicios de prerrequisitos}}\\[4pt]
+		{\large (con respuestas al final de cada ejercicio)}
+	\end{center}
+	
+	\section{Álgebra lineal}
+	\paragraph{Importancia.} Provee el idioma para modelar espacios de distribuciones y parámetros: ortogonalidad, proyecciones y descomposiciones son la base de la geometría de Fisher y de algoritmos numéricos.
+	
+	\subsection*{Espacios vectoriales, bases y cambio de base}
+	\begin{enumerate}
+		\item Sea $B=\{(1,0,1),(0,1,1),(1,1,0)\}$ en $\mathbb R^3$. ¿Es base? \textbf{Resp.:} Sí; el determinante de la matriz con columnas $B$ es $-2\ne0$.
+		\item Exprese $v=(2,1,1)$ en coordenadas de la base estándar y en la base $B$. \textbf{Resp.:} En estándar ya es $(2,1,1)$; en $B$, resuelva $[v]_B$ y obtiene $(1,1,1)$.
+		\item Cambie coordenadas: si $[x]_B=(a,b,c)$, encuentre $x$ en la base estándar. \textbf{Resp.:} $x=a(1,0,1)+b(0,1,1)+c(1,1,0)=(a+c,\,b+c,\,a+b)$.
+	\end{enumerate}
+	
+	\subsection*{Productos internos, normas, ortogonalidad y proyecciones}
+	\begin{enumerate}
+		\item Proyección de $y=(1,2)$ sobre $u=(2,0)$ en $\mathbb R^2$. \textbf{Resp.:} $\operatorname{proj}_u(y)=\frac{\langle y,u\rangle}{\langle u,u\rangle}u=\tfrac{2}{4}(2,0)=(1,0)$.
+		\item Ortonormalice $\{(1,1),(1,-1)\}$. \textbf{Resp.:} $e_1=\tfrac{1}{\sqrt2}(1,1)$, $e_2=\tfrac{1}{\sqrt2}(1,-1)$.
+		\item Verifique $\|x\|^2=\|\operatorname{proj}_U x\|^2+\|x-\operatorname{proj}_U x\|^2$ para $x=(1,2)$ y $U=\operatorname{span}\{(1,0)\}$. \textbf{Resp.:} $5=1^2+2^2=1^2+2^2$ (se cumple).
+	\end{enumerate}
+	
+	\subsection*{Autovalores/autovectores, descomposición espectral y SVD}
+	\begin{enumerate}
+		\item Autovalores de $A=\begin{pmatrix}2&1\\1&2\end{pmatrix}$. \textbf{Resp.:} $\lambda_1=3,\,\lambda_2=1$.
+		\item Diagonalice $A$ anterior. \textbf{Resp.:} $A=Q\operatorname{diag}(3,1)Q^T$ con $Q=\tfrac{1}{\sqrt2}\begin{pmatrix}1&1\\1&-1\end{pmatrix}$.
+		\item SVD de $M=\begin{pmatrix}3&0\\0&1\end{pmatrix}$. \textbf{Resp.:} $U=V=I$, $\Sigma=\operatorname{diag}(3,1)$.
+	\end{enumerate}
+	
+	\subsection*{Matrices simétricas/definidas positivas, traza y determinante}
+	\begin{enumerate}
+		\item Muestre que $A^TA$ es semidefinida positiva. \textbf{Resp.:} $x^TA^TAx=\|Ax\|^2\ge0$.
+		\item Para $B=\begin{pmatrix}1&2\\2&5\end{pmatrix}$, calcule $\det B$ y $\operatorname{tr} B$. \textbf{Resp.:} $\det=1\cdot5-4=1$, $\operatorname{tr}=6$ (PD).
+		\item Compruebe positividad definida de $B$ por autovalores. \textbf{Resp.:} Autovalores $=\tfrac{6\pm\sqrt{36-4}}{2}=3\pm\sqrt{5}>0$.
+	\end{enumerate}
+	
+	\subsection*{Cálculo matricial (traza, gradientes) y pseudoinversa}
+	\begin{enumerate}
+		\item Gradiente de $f(x)=x^TBx$ (simétrica). \textbf{Resp.:} $\nabla f(x)=2Bx$.
+		\item Derive $\frac{\partial}{\partial X}\, \operatorname{tr}(AXX^T)=?$ \textbf{Resp.:} $(A+A^T)X$ (si $A$ fijo).
+		\item Pseudoinversa de $u v^T$ con $u,v\ne0$. \textbf{Resp.:} $(uv^T)^+=\frac{1}{\|u\|^2\|v\|^2}vu^T$.
+	\end{enumerate}
+	
+	\section{Cálculo multivariable}
+	\paragraph{Importancia.} Gradientes y Hessianas describen curvatura de divergencias y la métrica de Fisher; Taylor y cambio de variables aparecen en aproximaciones y estimadores.
+	
+	\subsection*{Gradiente, Hessiana y Taylor de segundo orden}
+	\begin{enumerate}
+		\item Para $f(x,y)=x^2+xy+y^2$, halle $\nabla f$ y $\nabla^2 f$. \textbf{Resp.:} $\nabla f=(2x+y,\,x+2y)$; $\nabla^2 f=\begin{pmatrix}2&1\\1&2\end{pmatrix}$.
+		\item Aproximación de Taylor de $\log(1+t)$ en $t=0$ hasta orden $2$. \textbf{Resp.:} $t-\tfrac{t^2}{2}$.
+		\item Determine si $f$ es convexa. \textbf{Resp.:} Sí; Hessiana $\succeq0$ (autovalores $1,3$).
+	\end{enumerate}
+	
+	\subsection*{Regla de la cadena y jacobianos}
+	\begin{enumerate}
+		\item Jacobiano de $F(x,y)=(x^2-y,\,xy)$. \textbf{Resp.:} $JF=\begin{pmatrix}2x&-1\\ y&x\end{pmatrix}$.
+		\item Si $g(u,v)=(u+v,uv)$ y $h(x,y)=(x^2,y)$, compute $J(g\circ h)$ en $(1,1)$. \textbf{Resp.:} $J_h=\begin{pmatrix}2&0\\0&1\end{pmatrix}$, $J_g=\begin{pmatrix}1&1\\ v&u\end{pmatrix}|_{(u,v)=(1,1)}=\begin{pmatrix}1&1\\1&1\end{pmatrix}$; producto $=\begin{pmatrix}2&1\\2&1\end{pmatrix}$.
+		\item Derive $\frac{d}{dt}f(h(t))$ para $f(x,y)=x^2+y$, $h(t)=(t,\,t^2)$. \textbf{Resp.:} $\frac{d}{dt}(t^2+t^2)=2t+2t=4t$.
+	\end{enumerate}
+	
+	\subsection*{Óptimos de primer/segundo orden}
+	\begin{enumerate}
+		\item Minimice $f(x)=x^4-2x^2$. Puntos críticos y tipo. \textbf{Resp.:} $f'(x)=4x^3-4x=4x(x^2-1)$; mínimos en $x=\pm1$, máximo local en $x=0$.
+		\item Condición de segundo orden para mínimo en $x^\star$. \textbf{Resp.:} $\nabla f(x^\star)=0$ y $\nabla^2 f(x^\star)\succ0$.
+		\item Minimice $\tfrac12\|Ax-b\|^2$ y dé solución normal. \textbf{Resp.:} $A^TAx=A^Tb$.
+	\end{enumerate}
+	
+	\subsection*{Cambio de variables en integrales}
+	\begin{enumerate}
+		\item Integre $\int_{x^2+y^2\le1} (x^2+y^2)\,dxdy$ con polares. \textbf{Resp.:} $\int_0^{2\pi}\int_0^1 r^2\,r\,drd\theta=\pi/2$.
+		\item Sustitución $u=xy$ en $\int_0^1\int_0^1 e^{xy}\,dxdy$ (idea). \textbf{Resp.:} Valor $=\sum_{k\ge0}\frac{1}{(k+1)!}=e-1$.
+		\item Jacobiano de $(r,\theta)\mapsto (r\cos\theta, r\sin\theta)$. \textbf{Resp.:} $J=r$.
+	\end{enumerate}
+	
+	\subsection*{Función implícita (nociones)}
+	\begin{enumerate}
+		\item Para $F(x,y)=x^2+y^2-1=0$, halle $\frac{dy}{dx}$ en $(\tfrac{\sqrt2}{2},\tfrac{\sqrt2}{2})$. \textbf{Resp.:} $y'=-\tfrac{x}{y}=-1$.
+		\item ¿Se puede resolver $y(x)$ cerca de $(0,1)$ para $F$ anterior? \textbf{Resp.:} Sí, $\partial F/\partial y=2y\ne0$ en $(0,1)$.
+		\item Para $F(x,y)=y-e^{x+y}=0$, calcule $y'(0)$ si $y(0)=0$. \textbf{Resp.:} $1-(1+y')=0\Rightarrow y'=-0=0$.
+	\end{enumerate}
+	
+	\section{Probabilidad (convergencias, LLN/CLT)}
+	\paragraph{Importancia.} La noción de límite de distribuciones, leyes fuertes y centrales subyace a las aproximaciones locales (LAN) y a la curvatura informativa.
+	
+	\subsection*{Espacio de probabilidad, variables aleatorias}
+	\begin{enumerate}
+		\item Dado un dado justo, $P(X=k)=1/6$, halle $E[X]$. \textbf{Resp.:} $E[X]=3.5$.
+		\item Para $X\sim \operatorname{Bern}(p)$, calcule $P(X=1)$ y $E[X]$. \textbf{Resp.:} $p$ y $p$.
+		\item Halle la cdf de $X\sim\operatorname{Unif}[0,1]$. \textbf{Resp.:} $F(x)=0$ si $x<0$, $x$ en $[0,1]$, $1$ si $x>1$.
+	\end{enumerate}
+	
+	\subsection*{Esperanza, varianza, covarianza, condicional}
+	\begin{enumerate}
+		\item Si $X\sim\operatorname{Poisson}(\lambda)$, $E[X]$ y $\operatorname{Var}(X)$. \textbf{Resp.:} Ambos $=\lambda$.
+		\item Para $(X,Y)$ con $E[X]=E[Y]=0$, $\operatorname{Cov}(X,Y)=\rho$, halle $\operatorname{Var}(X+Y)$. \textbf{Resp.:} $\operatorname{Var}(X)+\operatorname{Var}(Y)+2\rho$.
+		\item $E[X\mid X+Y]$ con $X,Y\sim\mathcal N(0,1)$ indep. \textbf{Resp.:} $\tfrac12(X+Y)$.
+	\end{enumerate}
+	
+	\subsection*{Modos de convergencia}
+	\begin{enumerate}
+		\item Muestre que $X_n\to c$ en probabilidad si $P(|X_n-c|>\varepsilon)\to0$. \textbf{Resp.:} Definición.
+		\item Si $X_n\to c$ c.s., entonces $X_n\to c$ en prob. \textbf{Resp.:} Cierto; c.s. $\Rightarrow$ en prob.
+		\item Si $X_n\Rightarrow X$ y $a_n\to a$, entonces $a_nX_n\Rightarrow aX$. \textbf{Resp.:} Cierto.
+	\end{enumerate}
+	
+	\subsection*{LLN y CLT}
+	\begin{enumerate}
+		\item Para $X_i\sim\operatorname{Bern}(p)$, $\bar X_n\xrightarrow{a.s.}p$. \textbf{Resp.:} Ley fuerte.
+		\item Aproximar $P\big(\bar X_{100}\le p+0.1\big)$ por CLT. \textbf{Resp.:} $\Phi\!\left( \frac{0.1\sqrt{100}}{\sqrt{p(1-p)}} \right)$.
+		\item Si $X_i\sim\mathcal N(\mu,\sigma^2)$, distribución de $\sqrt{n}(\bar X_n-\mu)$. \textbf{Resp.:} $\mathcal N(0,\sigma^2)$.
+	\end{enumerate}
+	
+	\subsection*{Herramientas asintóticas (nociones)}
+	\begin{enumerate}
+		\item (Slutsky) Si $X_n\Rightarrow X$ y $Y_n\xrightarrow{p}c$, ¿$X_n+Y_n\Rightarrow X+c$? \textbf{Resp.:} Sí.
+		\item (Cramér--Wold) Convergencia de $Z_n\Rightarrow Z$ en $\mathbb R^k$. \textbf{Resp.:} Equivalente a $a^TZ_n\Rightarrow a^TZ$ para todo $a$.
+		\item (Delta) Si $\sqrt n(\hat\theta_n-\theta)\Rightarrow \mathcal N(0,V)$, dé la ley de $\sqrt n(g(\hat\theta_n)-g(\theta))$. \textbf{Resp.:} $\mathcal N(0,\,g'(\theta)Vg'(\theta)^T)$.
+	\end{enumerate}
+	
+	\section{Estadística matemática}
+	\paragraph{Importancia.} Fija el puente entre modelos y datos: verosimilitud, información y eficiencia son el esqueleto geométrico del aprendizaje.
+	
+	\subsection*{Verosimilitud y MLE; consistencia y normalidad}
+	\begin{enumerate}
+		\item MLE para $p$ en $X_i\sim\operatorname{Bern}(p)$. \textbf{Resp.:} $\hat p=\bar X_n$.
+		\item MLE de $\mu$ con $X_i\sim\mathcal N(\mu,\sigma^2)$ conocida. \textbf{Resp.:} $\hat\mu=\bar X_n$.
+		\item Asintóticamente, $\sqrt n(\hat\mu-\mu)\Rightarrow \mathcal N(0,\sigma^2)$. \textbf{Resp.:} Sí (CLT).
+	\end{enumerate}
+	
+	\subsection*{Información de Fisher y Cramér--Rao}
+	\begin{enumerate}
+		\item Para $\operatorname{Bern}(p)$, $I(p)=\frac{1}{p(1-p)}$. \textbf{Resp.:} Derivando $\ell$ y tomando esperanza.
+		\item Cota CR para estimadores insesgados de $p$. \textbf{Resp.:} $\operatorname{Var}(\hat p)\ge \frac{p(1-p)}{n}$.
+		\item Para $\operatorname{Poisson}(\lambda)$, $I(\lambda)=\frac{1}{\lambda}$. \textbf{Resp.:} Sí.
+	\end{enumerate}
+	
+	\subsection*{Suficiencia (Fisher--Neyman) y Rao--Blackwell}
+	\begin{enumerate}
+		\item Muestre que $\sum X_i$ es suficiente en Poisson($\lambda$). \textbf{Resp.:} Factorización.
+		\item Mejore $\hat\lambda=X_1$ usando RB. \textbf{Resp.:} $E[X_1\mid \sum X_i]=\tfrac{1}{n}\sum X_i$.
+		\item Completez y UMVU en Bernoulli para $\bar X_n$. \textbf{Resp.:} $\bar X_n$ es UMVU de $p$.
+	\end{enumerate}
+	
+	\subsection*{Contrastes: Neyman--Pearson y razón de verosimilitudes}
+	\begin{enumerate}
+		\item Test óptimo para $H_0:p=p_0$ vs $H_1:p=p_1$ en Bernoulli. \textbf{Resp.:} Umbral sobre $\sum X_i$ (LR).
+		\item Nivel $\alpha$ mediante cuantiles binomiales. \textbf{Resp.:} Elegir $k$ tal que $P_{p_0}(\sum X_i\ge k)\le\alpha$.
+		\item LR para $\mathcal N(\mu,\sigma^2)$ con $\sigma$ conocida. \textbf{Resp.:} Basado en $\bar X$.
+	\end{enumerate}
+	
+	\subsection*{Intervalos y pruebas de Wald/score/LR}
+	\begin{enumerate}
+		\item IC 95\% para $\mu$ con $\sigma$ conocida. \textbf{Resp.:} $\bar X\pm1.96\,\sigma/\sqrt n$.
+		\item Estadístico de Wald para $\mu=\mu_0$. \textbf{Resp.:} $W=\frac{(\bar X-\mu_0)^2}{\sigma^2/n}$.
+		\item Prueba LR para $p$ en Bernoulli. \textbf{Resp.:} $-2\log\Lambda\approx\chi^2_1$.
+	\end{enumerate}
+	
+	\subsection*{Familias exponenciales}
+	\begin{enumerate}
+		\item Escriba Bernoulli en forma exponencial. \textbf{Resp.:} $p(x\mid\eta)=\exp\{x\eta-\psi(\eta)\}$ con $\eta=\log\frac{p}{1-p}$.
+		\item Suficiencia canónica. \textbf{Resp.:} $T(x)=x$ y $\sum X_i$.
+		\item Momentos por $\psi'(\eta)$ y $\psi''(\eta)$. \textbf{Resp.:} $E[T]=\psi'(\eta)$, $\operatorname{Var}(T)=\psi''(\eta)$.
+	\end{enumerate}
+	
+	\subsection*{Distribuciones mixtas}
+	\begin{enumerate}
+		\item Media y varianza de mezcla $\pi\,\mathcal N(\mu_1,\sigma^2)+(1-\pi)\,\mathcal N(\mu_2,\sigma^2)$. \textbf{Resp.:} $E[X]=\pi\mu_1+(1-\pi)\mu_2$, $\operatorname{Var}=\sigma^2+\pi(1-\pi)(\mu_1-\mu_2)^2$.
+		\item Posterior de componente con regla de Bayes. \textbf{Resp.:} $P(Z=1\mid x)=\frac{\pi\,\phi(x;\mu_1,\sigma^2)}{\pi\,\phi_1+(1-\pi)\,\phi_2}$.
+		\item Paso E de EM: $\gamma_i=P(Z_i=1\mid x_i)$. \textbf{Resp.:} Fórmula anterior por dato $i$.
+	\end{enumerate}
+	
+	\section{Análisis convexo y optimización}
+	\paragraph{Importancia.} La geometría de divergencias es convexa; proyecciones e identidades de Fenchel/Bregman estructuran algoritmos y geodésicas duales.
+	
+	\subsection*{Conjuntos/funciones convexas; fuerte convexidad y Lipschitz}
+	\begin{enumerate}
+		\item Muestre que $f(x)=e^x$ es convexa. \textbf{Resp.:} $f''(x)=e^x\ge0$.
+		\item Para $f(x)=\tfrac12x^TQx$ con $Q\succeq mI$, constate $m$-fuerte convexidad. \textbf{Resp.:} $\nabla^2 f=Q\succeq mI$.
+		\item Para $\nabla f$ $L$-Lipschitz de $f(x)=\tfrac12x^TQx$, dé $L$. \textbf{Resp.:} $L=\lambda_{\max}(Q)$.
+	\end{enumerate}
+	
+	\section{Geometría diferencial}
+	\paragraph{Importancia.} Modela espacios de distribuciones como variedades con métricas (Fisher) y conexiones; geodésicas = interpolaciones “rectas” en el espacio estadístico.
+	
+	\subsection*{Variedades suaves, cartas y atlas}
+	\begin{enumerate}
+		\item Verifique que $S^1=\{(x,y):x^2+y^2=1\}$ es 1-variedad. \textbf{Resp.:} Cubrir con cartas $y>0$ y $y<0$ vía proyección.
+		\item Carta estereográfica de $S^1$ (desde $(0,1)$). \textbf{Resp.:} $\phi(x,y)=\frac{x}{1-y}$.
+		\item Atlas mínimo para $S^1$. \textbf{Resp.:} Dos cartas como arriba.
+	\end{enumerate}
+	
+	\subsection*{Espacios tangentes, pushforward/pullback}
+	\begin{enumerate}
+		\item Derivada de $F(x,y)=(x^2-y,xy)$ en $(1,1)$. \textbf{Resp.:} $dF=\begin{pmatrix}2&-1\\1&1\end{pmatrix}$.
+		\item Pushforward de $v=(1,0)$ bajo $F$ anterior. \textbf{Resp.:} $(2,1)$.
+		\item Pullback de 1-forma $\omega=udx+vdy$ por $F$ (idea). \textbf{Resp.:} $F^*\omega=\omega\circ dF$.
+	\end{enumerate}
+	
+	\subsection*{Métrica Riemanniana, gradiente y geodésicas}
+	\begin{enumerate}
+		\item En $\mathbb R^2$ con métrica $G=I$, gradiente de $f=\tfrac12\|x\|^2$. \textbf{Resp.:} $\nabla f=x$.
+		\item Geodésicas en $\mathbb R^2$ euclidiano. \textbf{Resp.:} Rectas $\gamma(t)=x_0+tv$.
+		\item Longitud de $\gamma(t)=(t,t^2)$ en $[0,1]$. \textbf{Resp.:} $\int_0^1 \sqrt{1+4t^2}\,dt=\tfrac12\big(\sqrt{5}+\operatorname{asinh}2\big)$.
+	\end{enumerate}
+	
+	\subsection*{Conexión de Levi--Civita, curvatura y mapa exponencial}
+	\begin{enumerate}
+		\item En $\mathbb R^n$ euclidiano, calcule símbolos de Christoffel. \textbf{Resp.:} Todos $\Gamma^k_{ij}=0$.
+		\item Exponencial en $\mathbb R^n$. \textbf{Resp.:} $\exp_x(v)=x+v$.
+		\item Curvatura seccional en $\mathbb R^n$. \textbf{Resp.:} 0.
+	\end{enumerate}
+	
+	\subsection*{Invariancia por reparametrizaciones}
+	\begin{enumerate}
+		\item La longitud de curva es invariante bajo reparametrización monótona. \textbf{Resp.:} Se preserva por cambio de variable.
+		\item Compruebe que el gradiente depende de la métrica, no de coordenadas. \textbf{Resp.:} Objeto geométrico.
+		\item Demuestre que $\operatorname{div}$ cambia con densidad pero es tensorial. \textbf{Resp.:} Identidad de transformación.
+	\end{enumerate}
+	
+	\section{Teoría de la información}
+	\paragraph{Importancia.} Entropía y divergencias cuantifican “distancia” entre distribuciones; KL induce la métrica de Fisher y proyecciones que estructuran la geometría.
+	
+	\subsection*{Entropía, entropía cruzada y KL}
+	\begin{enumerate}
+		\item Entropía de $\operatorname{Bern}(p)$. \textbf{Resp.:} $H(p)=-p\log p-(1-p)\log(1-p)$.
+		\item $D_{\mathrm{KL}}(\operatorname{Bern}(p)\Vert \operatorname{Bern}(q))$. \textbf{Resp.:} $p\log\frac{p}{q}+(1-p)\log\frac{1-p}{1-q}$.
+		\item Relación $H(p,q)=H(p)+D_{\mathrm{KL}}(p\Vert q)$. \textbf{Resp.:} Verdadera.
+	\end{enumerate}
+	
+	\subsection*{Información mutua y reglas de cadena}
+	\begin{enumerate}
+		\item Para canal BSC$(\varepsilon)$ con $X\sim\operatorname{Bern}(1/2)$, $I(X;Y)=?$ \textbf{Resp.:} $1-h_2(\varepsilon)$.
+		\item Regla de cadena: $I(X;Y,Z)=I(X;Y)+I(X;Z\mid Y)$. \textbf{Resp.:} Cierta.
+		\item $I(X;X)=H(X)$. \textbf{Resp.:} Cierto.
+	\end{enumerate}
+	
+	\subsection*{Desigualdad de procesamiento de datos}
+	\begin{enumerate}
+		\item Si $X\to Y\to Z$, ¿$I(X;Z)\le I(X;Y)$? \textbf{Resp.:} Sí.
+		\item Para BSC seguida de BSC, calcule $I$ total. \textbf{Resp.:} $1-h_2(\varepsilon\star\delta)$, con $\varepsilon\star\delta=\varepsilon(1-\delta)+(1-\varepsilon)\delta$.
+		\item KL contraída por canal estocástico. \textbf{Resp.:} $D(PK\Vert QK)\le D(P\Vert Q)$.
+	\end{enumerate}
+	
+	\subsection*{$f$-divergencias}
+	\begin{enumerate}
+		\item Hellinger entre Bernoulli$(p)$ y $(q)$. \textbf{Resp.:} $H^2=1-\sqrt{pq}-\sqrt{(1-p)(1-q)}$.
+		\item $\chi^2$ entre Poisson($\lambda$) y Poisson($\mu$). \textbf{Resp.:} $\chi^2=\exp\!\big((\lambda-\mu)^2/\mu\big)-1$.
+		\item Jensen--Shannon para Bernoulli simétrica $p$ y $1-p$. \textbf{Resp.:} $\operatorname{JS}=\tfrac12(H(p)+H(1-p))-H(1/2)$.
+	\end{enumerate}
+	
+	\subsection*{Familias exponenciales y momentos}
+	\begin{enumerate}
+		\item Para Poisson, $\eta=\log\lambda$. Dé $\psi(\eta)$. \textbf{Resp.:} $\psi(\eta)=e^{\eta}$.
+		\item $E[X]=\psi'(\eta)$ y $\operatorname{Var}(X)=\psi''(\eta)$. \textbf{Resp.:} Ambos $=e^{\eta}=\lambda$.
+		\item Suficiencia natural. \textbf{Resp.:} $T=\sum X_i$.
+	\end{enumerate}
+	
+	\section{Procesos estocásticos}
+	\paragraph{Importancia.} Modelan secuencias dependientes y dinámica de aprendizaje; ergodicidad fundamenta promedios de largo plazo y MCMC.
+	
+	\subsection*{Cadenas de Markov en tiempo discreto}
+	\begin{enumerate}
+		\item Para $P=\begin{pmatrix}0.9&0.1\\0.2&0.8\end{pmatrix}$, halle $P^2$. \textbf{Resp.:} $\begin{pmatrix}0.83&0.17\\0.34&0.66\end{pmatrix}$.
+		\item Distribución tras 3 pasos desde $\pi_0=(1,0)$. \textbf{Resp.:} $\pi_0P^3$ (numéricamente $\approx(0.778,0.222)$).
+		\item Probabilidad de regresar al estado 1 en 2 pasos. \textbf{Resp.:} $(P^2)_{11}=0.83$.
+	\end{enumerate}
+	
+	\subsection*{Estacionaria, ergodicidad y mezcla}
+	\begin{enumerate}
+		\item Estacionaria $\pi$ de $P$ anterior. \textbf{Resp.:} $\pi=(2/3,1/3)$.
+		\item ¿Es irreducible y aperiódica? \textbf{Resp.:} Sí.
+		\item Límite $\pi_0P^n\to\pi$. \textbf{Resp.:} Sí.
+	\end{enumerate}
+	
+	\subsection*{Reversibilidad y balance detallado}
+	\begin{enumerate}
+		\item Verifique $\pi_i P_{ij}=\pi_j P_{ji}$ para $\pi=(2/3,1/3)$. \textbf{Resp.:} $\tfrac{2}{3}0.1=\tfrac{1}{3}0.2$ y $\tfrac{2}{3}0.9=\tfrac{1}{3}0.8$ (cierto).
+		\item Reversibilidad implica estacionaria. \textbf{Resp.:} Sí.
+		\item Construya $P$ reversible dado $\pi$. \textbf{Resp.:} $P_{ij}=\frac{w_{ij}}{\pi_i}$ con $w_{ij}=w_{ji}\ge0$, $\sum_j w_{ij}=\pi_i$.
+	\end{enumerate}
+	
+	\subsection*{LLN en cadenas ergódicas (nociones)}
+	\begin{enumerate}
+		\item Para función $f$, $\frac1n\sum f(X_k)\to E_\pi[f]$. \textbf{Resp.:} Sí (LLN ergódico).
+		\item En $P$ anterior y $f(1)=0,f(2)=1$, calcule el límite. \textbf{Resp.:} $E_\pi[f]=1/3$.
+		\item Tiempo de mezcla aproximado: evalúe $\|\pi_0P^n-\pi\|_{\mathrm{TV}}$. \textbf{Resp.:} Decae geométricamente con razón el segundo autovalor ($0.7$).
+	\end{enumerate}
+	
+	\subsection*{MCMC (transiciones e invarianza)}
+	\begin{enumerate}
+		\item Aceptación de Metropolis–Hastings: $\alpha(x,y)=\min\{1, \tfrac{\pi(y)q(y,x)}{\pi(x)q(x,y)}\}$. \textbf{Resp.:} Fórmula dada.
+		\item Para propuesta simétrica, simplifique $\alpha$. \textbf{Resp.:} $\alpha=\min\{1,\pi(y)/\pi(x)\}$.
+		\item Verifique que el kernel tiene invariante $\pi$. \textbf{Resp.:} Por balance detallado.
+	\end{enumerate}
+	
+	\section{Programación científica}
+	\paragraph{Importancia.} Implementa algoritmos geométricos y estadísticos con estabilidad y reproducibilidad.
+	
+	\subsection*{NumPy: arreglos, broadcasting y álgebra lineal}
+	\begin{enumerate}
+		\item (Código) Multiplique una matriz $2\times2$ por un vector. \textbf{Resp.:} \texttt{A@x} con \texttt{A=np.array([[1,2],[3,4]]), x=np.array([1,1])} da \texttt{[3,7]}.
+		\item (Código) Norma de $x$. \textbf{Resp.:} \texttt{np.linalg.norm(x)}.
+		\item (Código) SVD. \textbf{Resp.:} \texttt{U,S,Vt = np.linalg.svd(A)}.
+	\end{enumerate}
+	
+	\subsection*{SciPy: integración, optimización y stats}
+	\begin{enumerate}
+		\item (Código) Integrar $e^{-x^2}$. \textbf{Resp.:} \texttt{quad(lambda x: np.exp(-x**2), -np.inf, np.inf)} $=\sqrt{\pi}$.
+		\item (Código) Minimizar $x^4-2x^2$. \textbf{Resp.:} \texttt{minimize} con inicio 0 retorna $x=\pm1$.
+		\item (Código) CLT simulado. \textbf{Resp.:} \texttt{np.mean(np.random.randn(n))} para muchos $n$.
+	\end{enumerate}
+	
+	\subsection*{Automatización y reproducibilidad}
+	\begin{enumerate}
+		\item Semilla fija. \textbf{Resp.:} \texttt{np.random.seed(0)}.
+		\item Entornos. \textbf{Resp.:} \texttt{requirements.txt} o \texttt{conda env}.
+		\item Guardar arrays. \textbf{Resp.:} \texttt{np.save('a.npy',A)}.
+	\end{enumerate}
+	
+	\subsection*{Visualización básica (matplotlib)}
+	\begin{enumerate}
+		\item (Código) Curva de $y=\sin x$. \textbf{Resp.:} \texttt{plt.plot(x,np.sin(x))}.
+		\item (Código) Histograma. \textbf{Resp.:} \texttt{plt.hist(data)}.
+		\item (Código) Etiquetas. \textbf{Resp.:} \texttt{plt.xlabel('x'); plt.ylabel('y')}.
+	\end{enumerate}
+	
+	\section{Métodos numéricos para optimización}
+	\paragraph{Importancia.} Permiten resolver proyecciones y estimación en variedades, y seguir geodésicas/flows definidos por divergencias.
+	
+	\subsection*{Descenso por gradiente, line search y parada}
+	\begin{enumerate}
+		\item Un paso de GD para $f(x)=\tfrac12\|Ax-b\|^2$ con $\eta$. \textbf{Resp.:} $x^{+}=x-\eta A^T(Ax-b)$.
+		\item Paso óptimo sobre dirección $d$ en cuadrática $Q$. \textbf{Resp.:} $\eta^*=\frac{d^T\nabla f}{d^TQd}$.
+		\item Criterio de parada. \textbf{Resp.:} $\|\nabla f(x)\|\le \varepsilon$.
+	\end{enumerate}
+	
+	\subsection*{Newton y quasi-Newton (BFGS/L-BFGS)}
+	\begin{enumerate}
+		\item Paso de Newton. \textbf{Resp.:} $x^{+}=x-[\nabla^2 f(x)]^{-1}\nabla f(x)$.
+		\item Actualización BFGS. \textbf{Resp.:} $H_{k+1}=\big(I-\rho s y^T\big)H_k\big(I-\rho y s^T\big)+\rho s s^T$, $\rho=1/(y^Ts)$.
+		\item Ventaja de L-BFGS. \textbf{Resp.:} Memoria limitada (usa parejas $(s,y)$).
+	\end{enumerate}
+	
+	\subsection*{Métodos estocásticos (SGD, momentum)}
+	\begin{enumerate}
+		\item Actualización SGD. \textbf{Resp.:} $x^{+}=x-\eta\,\widehat{\nabla f}(x)$(mini-lote).
+		\item Momentum clásico. \textbf{Resp.:} $v^{+}=\beta v+\nabla f(x)$; $x^{+}=x-\eta v^{+}$.
+		\item Regla Adam (forma básica). \textbf{Resp.:} Acumulados $m,v$ y correcciones de sesgo; $x^{+}=x-\alpha\, m/ (\sqrt v+\varepsilon)$.
+	\end{enumerate}
+	
+	\subsection*{Proyección, penalizaciones y barreras}
+	\begin{enumerate}
+		\item Proyección sobre caja $[l,u]$. \textbf{Resp.:} $\Pi_{[l,u]}(x)=\min(\max(x,l),u)$ (componente a componente).
+		\item Penalización cuadrática para $Ax=b$. \textbf{Resp.:} Minimizar $f(x)+\tfrac{\rho}{2}\|Ax-b\|^2$.
+		\item Barrera logarítmica para $x>0$. \textbf{Resp.:} $f(x)-\mu\sum_i \log x_i$.
+	\end{enumerate}
+	
+	\subsection*{Condicionamiento y estabilidad}
+	\begin{enumerate}
+		\item Número de condición de $A=\begin{pmatrix}1&0\\0&\kappa\end{pmatrix}$. \textbf{Resp.:} $\kappa(A)=\kappa$ (norma 2).
+		\item Sensibilidad de $Ax=b$ a $\delta b$. \textbf{Resp.:} $\frac{\|\delta x\|}{\|x\|}\lesssim \kappa(A)\,\frac{\|\delta b\|}{\|b\|}$.
+		\item Regularización de Tikhonov. \textbf{Resp.:} Minimizar $\|Ax-b\|^2+\lambda\|x\|^2$.
+	\end{enumerate}
+	
+
