@@ -1,0 +1,119 @@
+\chapter{Fundamentos Geométricos}
+
+\begin{quotation}
+	\itshape
+	``Start with the Fisher–Rao metric'' is the technical instruction; ``start by acknowledging that your only reliable compass is the curvature of your own uncertainty'' is the philosophical password.
+\end{quotation}
+
+\section{El Espacio de las Probabilidades}
+
+El punto de partida filosófico de la geometría de la información es la decisión normativa de tratar a la incertidumbre como un objeto geométrico primario. En lugar de considerar las distribuciones de probabilidad simplemente como funciones analíticas o herramientas para calcular esperanzas, las consideramos como \emph{puntos} en un espacio abstracto.
+
+Imaginemos una familia paramétrica de distribuciones de probabilidad $S = \{p_\theta : \theta \in \Theta\}$, donde cada punto en el conjunto $\Theta \subseteq \mathbb{R}^n$ etiqueta una distribución única. Nuestro objetivo es dotar a este conjunto $S$ de una estructura geométrica que refleje las propiedades intrínsecas de la inferencia estadística, y no simplemente la topología euclidiana de los parámetros $\theta$.
+
+La pregunta fundamental es: ¿Qué significa que dos distribuciones estén ``cerca''? La respuesta no la dicta la naturaleza, sino nuestra postura epistémica: la geometría debe ser invariante bajo reparametrizaciones y transformaciones suficientes.
+
+\section{Variedades Estadísticas}
+
+Formalmente, una \textbf{variedad estadística} es una variedad diferenciable $S$ cuyos puntos son distribuciones de probabilidad. Consideramos un espacio muestral $\mathcal{X}$ y una familia de funciones de densidad de probabilidad $p(x; \theta)$ con respecto a una medida base (usualmente Lebesgue o conteo).
+
+\[ S = \{ p(x; \theta) \mid \theta = (\theta^1, \dots, \theta^n) \in \Theta \} \]
+
+Asumimos condiciones de regularidad estándar (suavidad con respecto a $\theta$, soporte común, etc.) que permiten tratar a $\Theta$ como un sistema de coordenadas local para $S$.
+
+\section{La Métrica de Fisher}
+
+Para medir distancias en esta variedad, introducimos la \textbf{Matriz de Información de Fisher}. Esta matriz actúa como el tensor métrico Riemanniano en nuestra variedad estadística.
+
+Dada una función de log-verosimilitud $\ell(\theta; x) = \log p(x; \theta)$, la métrica de Fisher $g_{ij}(\theta)$ se define como la covarianza del score:
+
+\[ g_{ij}(\theta) = E_\theta \left[ \frac{\partial \ell}{\partial \theta^i} \frac{\partial \ell}{\partial \theta^j} \right] = \int_{\mathcal{X}} p(x; \theta) \frac{\partial \ell}{\partial \theta^i} \frac{\partial \ell}{\partial \theta^j} \, dx \]
+
+Bajo condiciones de regularidad, esto es equivalente a la esperanza del Hessiano negativo de la log-verosimilitud (la curvatura de la sorpresa):
+
+\[ g_{ij}(\theta) = -E_\theta \left[ \frac{\partial^2 \ell}{\partial \theta^i \partial \theta^j} \right] \]
+
+\section{Interpretación Geométrica}
+
+La métrica de Fisher $g$ define un producto interno en el espacio tangente $T_\theta S$ de la variedad en cada punto $\theta$. Si consideramos dos desplazamientos infinitesimales $d\theta$ y $\delta\theta$, su producto interno es:
+
+\[ \langle d\theta, \delta\theta \rangle_g = \sum_{i,j} g_{ij}(\theta) d\theta^i \delta\theta^j \]
+
+Esto nos permite medir la longitud de curvas en la variedad estadística. La distancia entre dos distribuciones $p_{\theta_1}$ y $p_{\theta_2}$ es la longitud de la geodésica (el camino más corto) que las conecta bajo esta métrica.
+
+Esta distancia, la \textbf{distancia de Fisher-Rao}, cuantifica qué tan distinguibles son dos distribuciones basándose en muestras observadas. Si la información de Fisher es alta, una pequeña perturbación en los parámetros resulta en un gran cambio en la distribución (gran distancia estadística).
+
+\section{Invariancia y Unicidad}
+
+Un resultado fundamental debido a Chentsov (1972) establece que la métrica de Fisher es la \emph{única} métrica Riemanniana (salvo factor escalar) en una variedad estadística que es invariante bajo \textbf{estadísticos suficientes}.
+
+Esto significa que si transformamos nuestros datos $x$ a través de una función $T(x)$ que no pierde información sobre $\theta$ (un estadístico suficiente), la geometría del espacio de parámetros permanece idéntica. Esta propiedad de invariancia confirma que la métrica de Fisher captura la estructura intrínseca de la información, independiente de la representación de los datos o de la parametrización elegida.
+
+\section{Ejemplo: La Familia Normal Univariada}
+
+Consideremos la familia de distribuciones normales con media $\mu$ y desviación estándar $\sigma$ fija (por simplicidad, digamos $\sigma=1$).
+\[ p(x; \mu) = \frac{1}{\sqrt{2\pi}} \exp\left( -\frac{(x-\mu)^2}{2} \right) \]
+
+La log-verosimilitud es (ignorando constantes):
+\[ \ell(\mu; x) = -\frac{(x-\mu)^2}{2} \]
+La primera derivada es $\frac{\partial \ell}{\partial \mu} = x - \mu$.
+La segunda derivada es $\frac{\partial^2 \ell}{\partial \mu^2} = -1$.
+
+La información de Fisher es:
+\[ g_{\mu\mu} = -E[-1] = 1 \]
+
+En este caso simple, la métrica es constante y el espacio es euclidiano. La distancia entre $\mathcal{N}(\mu_1, 1)$ y $\mathcal{N}(\mu_2, 1)$ es simplemente $|\mu_1 - \mu_2|$.
+
+Sin embargo, si consideramos tanto $\mu$ como $\sigma$ variables, la geometría se vuelve hiperbólica (espacio de Poincaré), lo cual veremos en capítulos posteriores.
+
+\section{Ejercicios}
+
+\subsection*{Conceptos Básicos}
+\begin{enumerate}
+	\item (V/F) Una variedad estadística es un conjunto de parámetros sin estructura adicional.
+	\item (V/F) La métrica de Fisher depende del sistema de coordenadas elegido para los datos $x$.
+	\item Defina explícitamente el conjunto $S$ para la familia de distribuciones Bernoulli. ¿Cuál es el espacio de parámetros $\Theta$?
+	\item Escriba la función de log-verosimilitud para una sola observación $x$ de una Bernoulli($\theta$).
+\end{enumerate}
+
+\subsection*{Cálculo de Información de Fisher}
+\begin{enumerate}[resume]
+	\item Calcule la primera derivada (score) de la log-verosimilitud de Bernoulli con respecto a $\theta$.
+	\item Calcule la segunda derivada de la log-verosimilitud de Bernoulli.
+	\item Calcule la Información de Fisher $I(\theta)$ tomando la esperanza del negativo de la segunda derivada.
+	\item Calcule $I(\lambda)$ para la distribución de Poisson $P(x;\lambda) = e^{-\lambda}\lambda^x/x!$.
+	\item Calcule $I(\lambda)$ para la distribución Exponencial $p(x;\lambda) = \lambda e^{-\lambda x}$.
+	\item Calcule $I(\mu)$ para la Normal $\mathcal{N}(\mu, \sigma^2)$ asumiendo $\sigma^2$ conocido y fijo.
+	\item Calcule $I(\sigma)$ para la Normal $\mathcal{N}(0, \sigma^2)$ asumiendo $\mu=0$ conocido.
+	\item (Reto) Calcule la matriz de Información de Fisher $2\times2$ para la Normal $\mathcal{N}(\mu, \sigma^2)$ con ambos parámetros desconocidos.
+	\item Calcule $I(\theta)$ para la distribución de Pareto $p(x;\theta) = \theta x^{-\theta-1}$ para $x \ge 1$.
+	\item Calcule $I(p)$ para la distribución Geométrica $P(X=k) = (1-p)^{k-1}p$.
+	\item Escriba la expresión para $I(\alpha)$ de una distribución Beta con $\beta$ fijo (en términos de funciones poligamma).
+\end{enumerate}
+
+\subsection*{Cambio de Variables e Invariancia}
+\begin{enumerate}[resume]
+	\item Si $\eta = f(\theta)$ es una reparametrización, ¿cómo se relaciona $I(\eta)$ con $I(\theta)$? (Regla de transformación tensorial 1D).
+	\item Aplique lo anterior a la Bernoulli usando el parámetro logit $\eta = \log(\theta/(1-\theta))$. Calcule $I(\eta)$.
+\end{enumerate}
+
+\subsection*{Distancias y Geometría}
+\begin{enumerate}[resume]
+	\item Escriba la fórmula para la distancia de Fisher-Rao entre dos distribuciones parametrizadas por $\theta_1$ y $\theta_2$ en una variedad 1D.
+	\item Calcule la distancia de Fisher-Rao entre $\mathcal{N}(0, 1)$ y $\mathcal{N}(1, 1)$ (varianza fija).
+	\item Calcule la distancia de Fisher-Rao entre $\mathcal{N}(0, 1)$ y $\mathcal{N}(0, 2)$ (media fija).
+	\item (Reto) ¿Cuál es la distancia entre dos distribuciones categóricas (multinomiales) $p$ y $q$? (Pista: geometría esférica).
+\end{enumerate}
+
+\subsection*{Propiedades Teóricas}
+\begin{enumerate}[resume]
+	\item Enuncie la Cota de Cramér-Rao en términos de la Información de Fisher.
+	\item ¿Cuál es la varianza mínima asintótica para un estimador insesgado de $p$ en una Bernoulli?
+	\item ¿El estimador de máxima verosimilitud alcanza esta cota asintóticamente?
+	\item ¿Quién probó que la métrica de Fisher es la única invariante bajo estadísticos suficientes?
+	\item ¿Qué divergencia induce localmente la métrica de Fisher?
+	\item Escriba la expansión de Taylor de segundo orden de la divergencia KL $D_{KL}(p_\theta || p_{\theta+\delta})$ en términos de $I(\theta)$.
+	\item ¿Qué representa la curvatura de la función de log-verosimilitud en el máximo?
+	\item ¿Qué representa la varianza del score?
+	\item ¿Por qué es importante la raíz cuadrada del determinante de la métrica de Fisher en la inferencia Bayesiana?
+\end{enumerate}

@@ -1,0 +1,37 @@
+\appendix
+\chapter{Soluciones a los Ejercicios}
+
+\section*{Capítulo 1: Fundamentos Geométricos}
+
+\begin{enumerate}
+	\item \textbf{Verdadero.} Una variedad estadística es, por definición, un conjunto de distribuciones de probabilidad parametrizadas suavemente.
+	\item \textbf{Falso.} La métrica de Fisher es invariante bajo reparametrizaciones de la muestra (estadísticos suficientes), pero cambia covariantemente bajo reparametrizaciones del parámetro $\theta$ (es un tensor).
+	\item \textbf{Resp.:} $S = \{ p(x;\theta) = \theta^x (1-\theta)^{1-x} \mid \theta \in (0,1) \}$. El espacio de parámetros es el intervalo abierto $(0,1)$.
+	\item \textbf{Resp.:} La log-verosimilitud es $\ell(\theta) = x\log\theta + (1-x)\log(1-\theta)$.
+	\item \textbf{Resp.:} $\ell'(\theta) = \frac{x}{\theta} - \frac{1-x}{1-\theta}$.
+	\item \textbf{Resp.:} $\ell''(\theta) = -\frac{x}{\theta^2} - \frac{1-x}{(1-\theta)^2}$.
+	\item \textbf{Resp.:} $I(\theta) = -E[\ell''(\theta)] = \frac{p}{\theta^2} + \frac{1-p}{(1-\theta)^2} = \frac{1}{\theta} + \frac{1}{1-\theta} = \frac{1}{\theta(1-\theta)}$. (Dado que $E[x]=\theta$).
+	\item \textbf{Resp.:} $I(\lambda) = 1/\lambda$.
+	\item \textbf{Resp.:} $I(\lambda) = 1/\lambda^2$ (para la exponencial $p(x)=\lambda e^{-\lambda x}$).
+	\item \textbf{Resp.:} $I(\mu) = 1/\sigma^2$ (constante).
+	\item \textbf{Resp.:} $I(\sigma) = 2/\sigma^2$ (para Normal con media 0 conocida).
+	\item \textbf{Resp.:} Matriz diagonal $\operatorname{diag}(1/\sigma^2, 2/\sigma^2)$.
+	\item \textbf{Resp.:} $I(\theta) = 1/\theta^2$ (para Pareto con $\alpha$ conocido o similar, depende de parametrización). Asumiendo $p(x)=\theta x^{-\theta-1}$, $I(\theta)=1/\theta^2$.
+	\item \textbf{Resp.:} $I(p) = \frac{1}{p^2(1-p)}$ (para Geométrica).
+	\item \textbf{Resp.:} $I(\alpha) = \psi'(\alpha) - \psi'(\alpha+\beta)$ (para Beta).
+	\item \textbf{Resp.:} $g_{new}(\eta) = g_{old}(\theta(\eta)) (\frac{\partial \theta}{\partial \eta})^2$.
+	\item \textbf{Resp.:} $\eta = \log(\theta/(1-\theta)) \implies \theta = e^\eta/(1+e^\eta)$. $d\theta/d\eta = \theta(1-\theta)$. $I(\eta) = \frac{1}{\theta(1-\theta)} (\theta(1-\theta))^2 = \theta(1-\theta) = \frac{e^\eta}{(1+e^\eta)^2}$.
+	\item \textbf{Resp.:} $d(p_1, p_2) = |\int_{\theta_1}^{\theta_2} \sqrt{I(\theta)} d\theta|$.
+	\item \textbf{Resp.:} Para Normal $(\mu, 1)$, $d = |\mu_1 - \mu_2|$.
+	\item \textbf{Resp.:} Para Normal $(0, \sigma)$, $d = |\sqrt{2}\ln(\sigma_2/\sigma_1)|$.
+	\item \textbf{Resp.:} $2\arccos(\sum \sqrt{p_i q_i})$ (Distancia de Bhattacharyya/Hellinger esférica).
+	\item \textbf{Resp.:} $\operatorname{Var}(\hat\theta) \ge 1/(n I(\theta))$.
+	\item \textbf{Resp.:} $\operatorname{Var}(\hat p) \ge p(1-p)/n$.
+	\item \textbf{Resp.:} Sí, $\bar X$ alcanza la cota en Bernoulli.
+	\item \textbf{Resp.:} Chentsov.
+	\item \textbf{Resp.:} Kullback-Leibler.
+	\item \textbf{Resp.:} $D_{KL}(p||q) \approx \frac{1}{2} \Delta\theta^T I(\theta) \Delta\theta$.
+	\item \textbf{Resp.:} Hessiano negativo de la log-verosimilitud.
+	\item \textbf{Resp.:} Covarianza del score.
+	\item \textbf{Resp.:} Porque define la única medida de volumen invariante (Prior de Jeffreys).
+\end{enumerate}
