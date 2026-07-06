@@ -1,0 +1,401 @@
+% !TeX root = main.tex
+
+\chapter{Familias Exponenciales y Variedades Dualmente Planas}
+
+\begin{quotation}
+	\itshape
+	``La familia exponencial es el único escenario donde la inferencia estadística se vuelve geometría euclidiana: la dualidad entre parámetros naturales y expectación es simplemente la transformada de Legendre de una función convexa.''
+\end{quotation}
+
+En el Capítulo~2 estudiamos divergencias como herramientas para medir el desajuste entre distribuciones.  Pero ¿qué estructura geométrica subyace al espacio de distribuciones?  Las \textbf{familias exponenciales} revelan una respuesta sorprendentemente elegante: son \emph{variedades dualmente planas}, donde la divergencia KL se convierte en la distancia euclidiana entre coordenadas duales.
+
+En este capítulo desarrollamos tres ideas centrales: (i) la estructura algebraica de las familias exponenciales, (ii) la dualidad de Legendre que conecta parámetros naturales y de expectación, y (iii) el teorema de Pitman--Koopman--Darmois que las caracteriza como las únicas familias donde la suficiencia es maximal.
+
+\section{Repaso de divergencias de Bregman}
+
+Antes de entrar en familias exponenciales, recordemos la conexión entre divergencias de Bregman y geometría estadística.
+
+\begin{definition}[Divergencia de Bregman]
+	Sea $F: \Theta \to \mathbb{R}$ una función convexa diferenciable.  La \textbf{divergencia de Bregman} generada por $F$ es:
+	\[
+	D_F(p \| q) \;=\; F(p) - F(q) - \langle \nabla F(q),\; p - q \rangle.
+	\]
+\end{definition}
+
+\begin{proposition}[Propiedades de las divergencias de Bregman]
+	\begin{enumerate}
+		\item $D_F(p \| q) \ge 0$ con igualdad si y solo si $p = q$.
+		\item $D_F$ es convexa en $p$ y cóncava en $q$.
+		\item La divergencia KL es un caso especial: si $F(\theta) = -\mathbb{E}[\log p_\theta(X)]$, entonces $D_F(\theta_1 \| \theta_2) \ge D_{\mathrm{KL}}(p_{\theta_1} \| p_{\theta_2})$ (con igualdad en familias exponenciales).
+	\end{enumerate}
+\end{proposition}
+
+La divergencia de Bregman mide el ``exceso'' de $F$ sobre su aproximación lineal.  Geométricamente, es la diferencia entre el valor de $F$ en $p$ y el valor que predeciría la tangent line de $F$ en $q$.
+
+\begin{center}
+	\begin{tikzpicture}
+		\begin{axis}[
+			width=10cm, height=6cm,
+			xlabel={$\theta$},
+			ylabel={$F(\theta)$},
+			domain=0.5:3.5,
+			samples=100,
+			axis lines=left,
+			grid=both,
+			grid style={gray!30},
+			tick style={black},
+			enlargelimits=false,
+		]
+			\addplot[Accent, thick] {x*ln(x)};
+			\coordinate (Q) at (axis cs:1.5,{1.5*ln(1.5)});
+			\coordinate (P) at (axis cs:2.8,{2.8*ln(2.8)});
+			\draw[AccentDark, thick, dashed] (axis cs:0.5,{1.5*ln(1.5)+(ln(1.5)+1)*(0.5-1.5)})
+				-- (axis cs:3.5,{1.5*ln(1.5)+(ln(1.5)+1)*(3.5-1.5)});
+			\node[AccentDark] at (axis cs:1.5,0.7) {$q$};
+			\node[Accent] at (axis cs:2.8,3.2) {$p$};
+			\draw[Accent, thick] (Q) -- (P) node[midway, right] {$D_F(p\|q)$};
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+
+\section{Definición de familias exponenciales}
+
+\begin{definition}[Familia exponencial]
+	Una familia paramétrica $\{p_\theta\}$ pertenece a la \textbf{familia exponencial} si puede escribirse como:
+	\[
+	p_\theta(x) \;=\; h(x) \exp\!\Big(\eta(\theta) \cdot T(x) - A(\theta)\Big)
+	\]
+	donde:
+	\begin{itemize}
+		\item $\eta(\theta)$ son los \textbf{parámetros naturales} (o canónicos),
+		\item $T(x)$ son las \textbf{estadísticas suficientes},
+		\item $A(\theta)$ es la \textbf{función de partición} (o log-normalizador),
+		\item $h(x)$ es una función base (medida de referencia).
+	\end{itemize}
+\end{definition}
+
+\begin{example}[Bernoulli como familia exponencial]
+	Para $X \sim \mathrm{Bern}(p)$, la densidad es $p^x(1-p)^{1-x}$.  Reescribiendo:
+	\[
+	p_\theta(x) = \exp\!\Big(x \log\frac{p}{1-p} + \log(1-p)\Big).
+	\]
+	Identificamos: $\eta = \log(p/(1-p))$ (log-odds), $T(x) = x$, $A(\theta) = -\log(1-p) = \log(1+e^\eta)$, $h(x) = 1$.
+\end{example}
+
+\begin{example}[Normal con media desconocida]
+	Para $X \sim \mathcal{N}(\mu, \sigma^2)$ con $\sigma^2$ fijo:
+	\[
+	p_\mu(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)
+	= \frac{1}{\sqrt{2\pi\sigma^2}} \exp\!\left(\frac{\mu x}{\sigma^2} - \frac{\mu^2}{2\sigma^2}\right).
+	\]
+	Parámetros naturales: $\eta = \mu/\sigma^2$.  Estadística suficiente: $T(x) = x$.  Función de partición: $A(\eta) = \sigma^2 \eta^2/2$.
+\end{example}
+
+\begin{example}[Poisson]
+	Para $X \sim \mathrm{Poisson}(\lambda)$:
+	\[
+	p_\lambda(x) = \frac{\lambda^x e^{-\lambda}}{x!} = \exp\!\Big(x \log\lambda - \lambda - \log(x!)\Big).
+	\]
+	$\eta = \log\lambda$, $T(x) = x$, $A(\eta) = e^\eta$, $h(x) = 1/x!$.
+\end{example}
+
+\section{Dualidad de Legendre}
+
+La dualidad de Legendre es el corazón geométrico de las familias exponenciales.  Conecta dos ``versiones'' del espacio paramétrico: el de parámetros naturales $\eta$ y el de parámetros de expectación $\mu$.
+
+\begin{definition}[Parámetros de expectación]
+	Los \textbf{parámetros de expectación} (o medios) son:
+	\[
+	\mu = \mathbb{E}_\eta[T(X)] = \nabla A(\eta).
+	\]
+\end{definition}
+
+\begin{theorem}[Dualidad de Legendre para familias exponenciales]
+	Sea $A(\eta)$ la función de partición.  Entonces:
+	\begin{enumerate}
+		\item $A$ es estrictamente convexa en $\eta$.
+		\item La transformada de Legendre $A^*(\mu) = \sup_\eta\{\langle \eta, \mu \rangle - A(\eta)\}$ satisface $A^*(\mu) = \langle \eta, \mu \rangle - A(\eta)$ evaluada en el punto donde $\nabla A(\eta) = \mu$.
+		\item Las relaciones inversas son: $\mu = \nabla A(\eta)$ y $\eta = \nabla A^*(\mu)$.
+	\end{enumerate}
+\end{theorem}
+
+\begin{proof}[Demostración (sketch)]
+	La convexidad de $A$ se deriva de la desigualdad de Jensen aplicada a $e^{\eta \cdot T(x)}$.  Para la dualidad, notemos que $\langle \eta, \mu \rangle - A(\eta)$ es una función cóncava en $\eta$ (su Hessiana es $-\nabla^2 A(\eta) \prec 0$).  El supremo se alcanza cuando la derivada se anula: $\mu - \nabla A(\eta) = 0$, es decir, $\mu = \nabla A(\eta)$.  Sustituyendo: $A^*(\mu) = \langle \eta, \mu \rangle - A(\eta)$.
+
+	Para la inversa, notemos que la función $A^*(\mu)$ es convexa (como conjugada de convexa) y $\nabla A^*(\mu) = \eta$ por la relación inversa de Legendre.
+\end{proof}
+
+\begin{example}[Dualidad en Bernoulli]
+	Para Bernoulli: $A(\eta) = \log(1+e^\eta)$, $\mu = e^\eta/(1+e^\eta) = p$.
+	La conjugada: $A^*(\mu) = \mu \log(\mu/(1-\mu)) + \log(1-\mu) = -H(\mu)$ donde $H$ es la entropía negativa.
+	Verificación: $\nabla A^*(\mu) = \log(\mu/(1-\mu)) = \eta$.
+\end{example}
+
+\section{Divergencia KL en familias exponenciales}
+
+En familias exponenciales, la KL entre dos distribuciones de la familia tiene una forma canónica elegante.
+
+\begin{theorem}[KL en la familia exponencial]
+	Para $p_{\eta_1}$ y $p_{\eta_2}$ en una familia exponencial:
+	\[
+	D_{\mathrm{KL}}(p_{\eta_1} \| p_{\eta_2}) \;=\; A(\eta_2) - A(\eta_1) - \langle \eta_2 - \eta_1,\; \nabla A(\eta_1) \rangle.
+	\]
+	Esto es exactamente la divergencia de Bregman generada por $A$:
+	\[
+	D_{\mathrm{KL}}(p_{\eta_1} \| p_{\eta_2}) \;=\; D_A(\eta_1 \| \eta_2).
+	\]
+\end{theorem}
+
+\begin{proof}
+	\begin{align*}
+		D_{\mathrm{KL}}(p_{\eta_1} \| p_{\eta_2})
+		&= \mathbb{E}_{\eta_1}\!\left[\log \frac{p_{\eta_1}(X)}{p_{\eta_2}(X)}\right] \\
+		&= \mathbb{E}_{\eta_1}\!\Big[\langle \eta_1 - \eta_2, T(X) \rangle - A(\eta_1) + A(\eta_2)\Big] \\
+		&= \langle \eta_1 - \eta_2, \mu_1 \rangle - A(\eta_1) + A(\eta_2) \\
+		&= A(\eta_2) - A(\eta_1) - \langle \eta_2 - \eta_1, \mu_1 \rangle.
+	\end{align*}
+\end{proof}
+
+\begin{corollary}[Asimetría de la KL]
+	La divergencia KL es asimétrica en general: $D_{\mathrm{KL}}(p_{\eta_1} \| p_{\eta_2}) = D_A(\eta_1 \| \eta_2)$ pero $D_{\mathrm{KL}}(p_{\eta_2} \| p_{\eta_1}) = D_A(\eta_2 \| \eta_1)$, y estas son distintas porque $D_A$ no es simétrica.
+\end{corollary}
+
+\begin{center}
+	\begin{tikzpicture}
+		\begin{axis}[
+			width=10cm, height=6cm,
+			xlabel={$\eta$},
+			ylabel={$A(\eta)$},
+			domain=-2:2,
+			samples=100,
+			axis lines=left,
+			grid=both,
+			grid style={gray!30},
+			tick style={black},
+		]
+			\addplot[Accent, thick] {ln(1+exp(x))};
+			\coordinate (E1) at (axis cs:-0.5,{ln(1+exp(-0.5))});
+			\coordinate (E2) at (axis cs:1.2,{ln(1+exp(1.2))});
+			\draw[AccentDark, thick, dashed] (axis cs:-2,{ln(1+exp(-0.5))+(exp(-0.5)/(1+exp(-0.5)))*(-2+0.5)})
+				-- (axis cs:2,{ln(1+exp(-0.5))+(exp(-0.5)/(1+exp(-0.5)))*(2+0.5)});
+			\node[AccentDark] at (axis cs:-0.5,0.2) {$\eta_1$};
+			\node[Accent] at (axis cs:1.2,2.0) {$\eta_2$};
+			\draw[Accent, thick] (E1) -- (E2) node[midway, above] {$D_A(\eta_1\|\eta_2)$};
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+
+\section{Variedades dualmente planas}
+
+La dualidad de Legendre revela una estructura geométrica profunda: las familias exponenciales son \textbf{variedades dualmente planas}.
+
+\begin{definition}[Variedad dualmente plana]
+	Una variedad estadística con coordenadas $\eta$ y una divergencia $D$ es \textbf{dualmente plana} si existen coordenadas $\eta$ (naturales) y $\mu$ (de expectación) tales que:
+	\[
+	D(p_{\eta_1} \| p_{\eta_2}) = F(\eta_1, \eta_2)
+	\]
+	donde $F$ es una función de Bregman generada por una función convexa $A(\eta)$, y las coordenadas duales están relacionadas por $\mu = \nabla A(\eta)$.
+\end{definition}
+
+\begin{proposition}[Geometría euclidiana en coordenadas duales]
+	En una familia exponencial, la geodésica $e$-exponencial (conexión exponencial) es una línea recta en coordenadas $\eta$, mientras que la geodésica $m$-exponencial (conexión de mixture) es una línea recta en coordenadas $\mu$.  La divergencia KL se convierte en la divergencia euclidiana entre parámetros naturales.
+\end{proposition}
+
+\begin{example}[Normal: geometría dual]
+	Para $\mathcal{N}(\mu, \sigma^2)$ con $\sigma^2$ fijo:
+	\begin{itemize}
+		\item Coordenadas naturales: $\eta = \mu/\sigma^2$.
+		\item Coordenadas de expectación: $\mu = \mathbb{E}[X] = \mu$.
+		\item La transformada de Legendre: $A(\eta) = \sigma^2 \eta^2/2$, $A^*(\mu) = \mu^2/(2\sigma^2)$.
+		\item $D_{\mathrm{KL}}(\mathcal{N}(\mu_1,\sigma^2) \| \mathcal{N}(\mu_2,\sigma^2)) = (\mu_1-\mu_2)^2/(2\sigma^2)$, que es cuadrática en las coordenadas naturales.
+	\end{itemize}
+\end{example}
+
+\section{El teorema de Pitman--Koopman--Darmois}
+
+¿Son las familias exponenciales las únicas familias con propiedades ``buenas''?  El teorema de Pitman--Koopman--Darmois responde afirmativamente bajo condiciones razonables.
+
+\begin{theorem}[Pitman--Koopman--Darmois]
+	Sea $\{p_\theta : \theta \in \Theta\}$ una familia de distribuciones sobre un espacio muestral $\mathcal{X}$ con $\Theta$ convexo.  Si:
+	\begin{enumerate}
+		\item la familia es \textbf{identificable} (diferentes $\theta$ dan diferentes distribuciones),
+		\item existe un \textbf{estadístico suficiente} de dimensión finita $T(X)$ cuya dimensión no crece con el tamaño muestral $n$,
+	\end{enumerate}
+	entonces la familia pertenece a la familia exponencial.
+\end{theorem}
+
+\begin{proof}[Demostración (idea principal)]
+	Para una familia con verosimilitud $L(\theta; x_1, \ldots, x_n) = \prod_{i=1}^n p_\theta(x_i)$, la suficiencia de $T$ implica que $L$ puede reescribirse como función de $T(x_1, \ldots, x_n)$ y $\theta$ solamente.  Si la dimensión de $T$ es $k$ (independiente de $n$), entonces para $n$ grande, la verosimilitud factorizada tiene la forma:
+	\[
+	L(\theta; x) = g(T(x), \theta) \cdot h(x).
+	\]
+	El resultado clave es que si $T$ es suficiente y completa, la familia tiene densidad de la forma exponencial.  La completitud se deriva de la identificabilidad y la condición de regularidad.
+\end{proof}
+
+\begin{corollary}[Implicación para inferencia]
+	Si una familia no es exponencial, entonces no existe un estadístico suficiente de dimensión finita.  En particular, la familia de Cauchy (sin localización conocida) y la familia de uniforme $U(0, \theta)$ no son exponenciales.
+\end{corollary}
+
+\section{Comparación: familias exponenciales vs.\ no exponenciales}
+
+La siguiente tabla resume las diferencias fundamentales:
+
+\begin{center}
+	\renewcommand{\arraystretch}{1.3}
+	\begin{tabular}{|l|c|c|}
+		\hline
+		\textbf{Propiedad} & \textbf{Familias exponenciales} & \textbf{Familias no exponenciales} \\
+		\hline
+		Estadístico suficiente finito & Sí & No \\
+		Geometría dualmente plana & Sí & No \\
+		$D_{\mathrm{KL}} = D_F$ (Bregman) & Sí & No \\
+		Geodésicas rectas en $\eta$ & Sí & No \\
+		Función de partición convexa & Sí & No definida \\
+		Transformada de Legendre & Sí & No aplicable \\
+		\hline
+	\end{tabular}
+\end{center}
+
+\begin{example}[Poisson: familia exponencial]
+	$\mathrm{Poisson}(\lambda)$ es exponencial con $\eta = \log\lambda$, $T(x) = x$, $A(\eta) = e^\eta$.
+	El estadístico suficiente $\sum x_i$ captura toda la información.  La divergencia KL es $D_{\mathrm{KL}}(\lambda_1 \| \lambda_2) = \lambda_1 \log(\lambda_1/\lambda_2) - \lambda_1 + \lambda_2$.
+\end{example}
+
+\begin{example}[Uniforme $U(0, \theta)$: no exponencial]
+	La densidad es $p_\theta(x) = 1/\theta$ para $x \in [0, \theta]$.  No hay forma de escribirla como $\exp(\eta T(x) - A(\theta))$.  El estadístico suficiente es $X_{(n)} = \max_i x_i$, cuya dimensión es siempre 1, pero la familia no es exponencial porque la densidad depende de $\theta$ en una forma que no es multiplicativa.
+\end{example}
+
+\begin{center}
+	\begin{tikzpicture}
+		\node[draw, rounded corners, fill=AccentLight!20, minimum width=3cm, minimum height=1cm] (exp) at (0,0) {Familias Exponenciales};
+		\node[draw, rounded corners, fill=AccentDark!10, minimum width=3cm, minimum height=1cm] (nonexp) at (5,0) {No Exponenciales};
+		\node[below=0.3cm] at (exp.south) {\scriptsize Suficiencia finita};
+		\node[below=0.3cm] at (nonexp.south) {\scriptsize Sin suficiencia finita};
+		\node[below=0.8cm] at (exp.south) {\scriptsize Dualidad de Legendre};
+		\node[below=0.8cm] at (nonexp.south) {\scriptsize Sin dualidad};
+		\node[below=1.3cm] at (exp.south) {\scriptsize Geodésicas rectas};
+		\node[below=1.3cm] at (nonexp.south) {\scriptsize Geodésicas curvas};
+	\end{tikzpicture}
+\end{center}
+
+\section{Más ejemplos de familias exponenciales}
+
+\begin{example}[Normal con ambos parámetros desconocidos]
+	Para $\mathcal{N}(\mu, \sigma^2)$ con $\mu$ y $\sigma^2$ desconocidos:
+	\[
+	p_{\mu,\sigma^2}(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)
+	= \exp\!\left(\frac{\mu x}{\sigma^2} - \frac{\mu^2}{2\sigma^2} - \frac{1}{2}\log(2\pi\sigma^2)\right).
+	\]
+	Parámetros naturales: $\eta_1 = \mu/\sigma^2$, $\eta_2 = -1/(2\sigma^2)$.  Estadísticas: $T_1 = x$, $T_2 = x^2$.
+\end{example}
+
+\begin{example}[Gamma]
+	Para $X \sim \mathrm{Gamma}(\alpha, \beta)$ (con $\beta$ conocido):
+	\[
+	p_\alpha(x) = \frac{\beta^\alpha}{\Gamma(\alpha)} x^{\alpha-1} e^{-\beta x}.
+	\]
+	Espacio exponencial con $\eta = \alpha - 1$, $T(x) = \log x$, $A(\eta) = \log\Gamma(\eta+1) - \eta\log\beta$.
+\end{example}
+
+\section{Código Python: descomposición exponencial}
+
+\begin{lstlisting}[language=Python, style=PythonStyle]
+import numpy as np
+from scipy import stats
+
+def exponential_family_decomposition(dist_name, params):
+    """Descompone una distribucion en la forma exponencial."""
+    if dist_name == "bernoulli":
+        p = params["p"]
+        eta = np.log(p / (1 - p))
+        psi = -np.log(1 - p)
+        return {"eta": eta, "T": "x", "psi": psi, "h": 1}
+    elif dist_name == "poisson":
+        lam = params["lambda"]
+        eta = np.log(lam)
+        psi = lam
+        return {"eta": eta, "T": "x", "psi": psi, "h": "1/x!"}
+    elif dist_name == "normal":
+        mu, sigma2 = params["mu"], params["sigma2"]
+        eta1 = mu / sigma2
+        eta2 = -1 / (2 * sigma2)
+        psi = mu**2 / (2 * sigma2) + 0.5 * np.log(2 * np.pi * sigma2)
+        return {"eta": [eta1, eta2], "T": ["x", "x^2"],
+                "psi": psi, "h": "1/sqrt(2*pi*sigma2)"}
+    else:
+        raise ValueError(f"Unknown: {dist_name}")
+
+# Verificacion
+bern_decomp = exponential_family_decomposition("bernoulli", {"p": 0.7})
+print(f"Bernoulli(0.7): eta={bern_decomp['eta']:.4f}, "
+      f"psi={bern_decomp['psi']:.4f}")
+
+pois_decomp = exponential_family_decomposition("poisson", {"lambda": 3.0})
+print(f"Poisson(3): eta={pois_decomp['eta']:.4f}, "
+      f"psi={pois_decomp['psi']:.4f}")
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, style=PythonStyle]
+# Divergencia KL como divergencia de Bregman
+def kl_as_bregman(eta1, eta2, dist_name):
+    """Calcula D_KL como D_A(eta1 || eta2) para familia exponencial."""
+    if dist_name == "poisson":
+        A1 = np.exp(eta1)  # A(eta) = e^eta para Poisson
+        A2 = np.exp(eta2)
+        mu1 = np.exp(eta1)  # nabla A(eta) = e^eta
+        return A2 - A1 - (eta2 - eta1) * mu1
+    elif dist_name == "bernoulli":
+        A1 = np.log(1 + np.exp(eta1))
+        A2 = np.log(1 + np.exp(eta2))
+        mu1 = np.exp(eta1) / (1 + np.exp(eta1))
+        return A2 - A1 - (eta2 - eta1) * mu1
+    else:
+        raise ValueError(f"Unknown: {dist_name}")
+
+# Verificacion: Poisson(3) vs Poisson(5)
+eta1 = np.log(3.0)  # lambda=3
+eta2 = np.log(5.0)  # lambda=5
+kl_bregman = kl_as_bregman(eta1, eta2, "poisson")
+kl_direct = 3 * np.log(3/5) - 3 + 5
+print(f"KL via Bregman:  {kl_bregman:.4f}")
+print(f"KL directa:      {kl_direct:.4f}")
+\end{lstlisting}
+
+\section{Ejercicios}
+
+\subsection*{Conceptuales}
+\begin{enumerate}
+	\item Verdadero o falso: Toda familia exponencial tiene un estadístico suficiente de dimensión finita.
+	\item Verdad o falso: La divergencia KL entre dos distribuciones de una familia exponencial es simétrica.
+	\item ¿Cuál es la relación entre los parámetros de expectación $\mu$ y los parámetros naturales $\eta$?
+	\item Muestre que la familia de Cauchy con localización y escala desconocidas \emph{no} es exponencial.
+	\item ¿Qué propiedad de la familia exponencial garantiza que la función de partición $A(\eta)$ sea convexa?
+\end{enumerate}
+
+\subsection*{Cálculos con familias exponenciales}
+\begin{enumerate}[resume]
+	\item Para $X \sim \mathrm{Bern}(p)$, encuentre: (a) $\eta$, (b) $A(\eta)$, (c) $\mu = \nabla A(\eta)$.
+	\item Para $X \sim \mathrm{Poisson}(\lambda)$, encuentre: (a) $\eta$, (b) $A(\eta)$, (c) $\mu$.
+	\item Para $X \sim \mathcal{N}(\mu, 1)$ con $\mu$ desconocido, encuentre $\eta$, $A(\eta)$ y $A^*(\mu)$.
+	\item Calcule $D_{\mathrm{KL}}(\mathrm{Bern}(0.6) \| \mathrm{Bern}(0.4))$ usando la fórmula $D_A(\eta_1 \| \eta_2)$.
+	\item Calcule $D_{\mathrm{KL}}(\mathrm{Poisson}(2) \| \mathrm{Poisson}(4))$ usando la fórmula $D_A$.
+	\item Verifique la igualdad $D_{\mathrm{KL}}(p_{\eta_1} \| p_{\eta_2}) = A(\eta_2) - A(\eta_1) - \langle \eta_2 - \eta_1, \nabla A(\eta_1) \rangle$ para $\mathrm{Bern}(0.7)$ vs $\mathrm{Bern}(0.3)$.
+\end{enumerate}
+
+\subsection*{Dualidad de Legendre}
+\begin{enumerate}[resume]
+	\item Para $\mathrm{Poisson}(\lambda)$, verifique que $\nabla A^*(\mu) = \eta$.
+	\item Para $\mathrm{Bern}(p)$, verifique que $A^*(\mu) = \mu\log(\mu/(1-\mu)) + \log(1-\mu)$.
+	\item Para $\mathcal{N}(\mu, \sigma^2)$ con $\sigma^2$ fijo, muestre que $A^*(\mu) = \mu^2/(2\sigma^2)$.
+	\item Demuestre que la transformada de Legendre es involutiva: $(A^*)^* = A$.
+	\item Muestre que $A(\eta) + A^*(\mu) = \langle \eta, \mu \rangle$ en el punto duale.
+\end{enumerate}
+
+\subsection*{Teorema de Pitman--Koopman--Darmois}
+\begin{enumerate}[resume]
+	\item Demuestre que la familia $U(0, \theta)$ no tiene un estadístico suficiente de dimensión finita.
+	\item Muestre que la familia de Cauchy con parámetro de localización $\theta$ no es exponencial.
+	\item Verifique que la familia exponencial $\mathrm{Exp}(\lambda)$ satisface las hipótesis del PKD.
+	\item Dé un ejemplo de una familia no exponencial donde la suficiencia es ``infinita''.
+	\item (Reto) Demuestre que si una familia es exponencial y tiene un solo parámetro, entonces $D_{\mathrm{KL}}(p_{\theta_1} \| p_{\theta_2})$ es estrictamente convexa en $\theta_1$ para $\theta_2$ fijo.
+\end{enumerate}

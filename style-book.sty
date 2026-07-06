@@ -135,3 +135,24 @@
 	framerule=0.5pt,
 	rulecolor=\color{Accent!30}
 }
+
+% Python-specific style
+\lstdefinestyle{PythonStyle}{%
+	basicstyle=\scriptsize\ttfamily,
+	keywordstyle=\color{AccentDark}\bfseries,
+	commentstyle=\color{Accent!60}\itshape,
+	stringstyle=\color{Accent!80},
+	backgroundcolor=\color{AccentLight!10},
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	numbersep=8pt,
+	tabsize=2,
+	xleftmargin=4pt,
+	xrightmargin=4pt,
+	showstringspaces=false,
+	columns=fullflexible,
+	breaklines=true,
+	framerule=0.5pt,
+	rulecolor=\color{Accent!30},
+	morekeywords={self,True,False,None,as,with,lambda,def,class,return,if,elif,else,for,while,in,not,and,or,is,import,from,try,except,finally,raise,yield,assert,break,continue,pass,del,global,nonlocal}
+}

@@ -64,3 +64,29 @@
 	\item \textbf{Resp.:} Ejemplo: $p = \mathrm{Bern}(0.9)$, $q = \mathrm{Bern}(0.5)$, $r = \mathrm{Bern}(0.1)$.  $D(p \| q) \approx 0.3681$, $D(q \| r) \approx 0.5108$, $D(p \| r) \approx 1.7578 > 0.3681 + 0.5108$ (se viola la desigualdad triangular).
 	\item \textbf{Resp.:} Sea $T$ bijección medible.  $I_f(p \| q) = \sum q(x) f(p(x)/q(x)) = \sum q(T^{-1}(y)) f(p(T^{-1}(y))/q(T^{-1}(y))) = I_f(p_T \| q_T)$.
 \end{enumerate}
+
+\section*{Capítulo 3: Familias Exponenciales y Variedades Dualmente Planas}
+
+\begin{enumerate}
+	\item \textbf{Verdadero.} Por el teorema de Pitman--Koopman--Darmois: suficiencia de dimensión finita implica familia exponencial.
+	\item \textbf{Falso.} La KL es asimétrica: $D_{\mathrm{KL}}(p_{\eta_1} \| p_{\eta_2}) = D_A(\eta_1 \| \eta_2)$ pero $D_A(\eta_1 \| \eta_2) \ne D_A(\eta_2 \| \eta_1)$.
+	\item \textbf{Resp.:} $\mu = \nabla A(\eta)$, es decir, los parámetros de expectación son el gradiente de la función de partición.
+	\item \textbf{Resp.:} La densidad de Cauchy con localización $\theta$ es $p_\theta(x) = 1/(\pi(1+(x-\theta)^2))$.  No hay forma de escribirla como $\exp(\eta T(x) - A(\theta))$ porque el denominador es una función aditiva de $(x-\theta)^2$, no multiplicativa.
+	\item \textbf{Resp.:} La convexidad de $A$ se deriva de la desigualdad de Jensen: $A(\eta) = \log\mathbb{E}[e^{\eta T(X)}] \ge \eta \cdot \mathbb{E}[T(X)]$, y el Hessiano $\nabla^2 A(\eta) = \mathrm{Var}_\eta(T(X)) \succ 0$.
+	\item \textbf{Resp.:} (a) $\eta = \log(p/(1-p))$, (b) $A(\eta) = \log(1+e^\eta)$, (c) $\mu = e^\eta/(1+e^\eta) = p$.
+	\item \textbf{Resp.:} (a) $\eta = \log\lambda$, (b) $A(\eta) = e^\eta$, (c) $\mu = e^\eta = \lambda$.
+	\item \textbf{Resp.:} $\eta = \mu$ (ya que $\sigma^2 = 1$), $A(\eta) = \eta^2/2$, $A^*(\mu) = \mu^2/2$.
+	\item \textbf{Resp.:} $\eta_1 = \log(0.6/0.4) = \log(1.5) \approx 0.4055$, $\eta_2 = \log(0.4/0.6) = \log(2/3) \approx -0.4055$.  $A(\eta_1) = \log(1+1.5) = \log(2.5) \approx 0.9163$, $A(\eta_2) = \log(1+2/3) = \log(5/3) \approx 0.5108$.  $\mu_1 = 0.6$.  $D_A = 0.5108 - 0.9163 - (-0.8110)(0.6) = 0.5108 - 0.9163 + 0.4866 = 0.0811$.  Verificación directa: $0.6\log(0.6/0.4) + 0.4\log(0.4/0.6) = 0.6(0.4055) + 0.4(-0.4055) = 0.0811$.  $\checkmark$
+	\item \textbf{Resp.:} $\eta_1 = \log 2 \approx 0.6931$, $\eta_2 = \log 4 \approx 1.3863$.  $A(\eta_1) = 2$, $A(\eta_2) = 4$.  $\mu_1 = 2$.  $D_A = 4 - 2 - (1.3863 - 0.6931)(2) = 2 - 1.3864 = 0.6137$.  Verificación: $2\log(2/4) - 2 + 4 = -2\log 2 + 2 = 2(1 - \log 2) \approx 2(0.3069) = 0.6137$.  $\checkmark$
+	\item \textbf{Resp.:} $\eta_1 = \log(0.7/0.3) \approx 0.8473$, $\eta_2 = \log(0.3/0.7) \approx -0.8473$.  $A(\eta_1) = \log(1+e^{0.8473}) = \log(3.3333) \approx 1.2040$, $A(\eta_2) = \log(1+e^{-0.8473}) = \log(1.4286) \approx 0.3567$.  $\mu_1 = 0.7$.  $D_A = 0.3567 - 1.2040 - (-1.6946)(0.7) = 0.3567 - 1.2040 + 1.1862 = 0.3389$.  Verificación: $0.7\log(0.7/0.3) + 0.3\log(0.3/0.7) = 0.7(0.8473) + 0.3(-0.8473) = 0.4(0.8473) = 0.3389$.  $\checkmark$
+	\item \textbf{Resp.:} Para Poisson, $\nabla A^*(\mu) = \eta$.  $A^*(\mu) = \mu\log\mu - \mu$ (entropía negativa).  $\nabla A^*(\mu) = \log\mu + 1 - 1 = \log\mu = \eta$.  $\checkmark$
+	\item \textbf{Resp.:} $A^*(\mu) = \sup_\eta\{\eta\mu - \log(1+e^\eta)\}$.  Derivando: $\mu - e^\eta/(1+e^\eta) = 0 \implies \eta = \log(\mu/(1-\mu))$.  Sustituyendo: $A^*(\mu) = \mu\log(\mu/(1-\mu)) + \log(1-\mu)$.
+	\item \textbf{Resp.:} $A(\eta) = \eta^2/2$, $A^*(\mu) = \sup_\eta\{\eta\mu - \eta^2/2\}$.  Derivando: $\mu - \eta = 0 \implies \eta = \mu$.  $A^*(\mu) = \mu^2 - \mu^2/2 = \mu^2/2$.  $\checkmark$
+	\item \textbf{Resp.:} Para una función convexa $A$, $(A^*)^*(\eta) = \sup_\mu\{\eta\mu - A^*(\mu)\} = \sup_\mu\{\eta\mu - \sup_\nu\{\nu\mu - A(\nu)\}\}$.  Por la involutividad de la transformada de Legendre en funciones convexas estrictamente diferenciable, $(A^*)^* = A$.
+	\item \textbf{Resp.:} En el punto duale $\mu = \nabla A(\eta)$, $A(\eta) + A^*(\mu) = A(\eta) + \eta\mu - A(\eta) = \eta\mu = \langle \eta, \mu \rangle$.
+	\item \textbf{Resp.:} La verosimilitud de $n$ muestras de $U(0, \theta)$ es $L = \theta^{-n}$ si $x_{(n)} \le \theta$ y 0 en otro caso.  $x_{(n)}$ es suficiente, pero la familia no es exponencial porque $L$ no tiene la forma $\exp(\eta T - A(\theta))$.
+	\item \textbf{Resp.:} La densidad de Cauchy $p_\theta(x) = 1/(\pi(1+(x-\theta)^2))$ no puede escribirse como $\exp(\eta T(x) - A(\theta))$ porque el logaritmo es $-\log\pi - \log(1+(x-\theta)^2)$, que no es lineal en $x$.
+	\item \textbf{Resp.:} $\mathrm{Exp}(\lambda)$ tiene densidad $\lambda e^{-\lambda x} = \exp(\eta x - e^\eta)$ con $\eta = \log\lambda$, $T(x) = x$, $A(\eta) = e^\eta$.  El estadístico suficiente $\sum x_i$ tiene dimensión 1 (finita), y la familia es regular.  $\checkmark$
+	\item \textbf{Resp.:} Ejemplo: la familia t-Student con grados de libertad $\nu$ desconocido.  No tiene estadístico suficiente de dimensión finita.
+	\item \textbf{Resp.:} Para una familia exponencial uniparamétrica, $D_{\mathrm{KL}}(p_{\theta_1} \| p_{\theta_2}) = A(\eta_2) - A(\eta_1) - (\eta_2 - \eta_1)\nabla A(\eta_1)$.  El Hessiano respecto a $\eta_1$ es $-\nabla^2 A(\eta_1) - \nabla^2 A(\eta_1) = -2\nabla^2 A(\eta_1) \prec 0$, lo que implica convexidad estricta.
+\end{enumerate}
