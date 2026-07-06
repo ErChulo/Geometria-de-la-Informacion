@@ -1,0 +1,486 @@
+% !TeX root = main.tex
+
+\chapter{Divergencias y la Geometría de Bregman}
+
+\begin{quotation}
+	\itshape
+	``No todo lo que se parece a una distancia lo es; la divergencia mide el costo de confundir la verdad con un modelo.''
+\end{quotation}
+
+En el Capítulo~1 introdujimos la métrica de Fisher--Rao como la única brújula invariante en el espacio de distribuciones.  Pero la métrica mide distancias infinitesimales: ¿cómo cuantificar el \emph{desajuste global} entre dos distribuciones $p$ y $q$ que están finitamente separadas?  La respuesta es: con \textbf{divergencias}.
+
+Una divergencia $D(p \| q)$ no es (necesariamente) simétrica ni satisface la desigualdad triangular, pero codifica algo más rico que una simple distancia: el \emph{costo direccional} de modelar $p$ usando $q$.  En este capítulo desarrollamos tres familias de divergencias ---KL, $f$-divergencias y divergencias de Bregman--- y mostramos cómo su geometría subyacente conecta con la métrica de Fisher, las proyecciones y el teorema pitagórico.
+
+\section{La Divergencia de Kullback--Leibler}
+
+\subsection{Definición y propiedades básicas}
+
+\begin{definition}[Divergencia KL]
+	Sean $p$ y $q$ distribuciones de probabilidad con el mismo soporte.  La \textbf{divergencia de Kullback--Leibler} (o entropía relativa) de $p$ con respecto a $q$ es:
+	\[
+	D_{\mathrm{KL}}(p \| q) \;=\; \sum_{x} p(x) \log \frac{p(x)}{q(x)}
+	\]
+	para el caso discreto, o
+	\[
+	D_{\mathrm{KL}}(p \| q) \;=\; \int p(x) \log \frac{p(x)}{q(x)}\, dx
+	\]
+	para el caso continuo.
+\end{definition}
+
+\begin{example}[KL entre dos Bernoulli]
+	Sean $p = \mathrm{Bern}(a)$ y $q = \mathrm{Bern}(b)$, con $a,b \in (0,1)$.  Entonces:
+	\[
+	D_{\mathrm{KL}}(p \| q) \;=\; a \log \frac{a}{b} + (1-a) \log \frac{1-a}{1-b}.
+	\]
+	Gráficamente, esta función es convexa en $a$ y tiene mínimo absoluto en $a = b$ (donde vale cero).  Para $b = 0.3$ fijo, la curva se ve así:
+
+	\begin{center}
+		\begin{tikzpicture}
+			\begin{axis}[
+				width=10cm, height=6cm,
+				xlabel={$a$},
+				ylabel={$D_{\mathrm{KL}}(\mathrm{Bern}(a) \| \mathrm{Bern}(0.3))$},
+				domain=0.05:0.95,
+				samples=100,
+				axis lines=left,
+				ymax=2.5,
+				grid=both,
+				grid style={gray!30},
+				tick style={black},
+			]
+				\addplot[Accent, thick] {x*ln(x/0.3) + (1-x)*ln((1-x)/0.7)};
+				\addplot[AccentDark, dashed, thick] coordinates {(0.3,0) (0.3,2.5)};
+				\node[AccentDark] at (axis cs:0.35,2.2) {$a=b=0.3$};
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+\end{example}
+
+\begin{proposition}[Propiedades fundamentales de la KL]
+	\begin{enumerate}
+		\item \textbf{No negatividad (desigualdad de Gibbs):} $D_{\mathrm{KL}}(p \| q) \ge 0$, con igualdad si y solo si $p = q$ c.s.
+		\item \textbf{Asimetría:} En general, $D_{\mathrm{KL}}(p \| q) \ne D_{\mathrm{KL}}(q \| p)$.
+		\item \textbf{No es métrica:} No satisface la desigualdad triangular.
+		\item \textbf{Pérdida por procesamiento de datos:} Si $X \to Y \to Z$ es una cadena de Markov, entonces $D_{\mathrm{KL}}(p_Z \| q_Z) \le D_{\mathrm{KL}}(p_X \| q_X)$.
+	\end{enumerate}
+\end{proposition}
+
+\begin{proof}[Demostración de la no negatividad]
+	Usamos la desigualdad $\log t \le t - 1$ para $t > 0$.  Entonces:
+	\[
+	D_{\mathrm{KL}}(p \| q) = -\sum_x p(x) \log \frac{q(x)}{p(x)} \ge -\sum_x p(x)\left(\frac{q(x)}{p(x)} - 1\right) = -\sum_x q(x) + \sum_x p(x) = 0.
+	\]
+	La igualdad ocurre cuando $q(x)/p(x) = 1$ para todo $x$ con $p(x) > 0$.
+\end{proof}
+
+\subsection{Interpretación: costo de la confusión}
+
+La KL mide cuánto se ``sorprendería'' un agente que espera $q$ si el mundo realmente sigue $p$.  Si usamos código optimizado para $q$ para comprimir datos generados por $p$, el exceso promedio de bits por símbolo es exactamente $D_{\mathrm{KL}}(p \| q) / \ln 2$.  Esta interpretación de compresión conecta la geometría de la información con la teoría de la información de Shannon.
+
+\subsection{KL en familias paramétricas}
+
+Cuando trabajamos con una familia $\{p_\theta\}$, definimos la divergencia \emph{relativa} al parámetro:
+\[
+D_{\mathrm{KL}}(p_{\theta_1} \| p_{\theta_2}) \;=\; \mathbb{E}_{\theta_1}\!\left[\log \frac{p_{\theta_1}(X)}{p_{\theta_2}(X)}\right].
+\]
+
+\begin{example}[KL en la familia Normal]
+	Para $p_{\theta} = \mathcal{N}(\mu, \sigma^2)$ con $\sigma^2$ fijo:
+	\[
+	D_{\mathrm{KL}}(\mathcal{N}(\mu_1, \sigma^2) \| \mathcal{N}(\mu_2, \sigma^2)) \;=\; \frac{(\mu_1 - \mu_2)^2}{2\sigma^2}.
+	\]
+	Esta es una \emph{cuadrática perfecta} en la diferencia de medias.  La geometría del espacio de medias es euclidiana, como ya anticipamos en el Capítulo~1.
+\end{example}
+
+\begin{example}[KL en la familia Poisson]
+	Para $X \sim \mathrm{Poisson}(\lambda)$ y modelo $\mathrm{Poisson}(\mu)$:
+	\[
+	D_{\mathrm{KL}}(\mathrm{Poisson}(\lambda) \| \mathrm{Poisson}(\mu)) \;=\; \lambda \log \frac{\lambda}{\mu} - \lambda + \mu.
+	\]
+	Nota que $D_{\mathrm{KL}}(\lambda \| \mu) \ne D_{\mathrm{KL}}(\mu \| \lambda)$: la asimetría es evidente.
+\end{example}
+
+\section{Divergencias $f$}
+
+\subsection{Definición unificada}
+
+Las $f$-divergencias generalizan la KL y muchas otras divergencias en una sola fórmula.
+
+\begin{definition}[$f$-divergencia de Csiszár]
+	Sea $f: (0,\infty) \to \mathbb{R}$ una función convexa con $f(1) = 0$.  La \textbf{$f$-divergencia} entre $p$ y $q$ es:
+	\[
+	I_f(p \| q) \;=\; \sum_x q(x) \, f\!\left(\frac{p(x)}{q(x)}\right)
+	\]
+	en el caso discreto (con la convención $0 \cdot f(0/q) = 0$).  En el caso continuo, la integral es análoga.
+\end{definition}
+
+\begin{theorem}[Propiedades de las $f$-divergencias]
+	\begin{enumerate}
+		\item $I_f(p \| q) \ge 0$, con igualdad si y solo si $p = q$.
+		\item $I_f$ es convexa conjunta en $(p, q)$.
+		\item Si $f(t) = t \log t$, recuperamos la KL: $I_f = D_{\mathrm{KL}}$.
+	\end{enumerate}
+\end{theorem}
+
+\subsection{Tabla de $f$-divergencias familiares}
+
+\begin{center}
+	\renewcommand{\arraystretch}{1.4}
+	\setlength{\tabcolsep}{8pt}
+	\begin{tabular}{|l|l|l|}
+		\hline
+		\rowcolor{Accent!20}
+		\textbf{Nombre} & \textbf{$f(t)$} & \textbf{Resultado} \\
+		\hline
+		Kullback--Leibler & $t \log t$ & $D_{\mathrm{KL}}(p \| q)$ \\
+		\hline
+		KL reversa & $-\log t$ & $D_{\mathrm{KL}}(q \| p)$ \\
+		\hline
+		$\chi^2$ (Pearson) & $(t-1)^2$ & $\sum \frac{(p-q)^2}{q}$ \\
+		\hline
+		Hellinger & $(1-\sqrt{t})^2$ & $1 - \sum \sqrt{pq}$ \\
+		\hline
+		TOTAL & $|t-1|$ & $\sum |p-q|$ \\
+		\hline
+		Jensen--Shannon & $-\frac{t}{2}\log t + \frac{1+t}{2}\log\frac{1+t}{2}$ & $\frac{1}{2}D_{\mathrm{KL}}(p \| m) + \frac{1}{2}D_{\mathrm{KL}}(q \| m)$ \\
+		\hline
+	\end{tabular}
+\end{center}
+
+\begin{example}[Hellinger entre normales]
+	Para $p = \mathcal{N}(\mu_1, \sigma^2)$ y $q = \mathcal{N}(\mu_2, \sigma^2)$ con la misma varianza:
+	\[
+	H^2(p, q) = 1 - \exp\!\left(-\frac{(\mu_1 - \mu_2)^2}{8\sigma^2}\right).
+	\]
+	La distancia de Hellinger es simétrica y satisface la desigualdad triangular: es una métrica verdadera.
+\end{example}
+
+\subsection{Relación con la métrica de Fisher}
+
+\begin{theorem}[Segundo orden de $f$-divergencias]
+	Toda $f$-divergencia induce localmente la métrica de Fisher.  Más precisamente, para $q = p_\theta$ y $p = p_{\theta + \delta\theta}$:
+	\[
+	I_f(p_{\theta+\delta\theta} \| p_\theta) \;=\; \frac{f''(1)}{2} \sum_{i,j} g_{ij}(\theta)\, \delta\theta^i \delta\theta^j \;+\; O(\|\delta\theta\|^3),
+	\]
+	donde $g_{ij}$ es la métrica de Fisher y $f''(1)$ es la constante de normalización.
+\end{theorem}
+
+Esto confirma que \emph{todas} las $f$-divergencias son ``localmente Fisher'': la geometría infinitesimal no depende de la divergencia elegida.  Las divergencias solo difieren en la estructura ``global'' (geodésicas, proyecciones, escalas de curvatura).
+
+\section{Las Divergencias de Bregman}
+
+\subsection{Definición geométrica}
+
+Las divergencias de Bregman nacen de la geometría convexa: miden cuánto ``falla'' la aproximación lineal de una función convexa.
+
+\begin{definition}[Divergencia de Bregman]
+	Sean $F: \mathbb{R}^n \to \mathbb{R}$ estrictamente convexa y diferenciable, y $p, q \in \mathbb{R}^n$.  La \textbf{divergencia de Bregman} inducida por $F$ es:
+	\[
+	D_F(p \| q) \;=\; F(p) - F(q) - \langle \nabla F(q),\; p - q \rangle.
+	\]
+\end{definition}
+
+\begin{center}
+	\begin{tikzpicture}[scale=0.9]
+		\draw[->, thick] (0,0) -- (5.5,0) node[below] {$p, q$};
+		\draw[->, thick] (0,0) -- (0,3.8) node[left] {$F$};
+
+		% Curve
+		\draw[Accent, thick, domain=0.5:5, samples=100] plot (\x,{0.35*\x*\x + 0.3});
+		\node[Accent] at (4.8,3.5) {$F$};
+
+		% Points
+		\coordinate (q) at (2, {0.35*4 + 0.3});
+		\coordinate (p) at (3.5, {0.35*12.25 + 0.3});
+		\fill[AccentDark] (q) circle (2.5pt) node[below left] {$q$};
+		\fill[AccentDark] (p) circle (2.5pt) node[below right] {$p$};
+
+		% Tangent at q
+		\draw[AccentLight, thick] (0.5, {0.35*4+0.3 + 0.7*(0.5-2)}) -- (5, {0.35*4+0.3 + 0.7*(5-2)});
+
+		% Vertical gap
+		\draw[Accent, dashed, thick] (3.5, {0.35*4+0.3 + 0.7*(3.5-2)}) -- (p);
+		\node[Accent] at (3.9, 1.8) {$D_F(p \| q)$};
+	\end{tikzpicture}
+\end{center}
+
+La divergencia mide la \emph{brecha vertical} entre $F(p)$ y la aproximación lineal de $F$ en $q$ evaluada en $p$.
+
+\begin{proposition}[Propiedades de Bregman]
+	\begin{enumerate}
+		\item $D_F(p \| q) \ge 0$, con igualdad si y solo si $p = q$.
+		\item \textbf{No simétrica} en general: $D_F(p \| q) \ne D_F(q \| p)$.
+		\item \textbf{Convexidad} en el primer argumento: $D_F(\cdot \| q)$ es convexa.
+		\item \textbf{Linealidad de la gradiente:} $\nabla_p D_F(p \| q) = \nabla F(p) - \nabla F(q)$.
+	\end{enumerate}
+\end{proposition}
+
+\begin{example}[Cuadrática]
+	Si $F(p) = \frac{1}{2}\|p\|^2$, entonces:
+	\[
+	D_F(p \| q) = \frac{1}{2}\|p - q\|^2.
+	\]
+	La divergencia de Bregman cuadrática es simplemente la distancia euclidiana al cuadrado: simétrica y ``bonita''.
+\end{example}
+
+\begin{example}[Entropía negativa $\to$ KL]
+	Si $F(p) = \sum_i p_i \log p_i$ (entropía negativa), entonces:
+	\[
+	D_F(p \| q) = \sum_i p_i \log \frac{p_i}{q_i} = D_{\mathrm{KL}}(p \| q).
+	\]
+	La divergencia KL es un caso especial de Bregman.  ¡Esto conecta toda la familia convexa con la geometría estadística!
+\end{example}
+
+\subsection{Transformada de Legendre y dualidad}
+
+La dualidad es el corazón de la geometría de Bregman.  Dada $F$ convexa, su \textbf{conjugada de Legendre} es:
+\[
+F^*(\eta) \;=\; \sup_p \left\{ \langle \eta, p \rangle - F(p) \right\}.
+\]
+
+\begin{theorem}[Dualidad de Fenchel--Young]
+	Para toda $F$ estrictamente convexa:
+	\[
+	\langle \eta, p \rangle \;\le\; F(p) + F^*(\eta),
+	\]
+	con igualdad si y solo si $\eta = \nabla F(p)$ (o equivalentemente, $p = \nabla F^*(\eta)$).
+\end{theorem}
+
+\begin{theorem}[Divergencia dual]
+	La divergencia de Bregman satisface la \textbf{identidad dual}:
+	\[
+	D_F(p \| q) \;=\; D_{F^*}(\eta_q \| \eta_p),
+	\]
+	donde $\eta_p = \nabla F(p)$ y $\eta_q = \nabla F(q)$ son las coordenadas ``duales''.  Es decir, ``virar'' la divergencia invierte el orden de los argumentos.
+\end{theorem}
+
+\begin{center}
+	\begin{tikzpicture}[
+		box/.style={rectangle, draw=Accent, fill=AccentLight!30, rounded corners, minimum width=2.4cm, minimum height=1cm, align=center, font=\small},
+		arrow/.style={->, thick, Accent}
+	]
+		\node[box] (F) at (0,0) {$F(p)$ \\ (espacio primal)};
+		\node[box] (Fstar) at (5,0) {$F^*(\eta)$ \\ (espacio dual)};
+		\node[box] (DF) at (0,-2) {$D_F(p \| q)$};
+		\node[box] (DFstar) at (5,-2) {$D_{F^*}(\eta_q \| \eta_p)$};
+
+		\draw[arrow] (F) -- node[above, font=\footnotesize] {$\nabla$} (Fstar);
+		\draw[arrow] (Fstar) -- node[above, font=\footnotesize] {$\nabla$} (F);
+		\draw[arrow] (DF) -- node[left, font=\footnotesize] {igual} (DFstar);
+	\end{tikzpicture}
+\end{center}
+
+\begin{example}[Bernoulli: primal y dual]
+	Para Bernoulli con parámetro $p$:
+	\[
+	F(p) = p \log p + (1-p) \log(1-p), \qquad F^*(\eta) = \log(1 + e^\eta),
+	\]
+	donde $\eta = \log(p/(1-p))$ es el logit (parámetro natural).  La divergencia KL en coordenadas primales $D_F(p \| q)$ equivale a $D_{F^*}(\eta_q \| \eta_p)$ en coordenadas duales.
+\end{example}
+
+\section{Teorema Pitagórico y Proyecciones}
+
+Una de las piezas centrales de la geometría de la información es que las proyecciones por KL satisfacen una descomposición ``pitagórica''.
+
+\begin{theorem}[Teorema pitagórico para KL]
+	Sea $\mathcal{C}$ un conjunto convexo cerrado de distribuciones, y $p$ una distribución dada.  Si $q^\star = \arg\min_{q \in \mathcal{C}} D_{\mathrm{KL}}(p \| q)$ es la \textbf{$m$-proyección} de $p$ sobre $\mathcal{C}$, entonces para toda $q \in \mathcal{C}$:
+	\[
+	D_{\mathrm{KL}}(p \| q) \;=\; D_{\mathrm{KL}}(p \| q^\star) + D_{\mathrm{KL}}(q^\star \| q).
+	\]
+\end{theorem}
+
+\begin{center}
+	\begin{tikzpicture}[scale=1.1]
+		% Convex set
+		\fill[AccentLight!30] (1,1) -- (4,0.5) -- (5,2.5) -- (3.5,3.5) -- (0.5,3) -- cycle;
+		\draw[Accent, thick] (1,1) -- (4,0.5) -- (5,2.5) -- (3.5,3.5) -- (0.5,3) -- cycle;
+		\node[Accent] at (2.8,2) {$\mathcal{C}$};
+
+		% Points
+		\coordinate (p) at (0.5,4.5);
+		\coordinate (qstar) at (2,3);
+		\coordinate (q) at (4,1.5);
+
+		\fill[AccentDark] (p) circle (2.5pt) node[above] {$p$};
+		\fill[AccentDark] (qstar) circle (2.5pt) node[below left] {$q^\star$};
+		\fill[AccentDark] (q) circle (2.5pt) node[below right] {$q$};
+
+		% Lines
+		\draw[Accent, thick] (p) -- (qstar);
+		\draw[Accent, thick] (qstar) -- (q);
+		\draw[Accent, thick, dashed] (p) -- (q);
+
+		% Labels
+		\node[Accent, font=\footnotesize] at (1, 3.8) {$D_{\mathrm{KL}}(p \| q^\star)$};
+		\node[Accent, font=\footnotesize] at (3.2, 2.2) {$D_{\mathrm{KL}}(q^\star \| q)$};
+		\node[Accent, font=\footnotesize] at (0.5, 2.7) {$D_{\mathrm{KL}}(p \| q)$};
+	\end{tikzpicture}
+\end{center}
+
+\begin{proof}[Idea de la demostración]
+	La condición de optimalidad es que el ``ángulo'' entre $p - q^\star$ y $q - q^\star$ sea recto en el sentido de KL.  Formalmente, la divergencia cruzada se anula:
+	\[
+	\left\langle \nabla \log \frac{p}{q^\star},\; \log \frac{q}{q^\star} \right\rangle_{q^\star} = 0
+	\]
+	para todo $q \in \mathcal{C}$.  La identidad entonces se deduce por expansión de Taylor de la KL en $q^\star$.
+\end{proof}
+
+\begin{definition}[$e$-proyección]
+	La \textbf{$e$-proyección} de $p$ sobre $\mathcal{C}$ es:
+	\[
+	q^\star_E = \arg\min_{q \in \mathcal{C}} D_{\mathrm{KL}}(q \| p).
+	\]
+	Note el orden invertido: aquí ``proyectamos'' desde la izquierda.  La $e$-proyección preserva la \emph{esperanza} del estadístico suficiente.
+\end{definition}
+
+\begin{theorem}[Dualidad de proyecciones]
+	En una familia exponencial, si $q^\star_M$ es la $m$-proyección de $p$ sobre una subfamilia y $q^\star_E$ es la $e$-proyección sobre la misma subfamilia, entonces:
+	\[
+	\eta(q^\star_M) = \eta(q^\star_E) \qquad \Longleftrightarrow \qquad q^\star_M = q^\star_E.
+	\]
+	Las dos proyecciones coinciden cuando la subfamilia es ``paralela'' a la dirección de proyección.
+\end{theorem}
+
+\section{Expansión de KL y Conexión con Fisher}
+
+\begin{theorem}[Segundo orden de la KL]
+	Sean $p_\theta$ y $p_{\theta + \delta\theta}$.  Entonces:
+	\[
+	D_{\mathrm{KL}}(p_{\theta+\delta\theta} \| p_\theta) \;=\; \frac{1}{2} \sum_{i,j} g_{ij}(\theta)\, \delta\theta^i \delta\theta^j \;+\; O(\|\delta\theta\|^3),
+	\]
+	donde $g_{ij}(\theta) = \mathbb{E}_\theta[\partial_i \ell \cdot \partial_j \ell]$ es la métrica de Fisher.
+\end{theorem}
+
+\begin{proof}
+	Expandimos la log-razón de verosimilitud $\ell(\theta + \delta\theta) - \ell(\theta)$ en Taylor:
+	\[
+	\ell(\theta + \delta\theta) = \ell(\theta) + \sum_i (\partial_i \ell)\,\delta\theta^i + \frac{1}{2}\sum_{i,j}(\partial_i \partial_j \ell)\,\delta\theta^i \delta\theta^j + O(\|\delta\theta\|^3).
+	\]
+	Tomando esperanza bajo $p_{\theta+\delta\theta}$:
+	\[
+	D_{\mathrm{KL}}(p_{\theta+\delta\theta} \| p_\theta) = \mathbb{E}_{\theta+\delta\theta}[\ell(\theta+\delta\theta) - \ell(\theta)] = \frac{1}{2}\sum_{i,j}(-\mathbb{E}_{\theta}[\partial_i\partial_j\ell])\,\delta\theta^i\delta\theta^j + O(\|\delta\theta\|^3).
+	\]
+	Por regularidad, $-\mathbb{E}[\partial_i\partial_j\ell] = g_{ij}$.
+\end{proof}
+
+Este teorema es fundamental: muestra que la métrica de Fisher es la \emph{curvatura} de la divergencia KL.  Toda divergencia ``bien portada'' tiene la misma geometría infinitesimal; las diferencias son globales.
+
+\section{Código: Explorando Divergencias en Python}
+
+\subsection{KL entre normales ajustadas}
+
+\begin{verbatim}
+import numpy as np
+from scipy import stats
+
+def kl_normal(mu1, sigma1, mu2, sigma2):
+    """D_KL(N(mu1,s1^2) || N(mu2,s2^2))"""
+    return (np.log(sigma2/sigma1)
+            + (sigma1**2 + (mu1 - mu2)**2)/(2*sigma2**2)
+            - 0.5)
+
+# Ejemplo: ajustar dos normales a datos
+np.random.seed(42)
+data1 = np.random.normal(0, 1, 500)
+data2 = np.random.normal(0.5, 1.5, 500)
+
+mu1, s1 = data1.mean(), data1.std()
+mu2, s2 = data2.mean(), data2.std()
+
+print(f"KL(N1 || N2) = {kl_normal(mu1, s1, mu2, s2):.4f}")
+print(f"KL(N2 || N1) = {kl_normal(mu2, s2, mu1, s1):.4f}")
+print(f"Asimetria: {kl_normal(mu1,s1,mu2,s2) != kl_normal(mu2,s2,mu1,s1)}")
+\end{verbatim}
+
+\subsection{Bregman cuadrática y divergencia KL}
+
+\begin{verbatim}
+def bregman_quad(p, q):
+    """D_F con F(p) = 0.5*||p||^2"""
+    return 0.5 * np.sum((p - q)**2)
+
+def bregman_neg_entropy(p, q):
+    """D_F con F(p) = sum p_i log p_i  =>  KL"""
+    p = np.clip(p, 1e-15, None)
+    q = np.clip(q, 1e-15, None)
+    return np.sum(p * np.log(p / q))
+
+# Comparar
+p = np.array([0.3, 0.7])
+q = np.array([0.5, 0.5])
+print(f"Bregman cuadratica: {bregman_quad(p, q):.4f}")
+print(f"Bregman KL:         {bregman_neg_entropy(p, q):.4f}")
+\end{verbatim}
+
+\subsection{Visualización de la brecha de Bregman}
+
+\begin{verbatim}
+import matplotlib.pyplot as plt
+
+F = lambda x: x * np.log(x + 1e-15)  # entropia negativa
+dF = lambda x: np.log(x + 1e-15) + 1
+
+x = np.linspace(0.05, 2, 200)
+q_val, p_val = 0.7, 1.5
+
+plt.figure(figsize=(8, 5))
+plt.plot(x, F(x), 'teal', linewidth=2, label='$F(x)$')
+tangent = F(q_val) + dF(q_val)*(x - q_val)
+plt.plot(x, tangent, '--', color='gray', label='Tangente en $q$')
+plt.fill_between([p_val, p_val],
+                 [F(q_val) + dF(q_val)*(p_val - q_val)],
+                 [F(p_val)], color='teal', alpha=0.2)
+plt.plot(p_val, F(p_val), 'ro', markersize=8)
+plt.plot(q_val, F(q_val), 'ko', markersize=8)
+plt.annotate('$D_F(p \\| q)$', xy=(p_val, (F(p_val)+F(q_val)+dF(q_val)*(p_val-q_val))/2),
+             fontsize=14, color='teal')
+plt.legend(); plt.xlabel('$x$'); plt.ylabel('$F(x)$')
+plt.title('Brecha de Bregman'); plt.grid(True, alpha=0.3)
+plt.tight_layout(); plt.show()
+\end{verbatim}
+
+\section{Ejercicios}
+
+\subsection*{Conceptos Básicos}
+\begin{enumerate}
+	\item (V/F) La divergencia KL es siempre no negativa.
+	\item (V/F) La divergencia KL es simétrica: $D_{\mathrm{KL}}(p \| q) = D_{\mathrm{KL}}(q \| p)$.
+	\item (V/F) Toda $f$-divergencia satisface la desigualdad triangular.
+	\item Defina la divergencia KL para distribuciones discretas.  ¿Qué significa que valga cero?
+	\item Si $p = \mathrm{Bern}(0.8)$ y $q = \mathrm{Bern}(0.3)$, calcule $D_{\mathrm{KL}}(p \| q)$ y $D_{\mathrm{KL}}(q \| p)$.
+\end{enumerate}
+
+\subsection*{Cálculo de Divergencias}
+\begin{enumerate}[resume]
+	\item Calcule $D_{\mathrm{KL}}(\mathrm{Poisson}(3) \| \mathrm{Poisson}(5))$.
+	\item Calcule $D_{\mathrm{KL}}(\mathrm{Poisson}(5) \| \mathrm{Poisson}(3))$.  ¿Es igual al anterior?
+	\item Para la familia exponencial $\mathrm{Exp}(\lambda)$, muestre que $D_{\mathrm{KL}}(\mathrm{Exp}(\lambda_1) \| \mathrm{Exp}(\lambda_2)) = \log(\lambda_2/\lambda_1) + \lambda_1/\lambda_2 - 1$.
+	\item Calcule la divergencia $\chi^2$ entre $\mathrm{Bern}(0.6)$ y $\mathrm{Bern}(0.4)$.
+	\item Calcule la distancia de Hellinger entre $\mathrm{Bern}(0.7)$ y $\mathrm{Bern}(0.3)$.
+	\item Verifique que $H^2(p,q) = 1 - \sum_x \sqrt{p(x)q(x)}$ es simétrica.
+\end{enumerate}
+
+\subsection*{Divergencias de Bregman}
+\begin{enumerate}[resume]
+	\item Para $F(p) = \frac{1}{2}p^2$ en $\mathbb{R}$, muestre que $D_F(p \| q) = \frac{1}{2}(p-q)^2$.
+	\item Para $F(p) = p^2$, muestre que $D_F(p \| q) = (p-q)^2$.
+	\item Para $F(p) = e^p$, calcule $D_F(p \| q)$.
+	\item Encuentre la conjugada de Legendre $F^*$ de $F(p) = \frac{1}{2}p^TQp$ con $Q \succ 0$.
+	\item Verifique la identidad dual $D_F(p \| q) = D_{F^*}(\eta_q \| \eta_p)$ para el caso cuadrático.
+\end{enumerate}
+
+\subsection*{Proyecciones y Teorema Pitagórico}
+\begin{enumerate}[resume]
+	\item Sea $\mathcal{C} = \{q : q_1 + q_2 = 1,\; q_i \ge 0\}$ (simplex de Bernoulli).  Si $p = (0.6, 0.4)$ y $\mathcal{C}$ se reduce al punto $q^\star = (0.5, 0.5)$, verifique el teorema pitagórico.
+	\item Para una cadena de Markov $X \to Y \to Z$, muestre que $D_{\mathrm{KL}}(p_Z \| q_Z) \le D_{\mathrm{KL}}(p_X \| q_X)$ (pérdida por procesamiento de datos).
+	\item Demuestre que la $m$-proyección de $p$ sobre el conjunto de distribuciones con esperanza fija $\mu$ en una familia exponencial es la distribución exponencial con ese momento.
+\end{enumerate}
+
+\subsection*{Propiedades Teóricas}
+\begin{enumerate}[resume]
+	\item Demuestre que $-\log t \le 1 - t$ para $t > 0$ (usado en la prueba de Gibbs).
+	\item Muestre que si $f$ es convexa con $f(1)=0$, entonces $I_f(p \| q) \ge 0$.
+	\item Para la KL, muestre que $\nabla_\theta D_{\mathrm{KL}}(p_\theta \| q) \big|_{\theta=\theta_0} = 0$ cuando $q = p_{\theta_0}$.
+	\item Demuestre que la divergencia KL \emph{no} satisface la desigualdad triangular: dé un contraejemplo con Bernoulli.
+	\item (Reto) Muestre que toda $f$-divergencia es invariante bajo transformaciones biyectivas medibles del espacio muestral.
+\end{enumerate}

@@ -35,3 +35,32 @@
 	\item \textbf{Resp.:} Covarianza del score.
 	\item \textbf{Resp.:} Porque define la única medida de volumen invariante (Prior de Jeffreys).
 \end{enumerate}
+
+\section*{Capítulo 2: Divergencias y la Geometría de Bregman}
+
+\begin{enumerate}
+	\item \textbf{Verdadero.} Por la desigualdad de Gibbs.
+	\item \textbf{Falso.} La KL es asimétrica en general.
+	\item \textbf{Falso.} Las $f$-divergencias no satisfacen la desigualdad triangular (solo Hellinger y TOTAL sí).
+	\item \textbf{Resp.:} $D_{\mathrm{KL}}(p \| q) = \sum_x p(x)\log\frac{p(x)}{q(x)}$.  Vale cero si y solo si $p = q$ c.s.
+	\item \textbf{Resp.:} $D_{\mathrm{KL}}(p \| q) = 0.8\log(0.8/0.3) + 0.2\log(0.2/0.7) \approx 0.5390$; $D_{\mathrm{KL}}(q \| p) = 0.3\log(0.3/0.8) + 0.7\log(0.7/0.2) \approx 0.6395$.
+	\item \textbf{Resp.:} $D_{\mathrm{KL}}(\mathrm{Poisson}(3) \| \mathrm{Poisson}(5)) = 3\log(3/5) - 3 + 5 = -3\log(5/3) + 2 \approx 0.2811$.
+	\item \textbf{Resp.:} $D_{\mathrm{KL}}(\mathrm{Poisson}(5) \| \mathrm{Poisson}(3)) = 5\log(5/3) - 5 + 3 = 5\log(5/3) - 2 \approx 0.5108$.  No es igual: la KL es asimétrica.
+	\item \textbf{Resp.:} $D_{\mathrm{KL}} = \log(\lambda_2/\lambda_1) + \lambda_1/\lambda_2 - 1$.  Se verifica directamente de la definición.
+	\item \textbf{Resp.:} $\chi^2 = \frac{(0.6-0.4)^2}{0.4} + \frac{(0.4-0.6)^2}{0.6} = 0.1 + 0.0667 = 0.1667$.
+	\item \textbf{Resp.:} $H^2 = 1 - \sqrt{0.7 \cdot 0.3} - \sqrt{0.3 \cdot 0.7} = 1 - 2\sqrt{0.21} \approx 0.0835$.
+	\item \textbf{Resp.:} Sí, $H^2(p,q) = H^2(q,p)$ porque $\sqrt{pq} = \sqrt{qp}$.
+	\item \textbf{Resp.:} $D_F = F(p) - F(q) - F'(q)(p-q) = \frac{1}{2}p^2 - \frac{1}{2}q^2 - q(p-q) = \frac{1}{2}(p-q)^2$.
+	\item \textbf{Resp.:} $D_F = p^2 - q^2 - 2q(p-q) = (p-q)^2$.
+	\item \textbf{Resp.:} $D_F = e^p - e^q - e^q(p-q)$.
+	\item \textbf{Resp.:} $F^*(\eta) = \frac{1}{2}\eta^T Q^{-1}\eta$.
+	\item \textbf{Resp.:} $\eta_p = Qp$, $\eta_q = Qq$.  $D_{F^*}(\eta_q \| \eta_p) = \frac{1}{2}\|\eta_q - \eta_p\|^2_{Q^{-1}} = \frac{1}{2}(p-q)^T Q (p-q) = D_F(p \| q)$.
+	\item \textbf{Resp.:} $D_{\mathrm{KL}}(p \| q^\star) = D_{\mathrm{KL}}(p \| q^\star) + 0$ se cumple trivialmente porque $q^\star$ es el único punto.
+	\item \textbf{Resp.:} Por la desigualdad de procesamiento de datos para canales estocásticos.
+	\item \textbf{Resp.:} La $m$-proyección minimiza $D_{\mathrm{KL}}(p \| q)$ sujeto a $E_q[T(X)] = \mu$, lo que da la distribución exponencial con ese momento.
+	\item \textbf{Resp.:} $-\log t \le 1 - t \iff \log t \ge 1 - t$, que es la convexidad de $-\log$.
+	\item \textbf{Resp.:} Por la convexidad de $f$ y la desigualdad de Jensen.
+	\item \textbf{Resp.:} $\nabla_\theta D_{\mathrm{KL}}(p_\theta \| q)\big|_{\theta_0} = \mathbb{E}_{\theta_0}[\nabla_\theta \ell(\theta_0)] = 0$ (el score tiene esperanza cero).
+	\item \textbf{Resp.:} Ejemplo: $p = \mathrm{Bern}(0.9)$, $q = \mathrm{Bern}(0.5)$, $r = \mathrm{Bern}(0.1)$.  $D(p \| q) \approx 0.531$, $D(q \| r) \approx 0.693$, $D(p \| r) \approx 1.204 > 0.531 + 0.693$ (se viola la desigualdad triangular).
+	\item \textbf{Resp.:} Sea $T$ bijección medible.  $I_f(p \| q) = \sum q(x) f(p(x)/q(x)) = \sum q(T^{-1}(y)) f(p(T^{-1}(y))/q(T^{-1}(y))) = I_f(p_T \| q_T)$.
+\end{enumerate}
