@@ -1,0 +1,289 @@
+% !TeX root = main.tex
+
+\chapter{Aplicaciones: De la Teoría a la Práctica}
+
+\begin{quotation}
+	\itshape
+	``La geometría de la información no es solo matemática elegante; es la herramienta que convierte la incertidumbre en decisión.''
+\end{quotation}
+
+En este capítulo cerramos el arco del libro mostrando cómo la maquinaria geométrica desarrollada en los capítulos anteriores se aplica a problemas reales.  Cuatro áreas convergen: la \textbf{teoría de seguros} (credibilidad), el \textbf{aprendizaje automático} (optimización y generalización), la \textbf{inferencia variacional} (aproximación bayesiana) y los \textbf{métodos de gradiente natural} (optimización en espacio estadístico).
+
+\section{Credibilidad actuarial y geometría}
+
+\subsection{El problema de la credibilidad}
+
+En seguros, un asegurador debe fijar primas basándose en el historial de siniestros de un asegurado.  El problema de \textbf{credibilidad} es: ¿cuánto peso dar a los datos propios del asegurado vs.\ la experiencia colectiva?
+
+\begin{definition}[Prima de credibilidad]
+	La \textbf{prima de credibilidad} es una combinación ponderada:
+	\[
+	P = Z \cdot \bar{X} + (1-Z) \cdot \mu
+	\]
+	donde $\bar{X}$ es el promedio de siniestros del asegurado, $\mu$ es la media colectiva y $Z \in [0,1]$ es el \textbf{factor de credibilidad}.
+\end{definition}
+
+\begin{theorem}[Fórmula de Bühlmann]
+	En el modelo Bühlmann, el factor de credibilidad óptimo es:
+	\[
+	Z = \frac{n}{n + K}
+	\]
+	donde $K = \text{EPV}/\text{VHM}$, con EPV = varianza esperada de la pérdida y VHM = varianza de la media hipotética.
+\end{theorem}
+
+\begin{example}[Credibilidad en Poisson--Gamma]
+	Para siniestros $\sim \mathrm{Poisson}(\lambda)$ con $\lambda \sim \mathrm{Gamma}(\alpha, \beta)$ (modeloBayesiano conjugado), la credibilidad es:
+	\[
+	Z = \frac{n}{n + \beta/\alpha + 1}.
+	\]
+	Cuando $n \to \infty$, $Z \to 1$ (confianza total en los datos propios).  Cuando $n \to 0$, $Z \to 0$ (confianza total en la experiencia colectiva).
+\end{example}
+
+\begin{center}
+	\begin{tikzpicture}
+		\begin{axis}[
+			width=10cm, height=6cm,
+			xlabel={$n$ (número de siniestros)},
+			xlabel style={at={(axis description cs:0.5,-0.15)}},
+			ylabel={$Z$ (factor de credibilidad)},
+			ylabel style={at={(axis description cs:-0.15,0.5)}},
+			domain=0:100,
+			samples=100,
+			axis lines=left,
+			ymax=1.1,
+			grid=both,
+			grid style={gray!30},
+			tick style={black},
+		]
+			\addplot[Accent, thick] {x/(x+10)};
+			\addplot[AccentDark, dashed] coordinates {(0,1) (100,1)};
+			\node[AccentDark] at (axis cs:80,0.85) {$Z \to 1$};
+			\node[Accent] at (axis cs:10,0.3) {$K=10$};
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+
+\subsection{Conexión con la geometría}
+
+La credibilidad bayesiana es una \textbf{proyección} en el espacio de distribuciones:
+
+\begin{proposition}[Credibilidad como proyección]
+	La prima de credibilidad bayesiana es la proyección $e$-exponencial de la distribución previa sobre la familia de distribuciones condicionales al historial del asegurado.
+\end{proposition}
+
+\section{Aprendizaje automático}
+
+\subsection{Pérdida y geometría}
+
+En aprendizaje automático, la función de pérdida codifica el ``costo'' de una predicción errónea.  Muchas pérdidas comunes son divergencias de Bregman.
+
+\begin{theorem}[Pérdidas y Bregman]
+	Sea $F$ una función convexa.  La pérdida $L(y, \hat{y}) = D_F(y \| \hat{y})$ es una pérdida de Bregman.  Casos especiales:
+	\begin{itemize}
+		\item $F(x) = x^2/2$: pérdida cuadrática (regresión).
+		\item $F(x) = x\log x$: entropía cruzada (clasificación).
+		\item $F(x) = e^x$: pérdida exponencial (boosting).
+	\end{itemize}
+\end{theorem}
+
+\subsection{Regularización y geometría}
+
+La regularización $L_2$ (ridge) es equivalente a una proyección $e$-exponencial sobre un conjunto de parámetros con norma acotada.
+
+\begin{proposition}[Regularización como proyección]
+	El problema de optimización regularizado:
+	\[
+	\min_\theta \frac{1}{n}\sum_{i=1}^n L(y_i, f_\theta(x_i)) + \lambda \|\theta\|^2
+	\]
+	es equivalente a la proyección $e$-exponencial de la verosimilitud sobre la bola $\|\theta\| \le r$ (donde $r$ depende de $\lambda$).
+\end{proposition}
+
+\section{Inferencia variacional}
+
+\subsection{El problema de la aproximación bayesiana}
+
+En inferencia bayesiana, el posterior $p(\theta | x)$ es a menudo intratable.  La \textbf{inferencia variacional} (VI) aproxima el posterior por una distribución más sencilla $q(\theta)$ minimizando la divergencia KL.
+
+\begin{definition}[Inferencia variacional]
+	El problema de VI es:
+	\[
+	\min_{q \in \mathcal{Q}} D_{\mathrm{KL}}(q \| p(\theta | x))
+	\]
+	donde $\mathcal{Q}$ es una familia paramétrica de distribuciones.
+\end{definition}
+
+\begin{theorem}[Descomposición ELBO]
+	La divergencia KL se descompone como:
+	\[
+	D_{\mathrm{KL}}(q \| p(\theta | x)) = \underbrace{-\mathrm{ELBO}(q)}_{\text{evidencia inferior}} + \log p(x)
+	\]
+	donde la ELBO (Evidence Lower Bound) es:
+	\[
+	\mathrm{ELBO}(q) = \mathbb{E}_q[\log p(x, \theta)] - \mathbb{E}_q[\log q(\theta)].
+	\]
+	Minimizar la KL es equivalente a maximizar la ELBO.
+\end{theorem}
+
+\begin{proof}[Demostración]
+	\begin{align*}
+		D_{\mathrm{KL}}(q \| p(\theta|x))
+		&= \mathbb{E}_q\!\left[\log \frac{q(\theta)}{p(\theta|x)}\right] \\
+		&= \mathbb{E}_q[\log q(\theta)] - \mathbb{E}_q[\log p(\theta|x)] \\
+		&= \mathbb{E}_q[\log q(\theta)] - \mathbb{E}_q[\log p(x,\theta)] + \log p(x) \\
+		&= -\mathrm{ELBO}(q) + \log p(x).
+	\end{align*}
+\end{proof}
+
+\begin{example}[VI para una Normal conjugada]
+	Para $x | \theta \sim \mathcal{N}(\theta, 1)$ y $\theta \sim \mathcal{N}(0, \tau^2)$, el posterior es $\mathcal{N}(\mu_n, \sigma_n^2)$ con:
+	\[
+	\mu_n = \frac{n\bar{x}}{n + 1/\tau^2}, \quad \sigma_n^2 = \frac{1}{n + 1/\tau^2}.
+	\]
+	Si usamos VI con $q = \mathcal{N}(\mu, \sigma^2)$, la solución coincide con el posterior exacto (por conjugación).
+\end{example}
+
+\section{Métodos de gradiente natural}
+
+\subsection{El problema de la optimización en espacio estadístico}
+
+Los métodos de gradiente estándar (GD, SGD, Adam) ignoran la geometría del espacio de parámetros.  El \textbf{gradiente natural} corrige esto usando la métrica de Fisher.
+
+\begin{definition}[Gradiente natural]
+	El \textbf{gradiente natural} de una función $L(\theta)$ es:
+	\[
+	\tilde{\nabla} L(\theta) = G^{-1}(\theta) \nabla L(\theta)
+	\]
+	donde $G(\theta)$ es la matriz de información de Fisher.
+\end{definition}
+
+\begin{theorem}[Invariancia del gradiente natural]
+	El gradiente natural es invariante bajo reparametrizaciones: si $\theta \to \phi(\theta)$, entonces $\tilde{\nabla} L$ se transforma como un vector contravariante.
+\end{theorem}
+
+\begin{proof}[Demostración (sketch)]
+	Si $\phi = \phi(\theta)$, entonces $\nabla_\phi L = J^{-T} \nabla_\theta L$ y $G_\phi = J^T G_\theta J$, donde $J = \partial\phi/\\partial\theta$.  Entonces:
+	\[
+	\tilde{\nabla}_\phi L = G_\phi^{-1} \nabla_\phi L = (J^T G_\theta J)^{-1} J^T \nabla_\theta L = J^{-1} G_\theta^{-1} \nabla_\theta L = J^{-1} \tilde{\nabla}_\theta L.
+	\]
+	Esto es exactamente la transformación de un vector contravariante.
+\end{proof}
+
+\begin{example}[Gradiente natural para Bernoulli]
+	Para $\mathrm{Bern}(p)$, la métrica de Fisher es $g = 1/(p(1-p))$.  Si la función de pérdida es $L(p) = -\log p(y|p)$, el gradiente natural es:
+	\[
+	\tilde{\nabla} L = p(1-p) \cdot \frac{\partial L}{\partial p}.
+	\]
+\end{example}
+
+\begin{center}
+	\begin{tikzpicture}
+		\node[draw, rounded corners, fill=AccentLight!20, minimum width=2.5cm, minimum height=0.8cm] (gd) at (0,0) {Gradiente};
+		\node[draw, rounded corners, fill=Accent!20, minimum width=2.5cm, minimum height=0.8cm] (ngd) at (4,0) {Gradiente Natural};
+		\draw[->, thick, AccentDark] (gd) -- (ngd) node[midway, above] {$\times G^{-1}$};
+		\node[below=0.3cm] at (gd.south) {Ignora geometría};
+		\node[below=0.3cm] at (ngd.south) {Respeta geometría};
+	\end{tikzpicture}
+\end{center}
+
+\section{Código Python: gradiente natural y VI}
+
+\begin{lstlisting}[language=Python, style=PythonStyle]
+import numpy as np
+
+def natural_gradient_bernoulli(y_data, lr=0.01, n_steps=100):
+    """Gradiente natural para estimar p en Bernoulli."""
+    p = 0.5  # inicializacion
+    history = [p]
+    
+    for _ in range(n_steps):
+        # Gradiente de la log-verosimilitud
+        grad = np.sum(y_data) / p - (len(y_data) - np.sum(y_data)) / (1 - p)
+        
+        # Metrica de Fisher
+        fisher = 1 / (p * (1 - p))
+        
+        # Gradiente natural
+        nat_grad = grad / fisher
+        
+        # Actualizacion
+        p = p - lr * nat_grad
+        p = np.clip(p, 0.01, 0.99)
+        history.append(p)
+    
+    return p, history
+
+# Verificacion
+np.random.seed(42)
+true_p = 0.7
+data = np.random.binomial(1, true_p, size=200)
+est_p, hist = natural_gradient_bernoulli(data, lr=0.1, n_steps=50)
+print(f"Estimado: {est_p:.4f}, Verdadero: {true_p}")
+print(f"Error: {abs(est_p - true_p):.4f}")
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, style=PythonStyle]
+# Inferencia variacional para Normal conjugada
+def variational_inference_normal(x_data, prior_mu=0, prior_var=1):
+    """VI para modelo Normal-Normal."""
+    n = len(x_data)
+    x_bar = np.mean(x_data)
+    
+    # Posterior exacto (para comparacion)
+    posterior_var = 1 / (n + 1/prior_var)
+    posterior_mu = posterior_var * (n * x_bar + prior_mu/prior_var)
+    
+    # VI con familia Gaussiana
+    # En este caso, VI coincide con el posterior exacto (conjugacion)
+    q_mu = posterior_mu
+    q_var = posterior_var
+    
+    # ELBO
+    elbo = (-0.5 * np.log(2 * np.pi * q_var)
+            - 0.5 * (q_var + (q_mu - x_bar)**2) * n
+            + 0.5 * np.log(2 * np.pi * prior_var)
+            + 0.5 * (q_mu**2 + q_var) / prior_var)
+    
+    return q_mu, q_var, elbo
+
+# Verificacion
+np.random.seed(42)
+true_mu = 2.0
+data = np.random.normal(true_mu, 1, size=50)
+mu_q, var_q, elbo = variational_inference_normal(data, prior_mu=0, prior_var=1)
+print(f"q_mu = {mu_q:.4f}, q_var = {var_q:.4f}")
+print(f"ELBO = {elbo:.4f}")
+\end{lstlisting}
+
+\section{Ejercicios}
+
+\subsection*{Credibilidad actuarial}
+\begin{enumerate}
+	\item Para un modelo Bühlmann con EPV $= 2$ y VHM $= 8$, calcule el factor de credibilidad $Z$ para $n = 20$.
+	\item En el modelo Poisson--Gamma, muestre que $Z \to 1$ cuando $n \to \infty$.
+	\item Para siniestros $\sim \mathrm{Poisson}(\lambda)$ con previa $\lambda \sim \mathrm{Gamma}(3, 1)$, calcule la prima de credibilidad para observaciones $3, 1, 4, 1, 5$.
+	\item ¿Cuándo la credibilidad bayesiana coincide con la credibilidad Bühlmann?
+\end{enumerate}
+
+\subsection*{Aprendizaje automático}
+\begin{enumerate}[resume]
+	\item Muestre que la pérdida de entropía cruzada binaria es una divergencia de Bregman.
+	\item Para regularización $L_2$, demuestre que la solución es la proyección $e$-exponencial sobre la bola de radio $r$.
+	\item Calcule el gradiente natural de la función de pérdida cuadrática para una regresión lineal.
+	\item Para una red neuronal con activación softmax, muestre que la salida es la proyección $m$-exponencial del vector de logits sobre el simplex.
+\end{enumerate}
+
+\subsection*{Inferencia variacional}
+\begin{enumerate}[resume]
+	\item Derive la ELBO para un modelo de mezcla de Gaussianas.
+	\item Para $q = \mathcal{N}(\mu, \sigma^2)$ y posterior exacto $\mathcal{N}(\mu_n, \sigma_n^2)$, calcule $D_{\mathrm{KL}}(q \| p)$.
+	\item Muestre que maximizar la ELBO es equivalente a minimizar la KL.
+	\item Para un modelo lineal bayesiano, derive la solución VI cuando la previa es Gaussiana.
+\end{enumerate}
+
+\subsection*{Gradiente natural}
+\begin{enumerate}[resume]
+	\item Calcule el gradiente natural para $\mathrm{Poisson}(\lambda)$ con función de pérdida de entropía cruzada.
+	\item Demuestre que el gradiente natural es invariante bajo reparametrizaciones.
+	\item Para una red neuronal con activación softmax, muestre que el gradiente natural es equivalente al gradiente estándar multiplicado por la inversa de la matriz de Fisher.
+	\item (Reto) Para una familia exponencial uniparamétrica, muestre que el paso de gradiente natural es $\Delta\eta = I(\eta)^{-1} \partial L / \partial\eta$, que es independiente de la escala del parámetro.
+\end{enumerate}

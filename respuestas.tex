@@ -132,3 +132,24 @@
 	\item \textbf{Resp.:} La transformación tensorial se deriva de la regla de cadena para derivadas parciales: $\partial_{\eta^i} = \sum_k \frac{\partial\theta^k}{\partial\eta^i} \partial_{\theta^k}$.
 	\item \textbf{Resp.:} $I(\eta) = \mathbb{E}[(\partial \ell / \partial \eta)^2] = \mathbb{E}[T(X)^2] - (\mathbb{E}[T(X)])^2 = \nabla^2 A(\eta)$ (varianza de la estadística suficiente).
 \end{enumerate}
+
+\section*{Capítulo 6: Aplicaciones: De la Teoría a la Práctica}
+
+\begin{enumerate}
+	\item \textbf{Resp.:} $Z = n/(n+K) = 20/(20+8/2) = 20/24 = 0.833$.
+	\item \textbf{Resp.:} $Z = n/(n + \beta/\alpha + 1)$.  Cuando $n \to \infty$, $Z \to n/n = 1$.
+	\item \textbf{Resp.:} Para Poisson--Gamma con $\alpha=3, \beta=1$: $Z = 5/(5 + 1/3 + 1) = 5/6.333 = 0.789$.  Promedio $\bar{x} = (3+1+4+1+5)/5 = 2.8$.  Prima: $P = 0.789 \times 2.8 + 0.211 \times 3 = 2.833$.
+	\item \textbf{Resp.:} La credibilidad bayesiana coincide con Bühlmann cuando la previa es conjugada y la función de pérdida es cuadrática.
+	\item \textbf{Resp.:} La entropía cruzada binaria es $H(p, q) = -p\log q - (1-p)\log(1-q)$, que es $D_F(p \| q)$ con $F(x) = -x\log x - (1-x)\log(1-x)$ (entropía negativa).
+	\item \textbf{Resp.:} La solución de ridge es $\hat\theta = \arg\min_\theta L(\theta) + \lambda\|\theta\|^2$, que es la proyección $e$-exponencial de la verosimilitud sobre la bola $\|\theta\| \le r$.
+	\item \textbf{Resp.:} Para pérdida cuadrática $L = (y - x\theta)^2$, $\nabla_\theta L = -2x(y-x\theta)$.  Fisher: $I = x^2$.  Gradiente natural: $\tilde{\nabla} L = -2(y-x\theta)/x$.
+	\item \textbf{Resp.:} La salida softmax es $\text{softmax}(z)_i = e^{z_i}/\sum_j e^{z_j}$, que es la proyección $m$-exponencial del vector de logits sobre el simplex de probabilidades.
+	\item \textbf{Resp.:} Para modelo de mezcla de Gaussianas, la ELBO es $\mathbb{E}_q[\log p(x|\mu,\Sigma)] + \mathbb{E}_q[\log p(\mu,\Sigma)] - \mathbb{E}_q[\log q(\mu,\Sigma)]$.
+	\item \textbf{Resp.:} $D_{\mathrm{KL}}(\mathcal{N}(\mu,\sigma^2) \| \mathcal{N}(\mu_n,\sigma_n^2)) = \frac{1}{2}\left(\frac{\sigma^2}{\sigma_n^2} + \frac{(\mu-\mu_n)^2}{\sigma_n^2} - 1 + \log\frac{\sigma_n^2}{\sigma^2}\right)$.
+	\item \textbf{Resp.:} Maximizar ELBO $\iff$ minimizar KL porque $D_{\mathrm{KL}} = -\mathrm{ELBO} + \log p(x)$ y $\log p(x)$ es constante respecto a $q$.
+	\item \textbf{Resp.:} Para prior Gaussiana $p(\theta) = \mathcal{N}(0, \tau^2 I)$, la solución VI es $q(\theta) = \mathcal{N}(\mu_q, \Sigma_q)$ con $\Sigma_q^{-1} = X^TX + I/\tau^2$.
+	\item \textbf{Resp.:} Para Poisson, $\nabla_\lambda L = \sum(x_i/\lambda - 1)$, $I(\lambda) = 1/\lambda$, $\tilde{\nabla} L = \lambda \sum(x_i/\lambda - 1) = \sum(x_i - \lambda)$.
+	\item \textbf{Resp.:} La invariancia se deriva de que $G$ se transforma como tensor y $\nabla L$ como covariante, así que $G^{-1}\nabla L$ se transforma como contravariante.
+	\item \textbf{Resp.:} Para softmax, el gradiente natural es $\tilde{\nabla} L = G^{-1} \nabla L$, donde $G = \text{diag}(p) - pp^T$ es la Fisher del categorical.  Esto equivale al gradiente estándar corregido por la curvatura de la salida.
+	\item \textbf{Resp.:} $\Delta\eta = I(\eta)^{-1} \partial L/\partial\eta$.  Para familia exponencial, $I(\eta) = \nabla^2 A(\eta)$, así que $\Delta\eta = (\nabla^2 A(\eta))^{-1} \nabla L$, que es invariante bajo reparametrizaciones.
+\end{enumerate}
