@@ -369,7 +369,7 @@ Este teorema es fundamental: muestra que la métrica de Fisher es la \emph{curva
 
 \subsection{KL entre normales ajustadas}
 
-\begin{verbatim}
+\begin{lstlisting}[language=Python]
 import numpy as np
 from scipy import stats
 
@@ -390,11 +390,11 @@ mu2, s2 = data2.mean(), data2.std()
 print(f"KL(N1 || N2) = {kl_normal(mu1, s1, mu2, s2):.4f}")
 print(f"KL(N2 || N1) = {kl_normal(mu2, s2, mu1, s1):.4f}")
 print(f"Asimetria: {kl_normal(mu1,s1,mu2,s2) != kl_normal(mu2,s2,mu1,s1)}")
-\end{verbatim}
+\end{lstlisting}
 
 \subsection{Bregman cuadrática y divergencia KL}
 
-\begin{verbatim}
+\begin{lstlisting}[language=Python]
 def bregman_quad(p, q):
     """D_F con F(p) = 0.5*||p||^2"""
     return 0.5 * np.sum((p - q)**2)
@@ -410,11 +410,11 @@ p = np.array([0.3, 0.7])
 q = np.array([0.5, 0.5])
 print(f"Bregman cuadratica: {bregman_quad(p, q):.4f}")
 print(f"Bregman KL:         {bregman_neg_entropy(p, q):.4f}")
-\end{verbatim}
+\end{lstlisting}
 
 \subsection{Visualización de la brecha de Bregman}
 
-\begin{verbatim}
+\begin{lstlisting}[language=Python]
 import matplotlib.pyplot as plt
 
 F = lambda x: x * np.log(x + 1e-15)  # entropia negativa
@@ -437,7 +437,7 @@ plt.annotate('$D_F(p \\| q)$', xy=(p_val, (F(p_val)+F(q_val)+dF(q_val)*(p_val-q_
 plt.legend(); plt.xlabel('$x$'); plt.ylabel('$F(x)$')
 plt.title('Brecha de Bregman'); plt.grid(True, alpha=0.3)
 plt.tight_layout(); plt.show()
-\end{verbatim}
+\end{lstlisting}
 
 \section{Ejercicios}
 

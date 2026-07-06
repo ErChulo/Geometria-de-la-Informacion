@@ -10,13 +10,17 @@
 \RequirePackage{amsmath,amssymb}
 \RequirePackage{graphicx}
 \RequirePackage{tikz}
-\usetikzlibrary{calc,shadows.blur,backgrounds} % calc for coords, blur for halo, backgrounds for layering
-\RequirePackage{xcolor}
+\usetikzlibrary{calc,shadows.blur,backgrounds,babel}
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\RequirePackage[table]{xcolor}
 \RequirePackage{hyperref}
 \RequirePackage{fancyhdr}
 \RequirePackage{titlesec}
 \RequirePackage{tocloft}
 \RequirePackage{enumitem}
+\RequirePackage{amsthm}
+\RequirePackage{listings}
 
 % ====== Typefaces ======
 % Text: Linux Libertine; Math: newtxmath; Titles: TeX Gyre Heros (sans)
@@ -97,3 +101,37 @@
 \renewcommand{\cftsecfont}{\sffamily}
 \renewcommand{\cftsubsecfont}{\sffamily}
 \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+
+% ====== Theorem-like environments ======
+\theoremstyle{definition}
+\newtheorem{definition}{Definición}[chapter]
+\newtheorem{example}{Ejemplo}[chapter]
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Teorema}[chapter]
+\newtheorem{proposition}{Proposición}[chapter]
+\newtheorem{corollary}{Corolario}[chapter]
+\newtheorem{lemma}{Lema}[chapter]
+
+\theoremstyle{remark}
+\newtheorem{remark}{Observación}[chapter]
+
+% ====== Code listings style ======
+\lstset{
+	basicstyle=\small\ttfamily,
+	keywordstyle=\color{AccentDark}\bfseries,
+	commentstyle=\color{Accent!60}\itshape,
+	breaklines=true,
+	columns=fullflexible,
+	showstringspaces=false,
+	frame=single,
+	backgroundcolor=\color{AccentLight!20},
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	numbersep=8pt,
+	tabsize=4,
+	xleftmargin=8pt,
+	xrightmargin=8pt,
+	framerule=0.5pt,
+	rulecolor=\color{Accent!30}
+}
