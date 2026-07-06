@@ -1,0 +1,261 @@
+% !TeX root = main.tex
+
+\chapter{Conexiones de Amari y la Familia $\alpha$}
+
+\begin{quotation}
+	\itshape
+	``No hay una única manera de definir la rectitud en el espacio de distribuciones; cada valor de $\alpha$ elige una diferente, y todas son legítimas.''
+\end{quotation}
+
+En los capítulos anteriores vimos que la métrica de Fisher define distancias infinitesimales y que las divergencias codifican desajustes globales.  Pero falta una pieza clave: ¿cómo se propagan los vectores a lo largo de curvas en el espacio estadístico?  La respuesta es: con \textbf{conexiones}.
+
+Shun--ichi Amari introdujo una familia uniparamétrica de conexiones, las \textbf{$\alpha$-conexiones}, que unifica bajo un solo marco las tres estructuras geométricas fundamentales: la conexión exponencial ($\alpha = 1$), la conexión de mixture ($\alpha = -1$) y la conexión de Levi--Civita ($\alpha = 0$, la ``media'' de las otras dos).
+
+\section{Recordatorio: curvas y tangent spaces}
+
+Antes de definir conexiones, recordemos la geometría básica de variedades.
+
+\begin{definition}[Espacio tangente]
+	El \textbf{espacio tangente} $T_\theta \mathcal{M}$ a una variedad estadística $\mathcal{M}$ en el punto $\theta$ es el conjunto de todos los vectores tangentes a las curvas que pasan por $\theta$.  En una familia paramétrica $\{p_\theta\}$, un vector tangente $v \in T_\theta \mathcal{M}$ se identifica con una derivada parcial $v = \sum_i v^i \partial/\partial\theta^i$.
+\end{definition}
+
+\begin{definition}[Transporte paralelo]
+	Un \textbf{transporte paralelo} a lo largo de una curva $\gamma(t)$ es una manera de ``arrastrar'' vectores tangentes de un punto a otro sin ``rotarlos'' ni ``estirarlos''.  Diferentes conexiones definen diferentes transportes paralelos.
+\end{definition}
+
+\begin{center}
+	\begin{tikzpicture}
+		\draw[->, thick, Accent] (0,0) .. controls (2,1) and (3,-0.5) .. (5,0.5);
+		\node[AccentDark] at (0,-0.3) {$\gamma(0)$};
+		\node[AccentDark] at (5,-0.3) {$\gamma(1)$};
+		\draw[->, thick, AccentDark] (0.5,0.3) -- (0.5,1.2) node[above] {$v_0$};
+		\draw[->, thick, AccentDark] (4.5,0.8) -- (4.5,1.7) node[above] {$v_1$};
+		\node[Accent] at (2.5,1.5) {transporte paralelo};
+	\end{tikzpicture}
+\end{center}
+
+\section{Definición de $\alpha$-conexiones}
+
+\begin{definition}[$\alpha$-conexión de Amari]
+	Una \textbf{$\alpha$-conexión} $\nabla^{(\alpha)}$ en una variedad estadística es una familia uniparamétrica de conexiones lineales que satisface:
+	\[
+	\nabla^{(\alpha)} = \frac{1+\alpha}{2} \nabla^{(1)} + \frac{1-\alpha}{2} \nabla^{(-1)}
+	\]
+	donde $\nabla^{(1)}$ es la \textbf{conexión exponencial} y $\nabla^{(-1)}$ es la \textbf{conexión de mixture}.
+\end{definition}
+
+Los símbolos de Christoffel de una $\alpha$-conexión se expresan en función de las derivadas terceras de la log-verosimilitud:
+
+\begin{definition}[Símbolos de $\alpha$-Christoffel]
+	Los símbolos de Christoffel de la $\alpha$-conexión son:
+	\[
+	\Gamma^{(\alpha)}_{ijk} = \mathbb{E}_\theta\!\left[\frac{1}{2}\left(\frac{\partial^3 \log p_\theta}{\partial\theta^i \partial\theta^j \partial\theta^k}
+	+ \frac{1+\alpha}{2} \frac{\partial^2 \log p_\theta}{\partial\theta^i \partial\theta^j}\frac{\partial \log p_\theta}{\partial\theta^k}
+	+ \frac{1-\alpha}{2} \frac{\partial^2 \log p_\theta}{\partial\theta^i \partial\theta^k}\frac{\partial \log p_\theta}{\partial\theta^j}\right)\right].
+	\]
+\end{definition}
+
+\begin{proposition}[Casos especiales]
+	\begin{itemize}
+		\item $\alpha = 1$: $\Gamma^{(1)}_{ijk} = \mathbb{E}[\partial_i \partial_j \ell \cdot \partial_k \ell]$ (conexión exponencial).
+		\item $\alpha = -1$: $\Gamma^{(-1)}_{ijk} = \mathbb{E}[\partial_i \partial_k \ell \cdot \partial_j \ell]$ (conexión de mixture).
+		\item $\alpha = 0$: $\Gamma^{(0)}_{ijk} = \frac{1}{2}(\Gamma^{(1)}_{ijk} + \Gamma^{(-1)}_{ijk})$ (conexión de Levi--Civita, la única métrica-compatible).
+	\end{itemize}
+\end{proposition}
+
+\section{Dualidad de $\alpha$-conexiones}
+
+La familia $\alpha$-conexiones tiene una estructura dual: cada $\alpha$-conexión tiene una \textbf{$(-\alpha)$-conexión dual}.
+
+\begin{definition}[Dualidad]
+	Dos conexiones $\nabla^{(\alpha)}$ y $\nabla^{(-\alpha)}$ son \textbf{duales} si satisfacen la relación:
+	\[
+	\nabla^{(\alpha)} = \nabla^{(0)} + \frac{\alpha}{2} T
+	\]
+	donde $T$ es el tensor de torsión asociado a la diferencia entre las conexiones exponencial y de mixture.
+\end{definition}
+
+\begin{theorem}[Propiedades de la dualidad]
+	\begin{enumerate}
+		\item La $\alpha$-conexión y la $(-\alpha)$-conexión son duales entre sí.
+		\item La divergencia $e$-exponencial (asociada a $\nabla^{(1)}$) y la divergencia $m$-mixture (asociada a $\nabla^{(-1)}$) son duales en el sentido de que $D_e(p \| q) = D_m(q \| p)$ en familias exponenciales.
+		\item La $\alpha$-geodésica y la $(-\alpha)$-geodésica son ``direcciones opuestas'' en un cierto sentido.
+	\end{enumerate}
+\end{theorem}
+
+\section{Geodésicas $\alpha$}
+
+\begin{definition}[$\alpha$-geodésica]
+	Una curva $\gamma(t)$ es una \textbf{$\alpha$-geodésica} si satisface la ecuación geodésica:
+	\[
+	\frac{d^2\gamma^k}{dt^2} + \sum_{i,j} \Gamma^{(\alpha)}_{ijk}\frac{d\gamma^i}{dt}\frac{d\gamma^j}{dt} = 0.
+	\]
+\end{definition}
+
+\begin{example}[$\alpha$-geodésicas en Bernoulli]
+	Para $X \sim \mathrm{Bern}(p)$ con parámetro $\eta = \log(p/(1-p))$:
+	\begin{itemize}
+		\item $\alpha = 1$ (exponencial): la geodésica es recta en $\eta$, es decir, $\eta(t) = (1-t)\eta_0 + t\eta_1$.
+		\item $\alpha = -1$ (mixture): la geodésica es recta en $p$, es decir, $p(t) = (1-t)p_0 + tp_1$.
+		\item $\alpha = 0$ (Levi--Civita): la geodésica es una curva intermedia.
+	\end{itemize}
+\end{example}
+
+\begin{center}
+	\begin{tikzpicture}
+		\begin{axis}[
+			width=10cm, height=7cm,
+			xlabel={$p$ (probabilidad)},
+			ylabel={$\eta$ (log-odds)},
+			domain=0.05:0.95,
+			samples=100,
+			axis lines=left,
+			grid=both,
+			grid style={gray!30},
+			tick style={black},
+			xmin=0, xmax=1,
+			ymin=-4, ymax=4,
+		]
+			\addplot[Accent, thick, domain=0.05:0.95] {ln(x/(1-x))};
+			\coordinate (P0) at (axis cs:0.2,{ln(0.2/0.8)});
+			\coordinate (P1) at (axis cs:0.8,{ln(0.8/0.2)});
+			\draw[AccentDark, thick, dashed] (P0) -- (P1);
+			\node[AccentDark] at (axis cs:0.2,-2.8) {$p_0$};
+			\node[AccentDark] at (axis cs:0.8,2.8) {$p_1$};
+			\node[Accent] at (axis cs:0.5,0.5) {$\alpha=1$ (recta en $\eta$)};
+			\draw[AccentDark, thick] (axis cs:0.2,{ln(0.2/0.8)}) .. controls (axis cs:0.5,-0.5) .. (axis cs:0.8,{ln(0.8/0.2)}) node[right] {$\alpha=0$};
+			\addplot[Accent!50, thick, domain=0.2:0.8] {ln(x/(1-x))} node[right] {$\alpha=-1$ (recta en $p$)};
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+
+\section{Tensor de curvatura $\alpha$}
+
+La curvatura de una $\alpha$-conexión mide cuánto ``falla'' el transporte paralelo al recorrer una curva cerrada.
+
+\begin{definition}[Tensor de curvatura $\alpha$]
+	El tensor de curvatura de Riemann--Christoffel de la $\alpha$-conexión es:
+	\[
+	R^{(\alpha)}_{ijkl} = \partial_i \Gamma^{(\alpha)}_{jkl} - \partial_j \Gamma^{(\alpha)}_{ikl} + \sum_{m} \left(\Gamma^{(\alpha)}_{imk}\Gamma^{(\alpha)}_{jml} - \Gamma^{(\alpha)}_{jmk}\Gamma^{(\alpha)}_{iml}\right).
+	\]
+\end{definition}
+
+\begin{theorem}[Propiedades de la curvatura $\alpha$]
+	\begin{enumerate}
+		\item Para $\alpha = 0$ (Levi--Civita), la curvatura es el tensor de Riemann usual.
+		\item En familias exponenciales, la curvatura de la $\alpha$-conexión depende de $\alpha$ de manera cuadrática.
+		\item Para $\alpha = \pm 1$, la curvatura no se anula en general, pero tiene formas simplificadas.
+	\end{enumerate}
+\end{theorem}
+
+\section{Relación con la métrica de Fisher}
+
+\begin{theorem}[Compatibilidad métrica]
+	La $\alpha$-conexión $\nabla^{(\alpha)}$ es compatible con la métrica de Fisher $g$ si y solo si $\alpha = 0$ (Levi--Civita).  Para $\alpha \ne 0$, la conexión tiene torsión.
+\end{theorem}
+
+\begin{proof}[Demostración (sketch)]
+	La compatibilidad métrica requiere $\nabla g = 0$, lo que implica que los símbolos de Christoffel sean simétricos en los dos primeros índices.  Para $\alpha \ne 0$, los símbolos $\Gamma^{(\alpha)}_{ijk}$ no son simétricos en $j$ y $k$ (la torsión es $T^{(\alpha)}_{ijk} = \alpha(\Gamma^{(1)}_{ijk} - \Gamma^{(-1)}_{ijk})$), por lo que la conexión no es métrica.
+\end{proof}
+
+\section{Código Python: geodésicas $\alpha$ en Bernoulli}
+
+\begin{lstlisting}[language=Python, style=PythonStyle]
+import numpy as np
+import matplotlib.pyplot as plt
+
+def alpha_geodesic_bernoulli(p0, p1, alpha, n_points=100):
+    """Calcula la geodesica alpha entre dos Bernoulli."""
+    eta0 = np.log(p0 / (1 - p0))
+    eta1 = np.log(p1 / (1 - p1))
+    t = np.linspace(0, 1, n_points)
+    
+    if alpha == 1:
+        # Exponencial: recta en eta
+        eta_t = (1 - t) * eta0 + t * eta1
+        p_t = 1 / (1 + np.exp(-eta_t))
+    elif alpha == -1:
+        # Mixture: recta en p
+        p_t = (1 - t) * p0 + t * p1
+    else:
+        # Interpolacion general
+        eta_t = (1 - t) * eta0 + t * eta1
+        p_t = 1 / (1 + np.exp(-eta_t))
+        # Ajuste para alpha != 0,1,-1
+        p_mix = (1 - t) * p0 + t * p1
+        p_t = ((1 + alpha) / 2) * p_t + ((1 - alpha) / 2) * p_mix
+    
+    return t, p_t
+
+# Ejemplo
+p0, p1 = 0.2, 0.8
+t_exp, p_exp = alpha_geodesic_bernoulli(p0, p1, alpha=1)
+t_mix, p_mix = alpha_geodesic_bernoulli(p0, p1, alpha=-1)
+t_levi, p_levi = alpha_geodesic_bernoulli(p0, p1, alpha=0)
+
+plt.figure(figsize=(8, 5))
+plt.plot(t_exp, p_exp, 'b-', linewidth=2, label=r'$\alpha=1$ (exponencial)')
+plt.plot(t_mix, p_mix, 'r-', linewidth=2, label=r'$\alpha=-1$ (mixture)')
+plt.plot(t_levi, p_levi, 'g--', linewidth=2, label=r'$\alpha=0$ (Levi-Civita)')
+plt.xlabel('t')
+plt.ylabel('p(t)')
+plt.legend()
+plt.title('Geodesicas alpha entre Bernoulli(0.2) y Bernoulli(0.8)')
+plt.grid(True, alpha=0.3)
+plt.show()
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, style=PythonStyle]
+# Christoffel symbols para Bernoulli (verificacion numerica)
+def bernoulli_christoffel_alpha(p, alpha):
+    """Simbolos de Christoffel alpha para Bernoulli."""
+    # Gamma_111 = E[d^3 l / dp^3] + alpha terms
+    # Para Bernoulli: l = x log(p/(1-p)) + log(1-p)
+    # dl/dp = x/p - (1-x)/(1-p) = (x-p)/(p(1-p))
+    # d2l/dp2 = -x/p^2 - (1-x)/(1-p)^2
+    # d3l/dp3 = 2x/p^3 - 2(1-x)/(1-p)^3
+    
+    # Valores esperados
+    E_d2l = -1/(p*(1-p))
+    E_d3l = 2/p^2 - 2/(1-p)**2  # simplificado
+    
+    # Gamma^(alpha)_111
+    gamma_alpha = E_d3l/2 + alpha/4 * (E_d2l)**2
+    return gamma_alpha
+
+# Verificacion
+p = 0.5
+for alpha in [-1, 0, 1]:
+    g = bernoulli_christoffel_alpha(p, alpha)
+    print(f"Gamma^(alpha={alpha:2d})_111(p=0.5) = {g:.4f}")
+\end{lstlisting}
+
+\section{Ejercicios}
+
+\subsection*{Conceptuales}
+\begin{enumerate}
+	\item Verdadero o falso: La $\alpha$-conexión de Levi--Civita ($\alpha = 0$) es la única conexión compatible con la métrica de Fisher.
+	\item ¿Cuál es la relación entre las geodésicas exponenciales ($\alpha = 1$) y las geodésicas de mixture ($\alpha = -1$) en una familia exponencial?
+	\item Defina la torsión de una $\alpha$-conexión.  ¿Cuándo se anula?
+	\item ¿Por qué las $\alpha$-conexiones son importantes para la inferencia estadística?
+	\item Explique la dualidad entre $\alpha$ y $-\alpha$ geodésicas.
+\end{enumerate}
+
+\subsection*{Cálculos}
+\begin{enumerate}[resume]
+	\item Para $\mathrm{Bern}(p)$, calcule los símbolos de Christoffel $\Gamma^{(1)}_{111}$ y $\Gamma^{(-1)}_{111}$.
+	\item Para $\mathcal{N}(\mu, \sigma^2)$ con $\sigma^2$ fijo, calcule $\Gamma^{(\alpha)}_{111}$ en función de $\alpha$.
+	\item Encuentre la ecuación geodésica $\alpha$ para la familia $\mathrm{Poisson}(\lambda)$.
+	\item Para $\mathrm{Bern}(p)$ con $p_0 = 0.3$ y $p_1 = 0.7$, calcule el punto medio de la geodésica $\alpha$ para $\alpha = 0, 1, -1$.
+	\item Verifique que $\Gamma^{(0)}_{ijk} = \frac{1}{2}(\Gamma^{(1)}_{ijk} + \Gamma^{(-1)}_{ijk})$ para Bernoulli.
+	\item Calcule la curvatura escalar de la métrica de Fisher para $\mathrm{Bern}(p)$.
+\end{enumerate}
+
+\subsection*{Teóricos}
+\begin{enumerate}[resume]
+	\item Demuestre que la torsión de la $\alpha$-conexión es $T^{(\alpha)} = \alpha \cdot T^{(1)}$, donde $T^{(1)}$ es la torsión de la conexión exponencial.
+	\item Muestre que en una familia exponencial, las geodésicas $\alpha = 1$ son líneas rectas en las coordenadas naturales $\eta$.
+	\item Demuestre que la métrica de Fisher es invariante bajo reparametrizaciones para cualquier valor de $\alpha$.
+	\item (Reto) Para la familia de Cauchy con parámetro de localización $\theta$, muestre que la curvatura de la $\alpha$-conexión de Levi--Civita es constante y positiva.
+	\item (Reto) Demuestre que las $\alpha$-geodésicas en una familia exponencial satisfacen una ecuación diferencial de tipo Riccati.
+\end{enumerate}
