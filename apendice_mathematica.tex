@@ -1,0 +1,424 @@
+% !TeX root = main.tex
+
+\chapter*{Apéndice: Rutinas de Wolfram Mathematica para Geometría de la Información}
+\addcontentsline{toc}{chapter}{Apéndice: Rutinas de Mathematica}
+
+Este apéndice contiene un archivo completo de Wolfram Mathematica que agrupa todas las rutinas fundamentales de geometría de la información: cálculo de la matriz de información de Fisher, símbolos de Christoffel, tensores de Riemann--Ricci, geodésicas, descomposición en familias exponenciales, divergencias (KL, Bregman), transformada de Legendre y verificación del teorema pitagórico.
+
+\begin{quotation}
+	\itshape
+	El código está preparado para copiarse y pegarse directamente en un Notebook de Mathematica.  Cada modelo se define como una \emph{Association} con claves \texttt{"function"} y \texttt{"assumptions"}, lo que permite que las funciones se adapten automáticamente a las condiciones de cada problema.
+\end{quotation}
+
+\section{Cómo usar este apéndice}
+\begin{enumerate}
+	\item Copia todo el bloque de código que sigue en un nuevo Notebook de Mathematica.
+	\item Evalúa cada celda en orden (Shift+Enter en cada bloque).
+	\item Define tu modelo como una Association y pasa las funciones a las utilidades.
+\end{enumerate}
+
+\section{Código Mathematica}
+
+\begin{lstlisting}[language=Mathematica, frame=none, numbers=none,
+basicstyle=\scriptsize\ttfamily,
+keywordstyle=\color{AccentDark}\bfseries,
+commentstyle=\color{Accent!60}\itshape,
+backgroundcolor=\color{AccentLight!10},
+columns=fullflexible,
+breaklines=true,
+tabsize=2,
+xleftmargin=4pt, xrightmargin=4pt,
+showstringspaces=false]
+
+(* =================================================== *)
+(*  CODIGO UNIFICADO DE GEOMETRIA DE LA INFORMACION    *)
+(*  EN MATHEMATICA                                     *)
+(* =================================================== *)
+
+(*
+Cada modelo se puede definir como una Association con dos claves:
+  "function"    -> la funcion de densidad, y
+  "assumptions" -> la lista de supuestos.
+
+Si se pasa el modelo como una funcion simple, se utilizan supuestos por defecto.
+
+Se incluyen versiones para:
+  (a) Modelos multiparametricos (p.ej., f(x; a, b)).
+  (b) Modelos uniparametricos (p.ej., h(x; theta)).
+
+Ademas, se incorporan rutinas para:
+  - Matriz de informacion de Fisher.
+  - Hessiana y tensor de terceras derivadas.
+  - Calculo de los simbolos de Christoffel.
+  - Descomposicion en la forma de la familia exponencial.
+  - Ecuaciones geodesicas y solucion/graficacion de las mismas.
+  - Calculo de tensores (Riemann, Ricci y curvatura escalar).
+  - Visualizaciones integrales.
+  - Divergencias (KL, Bregman), transformada de Legendre.
+  - Verificacion del teorema pitagorico.
+*)
+
+(* =================================================== *)
+(*   Seccion 1: Rutinas Multiparametricas              *)
+(* =================================================== *)
+
+(* 1. Matriz de Informacion de Fisher (Multiparametrica) *)
+FisherInformationMatrix[model_, a_, b_, {x_, xmin_, xmax_}] :=
+Module[{f, assumptions, L, dLda, dLdb, Iaa, Iab, Ibb},
+  If[AssociationQ[model],
+    f = model["function"];
+    assumptions = model["assumptions"],
+    f = model;
+    assumptions = {a>0, Element[b,Reals], Element[x,Reals], x>=xmin}
+  ];
+  L = Log[f[x,a,b]];
+  dLda = D[L,a];
+  dLdb = D[L,b];
+  Iaa = Integrate[f[x,a,b](dLda)^2, {x,xmin,xmax},
+                  Assumptions->assumptions];
+  Iab = Integrate[f[x,a,b] dLda dLdb, {x,xmin,xmax},
+                  Assumptions->assumptions];
+  Ibb = Integrate[f[x,a,b](dLdb)^2, {x,xmin,xmax},
+                  Assumptions->assumptions];
+  Simplify[{{Iaa, Iab},{Iab, Ibb}}]
+];
+
+(* 2. Matriz Hessiana *)
+HessianMatrix[f_, vars_List] :=
+  Table[D[f,vars[[i]],vars[[j]]],
+        {i,Length[vars]},{j,Length[vars]}];
+
+(* 3. Tensor de Terceras Derivadas Parciales *)
+ThirdOrderTensor[f_, vars_List] :=
+  Table[D[f,vars[[i]],vars[[j]],vars[[k]]],
+        {i,Length[vars]},{j,Length[vars]},{k,Length[vars]}];
+
+(* 4. Simbolos de Christoffel del Segundo Tipo *)
+ChristoffelSymbols[g_, coords_List] :=
+Module[{n, gInv, Gamma},
+  n = Length[coords];
+  gInv = Simplify[Inverse[g]];
+  Gamma = Table[
+    1/2 Sum[
+      gInv[[k,l]] (D[g[[i,l]],coords[[j]]]
+                   +D[g[[j,l]],coords[[i]]]
+                   -D[g[[i,j]],coords[[l]]]),
+      {l,1,n}],
+    {i,1,n},{j,1,n},{k,1,n}];
+  Simplify[Gamma]
+];
+
+(* 5. Descomposicion en Familia Exponencial *)
+ExponentialFamilyDecomposition[f_,{x_,a_,b_}] :=
+Module[{L,termList,hPart,F,Fterms,Fx,F0,
+        candidateTerms,gExpr,pExpr,res},
+  L = Expand[Simplify[Log[f[x,a,b]]]];
+  termList = If[Head[L]===Plus, List@@L, {L}];
+  hPart = Total[Select[termList,
+           FreeQ[#,a] && FreeQ[#,b]&]];
+  F = Simplify[L - hPart];
+  Fterms = If[Head[F]===Plus, List@@F, {F}];
+  Fx = Total[Select[Fterms, Not[FreeQ[#,x]]&]];
+  F0 = Total[Select[Fterms, FreeQ[#,x]&]];
+  candidateTerms = Map[
+    Function[t,
+      gExpr = Simplify[Coefficient[Coefficient[t,a,0],b,0]];
+      If[gExpr===0, gExpr=1];
+      pExpr = Simplify[t/gExpr];
+      If[FreeQ[gExpr,a] && FreeQ[gExpr,b] && FreeQ[pExpr,x],
+        {pExpr, gExpr}, "n/a"]
+    ],
+    If[Head[Fx]===Plus, List@@Fx, {Fx}]
+  ];
+  If[MemberQ[candidateTerms,"n/a"],
+    "El modelo no es miembro de la familia exponencial",
+    res = {
+      {"h(x)", Simplify[Exp[hPart]]},
+      {"[theta, T(x)]", candidateTerms},
+      {"psi(theta)", Simplify[-F0]}
+    }; res
+  ]
+];
+
+(* 6. Ecuaciones Geodesicas *)
+GeodesicEquations[g_, coords_List, t_] :=
+Module[{n, Gamma, fCoords, eqs},
+  n = Length[coords];
+  Gamma = ChristoffelSymbols[g, coords];
+  fCoords = Map[#[t]&, coords];
+  eqs = Table[
+    D[fCoords[[i]],{t,2}] +
+    Sum[(Gamma[[i,j,k]] /. Thread[coords->fCoords])
+         D[fCoords[[j]],t] D[fCoords[[k]],t],
+        {j,1,n},{k,1,n}] == 0,
+    {i,1,n}];
+  Simplify[eqs]
+];
+
+(* 7. Solucion y Graficacion de Geodesicas *)
+SolveAndPlotGeodesics[g_, coords_List,
+    initConds_:Automatic, tmax_:5] :=
+Module[{n, t, eqns, sols, plots, defaultInit},
+  n = Length[coords];
+  defaultInit = {
+    {coords[[1]][0]==0, coords[[1]]'[0]==1,
+     coords[[2]][0]==0, coords[[2]]'[0]==0},
+    {coords[[1]][0]==0, coords[[1]]'[0]==0,
+     coords[[2]][0]==0, coords[[2]]'[0]==1}
+  };
+  If[initConds===Automatic, initConds=defaultInit];
+  eqns = GeodesicEquations[g, coords, t];
+  sols = Table[
+    Module[{sol},
+      sol = DSolve[Join[eqns,init],
+        Table[coords[[i]][t],{i,1,n}], t];
+      If[sol==={} || sol===Null,
+        sol = NDSolve[Join[eqns,init],
+          Table[coords[[i]],{i,1,n}],{t,0,tmax}];
+      ]; sol],
+    {init,initConds}];
+  plots = Table[
+    ParametricPlot[
+      Evaluate[Table[coords[[i]][t],{i,1,n}]/.sol[[1]]],
+      {t,0,tmax}, PlotRange->All,
+      AxesLabel->(ToString/@coords)],
+    {sol,sols}];
+  {sols, Show[plots,PlotRange->All,
+    AxesLabel->(ToString/@coords)]}
+];
+
+(* 8. Tensores a partir de la Metrica *)
+TensorsFromMetric[g_, coords_List] :=
+Module[{n,gamma,Riemann,Ricci,gInv,Rscalar},
+  n = Length[coords];
+  gamma = ChristoffelSymbols[g, coords];
+  Riemann = Table[
+    Simplify[
+      D[gamma[[a,c,d]],coords[[b]]]
+      -D[gamma[[b,c,d]],coords[[a]]]
+      +Sum[gamma[[a,c,m]]gamma[[b,m,d]]
+           -gamma[[b,c,m]]gamma[[a,m,d]],
+           {m,1,n}]],
+    {a,1,n},{b,1,n},{c,1,n},{d,1,n}];
+  Ricci = Table[
+    Simplify[Sum[Riemann[[k,j,i,k]],{k,1,n}]],
+    {i,1,n},{j,1,n}];
+  gInv = Simplify[Inverse[g]];
+  Rscalar = Simplify[Sum[gInv[[i,j]]Ricci[[i,j]],
+    {i,1,n},{j,1,n}]];
+  {{"Tensor de Riemann",Riemann},
+   {"Tensor de Ricci",Ricci},
+   {"Curvatura Escalar",Rscalar}}
+];
+
+(* =================================================== *)
+(*   Seccion 2: Rutinas Uniparametricas                *)
+(* =================================================== *)
+
+(* 1. Informacion de Fisher 1D *)
+FisherInformation1D[model_, param_, {x_, xmin_, xmax_}] :=
+Module[{f,assumptions,L,dLdparam,info},
+  If[AssociationQ[model],
+    f = model["function"];
+    assumptions = model["assumptions"],
+    f = model;
+    assumptions = {param>0, Element[x,Reals], x>=xmin}
+  ];
+  L = Log[f[x,param]];
+  dLdparam = D[L,param];
+  info = Integrate[f[x,param](dLdparam)^2,
+    {x,xmin,xmax}, Assumptions->assumptions];
+  Simplify[info]
+];
+
+(* 2. Hessiana 1D *)
+Hessian1D[f_,theta_] := D[f,{theta,2}];
+
+(* 3. Tensor de Terceras Derivadas 1D *)
+ThirdOrderTensor1D[f_,theta_] := D[f,{theta,3}];
+
+(* 4. Simbolos de Christoffel 1D *)
+ChristoffelSymbols1D[g_,theta_] :=
+Module[{gInv,gamma},
+  gInv = Simplify[1/g];
+  gamma = Simplify[(1/2) gInv D[g,theta]];
+  gamma
+];
+
+(* 5. Descomposicion en Familia Exponencial 1D *)
+ExponentialFamilyDecomposition1D[f_,{x_,theta_}] :=
+Module[{L,termList,hPart,F,Fterms,Fx,F0,
+        candidateTerm,gExprLocal,pExprLocal,res},
+  L = Expand[Simplify[Log[f[x,theta]]]];
+  termList = If[Head[L]===Plus, List@@L, {L}];
+  hPart = Total[Select[termList, FreeQ[#,theta]&]];
+  F = Simplify[L - hPart];
+  Fterms = If[Head[F]===Plus, List@@F, {F}];
+  Fx = Total[Select[Fterms, Not[FreeQ[#,x]]&]];
+  F0 = Total[Select[Fterms, FreeQ[#,x]&]];
+  candidateTerm = Module[{gEL,pEL},
+    gEL = Simplify[Coefficient[Fx,theta,0]];
+    If[gEL===0, gEL=1];
+    pEL = Simplify[Fx/gEL];
+    If[FreeQ[gEL,theta] && FreeQ[pEL,x],
+      {pEL,gEL}, "n/a"]
+  ];
+  If[candidateTerm==="n/a",
+    "El modelo no es miembro de la familia exponencial",
+    res = {
+      {"h(x)", Simplify[Exp[hPart]]},
+      {"[theta, T(x)]", candidateTerm},
+      {"psi(theta)", Simplify[-F0]}
+    }; res
+  ]
+];
+
+(* 6. Ecuacion Geodesica 1D *)
+GeodesicEquations1D[g_,theta_,t_] :=
+Module[{Gamma,thetaFunc,eq},
+  Gamma = ChristoffelSymbols1D[g,theta];
+  thetaFunc = theta[t];
+  eq = Simplify[D[thetaFunc,{t,2}] +
+    (Gamma /. theta->thetaFunc)(D[thetaFunc,t])^2 == 0];
+  eq
+];
+
+(* 7. Solucion y Graficacion de Geodesicas 1D *)
+SolveAndPlotGeodesics1D[g_,theta_,
+    initConds_:Automatic, tmax_:5] :=
+Module[{t,eq,sol,plot,defaultInit},
+  eq = GeodesicEquations1D[g,theta,t];
+  defaultInit = {theta[0]==1, theta'[0]==0.5};
+  If[initConds===Automatic, initConds=defaultInit];
+  sol = DSolve[Join[{eq},initConds],theta[t],t];
+  If[sol==={} || sol===Null,
+    sol = NDSolve[Join[{eq},initConds],
+      theta,{t,0,tmax}];
+    plot = Plot[Evaluate[theta[t]/.sol[[1]]],{t,0,tmax},
+      AxesLabel->{"t",ToString[theta]},
+      PlotLabel->"Geodesica 1D"],
+    plot = Plot[Evaluate[theta[t]/.sol[[1]]],{t,0,tmax},
+      AxesLabel->{"t",ToString[theta]},
+      PlotLabel->"Geodesica 1D (analitica)"]
+  ];
+  {sol,plot}
+];
+
+(* 8. Tensores a partir de la Metrica 1D *)
+(* En 1D el tensor de Riemann se anula por antisimetria:
+   R^1_{111} = 0 siempre. La curvatura escalar es 0. *)
+TensorsFromMetric1D[g_,theta_] :=
+Module[{gInv,gamma},
+  gInv = Simplify[1/g];
+  gamma = ChristoffelSymbols1D[g,theta];
+  {{"Tensor de Riemann", 0},
+   {"Tensor de Ricci", 0},
+   {"Curvatura Escalar", 0}}
+];
+
+(* =================================================== *)
+(*   Seccion 3: Funciones de Utilidad Comunes          *)
+(* =================================================== *)
+
+(* 1. Informacion de Fisher para distribuciones comunes *)
+FisherBernoulli[p_?NumericQ] := Simplify[1/(p(1-p))];
+
+FisherNormal[mu_, sigma_?NumericQ] :=
+  Simplify[{{1/sigma^2,0},{0,2/sigma^2}}];
+
+FisherPoisson[lambda_?NumericQ] := Simplify[1/lambda];
+
+FisherExponential[lambda_?NumericQ] := Simplify[1/lambda^2];
+
+(* 2. Divergencia KL numerica *)
+KLDivergence[f_,g_,{x_,xmin_,xmax_}] :=
+Module[{integrand,assumptions},
+  assumptions = {Element[x,Reals],x>=xmin};
+  integrand = f Log[f/g];
+  Simplify[Integrate[integrand,{x,xmin,xmax},
+                     Assumptions->assumptions]]
+];
+
+(* 3. Divergencia de Bregman generica *)
+BregmanDivergence[F_,p_,q_] :=
+Module[{gradF},
+  gradF = D[F,#]&;
+  (F /. q->p) - (F /. q->q) - gradF[q](p-q)
+];
+
+(* 4. Transformada de Legendre-Fenchel simbolica *)
+LegendreTransform[F_,x_,eta_] :=
+Module[{sol,starFunc},
+  sol = Solve[D[F,x]==eta, x];
+  If[sol==={} || sol===Null,
+    "No se puede resolver para eta = dF/dx",
+    sol = First[sol];
+    starFunc = (x eta - F) /. sol;
+    Simplify[starFunc]
+  ]
+];
+
+(* 5. Verificacion numerica del teorema pitagorico *)
+VerifyPythagoreanKL[model_,thetaTrue_,
+                    thetaProj_,thetaQ_] :=
+Module[{d1,d2,d3},
+  d1 = KLDivergence[model[thetaTrue],
+                     model[thetaProj],
+                     {x,-Infinity,Infinity}];
+  d2 = KLDivergence[model[thetaProj],
+                     model[thetaQ],
+                     {x,-Infinity,Infinity}];
+  d3 = KLDivergence[model[thetaTrue],
+                     model[thetaQ],
+                     {x,-Infinity,Infinity}];
+  Print["D_KL(p||q*) = ",N[d1]];
+  Print["D_KL(q*||q) = ",N[d2]];
+  Print["Suma       = ",N[d1+d2]];
+  Print["D_KL(p||q)  = ",N[d3]];
+  Print["Pitagorico: ",
+    N[Abs[d3-(d1+d2)]] < 1*^-10]
+];
+
+(* 6. Coordenadas duales para familias exponenciales *)
+DualCoordinatesBernoulli[p_] := {Log[p/(1-p)],p};
+DualCoordinatesPoisson[lambda_] := {Log[lambda],lambda};
+DualCoordinatesNormal[mu_,sigma_] := {mu/sigma^2,mu};
+
+(* =================================================== *)
+(*              EJEMPLOS DE USO                        *)
+(* =================================================== *)
+
+(* --- Ejemplo Multiparametrico --- *)
+expModel2D = <|
+  "function" -> (a Exp[-a(x-b)] UnitStep[x-b]),
+  "assumptions" -> {a>0, Element[b,Reals],
+                    Element[x,Reals], x>=b}
+|>;
+FisherMat = FisherInformationMatrix[expModel2D,
+  a, b, {x, b, Infinity}];
+Print["Matriz de Fisher (Multiparametrica):"];
+Print[FisherMat];
+
+(* --- Ejemplo Uniparametrico --- *)
+expModel1D = <|
+  "function" -> (a Exp[-a*x] UnitStep[x]),
+  "assumptions" -> {a>0, Element[x,Reals], x>=0}
+|>;
+Print["Fisher (Uniparametrica):"];
+Print[FisherInformation1D[expModel1D, a,
+  {x, 0, Infinity}]];
+
+(* --- Verificacion rapida --- *)
+(* FisherBernoulli[0.5]   deve devolver 4 *)
+(* FisherPoisson[3.0]     deve devolver 1/3 *)
+(* DualCoordinatesBernoulli[0.7] = {Logit(0.7), 0.7} *)
+\end{lstlisting}
+
+\section{Notas sobre las convenciones utilizadas}
+
+\begin{itemize}
+	\item \textbf{Notación de los símbolos de Christoffel:} $\Gamma^{k}_{ij}$ se almacenan como \texttt{Gamma[[i,j,k]]} (dos índices inferiores, uno superior).
+	\item \textbf{Tensor de Riemann:} En 2D, la convención utilizada es $R^{d}_{abc} = \partial_b \Gamma^{d}_{ac} - \partial_a \Gamma^{d}_{bc} + \Gamma^{d}_{am}\Gamma^{m}_{bc} - \Gamma^{d}_{bm}\Gamma^{m}_{ac}$.  Esto es consistente con las fórmulas de Ricci y curvatura escalar calculadas internamente.
+	\item \textbf{1D:} En una dimensión, el tensor de Riemann se anula por antisimetría ($R^{1}_{111}=0$), por lo que la curvatura escalar es siempre cero.  Esto refleja que toda variedad unidimensional es localmente plana.
+	\item \textbf{Modelos con Association:} Las funciones aceptan tanto un modelo dado como una Association \texttt{"function" $\to$ ..., "assumptions" $\to$ ...} para mayor flexibilidad.
+\end{itemize}
