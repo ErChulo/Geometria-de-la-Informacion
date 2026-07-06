@@ -1,0 +1,225 @@
+% !TeX root = main.tex
+
+\chapter{Temas Avanzados}
+
+\begin{quotation}
+	\itshape
+	``La geometría de la información no termina con las familias exponenciales; se extiende a variedades más generales, conexiones no lineales y estructuras que aún están siendo descubiertas.''
+\end{quotation}
+
+En este capítulo exploramos extensiones y generalizaciones de la geometría de la información.  Vamos más allá de las familias exponenciales para estudiar \textbf{variedades estadísticas generales}, \textbf{geometría de información cuántica}, \textbf{aprendizaje de variedades} y \textbf{estructuras emergentes} como la geometría de información alpha-beta y las conexiones de Wasserstein.
+
+\section{Variedades estadísticas generales}
+
+Hasta ahora nos enfocamos en familias exponenciales, donde la geometría es particularmente limpia.  Pero la mayoría de distribuciones no son exponenciales.
+
+\begin{definition}[Variedad estadística general]
+	Una \textbf{variedad estadística} es un conjunto de distribuciones de probabilidad $\mathcal{M} = \{p_\theta : \theta \in \Theta\}$ parametrizado suavemente, donde $\Theta$ es un conjunto abierto de $\mathbb{R}^k$.
+\end{definition}
+
+\begin{proposition}[Métrica de Fisher general]
+	Para una variedad estadística general, la métrica de Fisher $g_{ij}(\theta) = \mathbb{E}[\partial_i \ell \cdot \partial_j \ell]$ siempre está bien definida, independientemente de si la familia es exponencial o no.
+\end{proposition}
+
+\begin{example}[Familia t-Student]
+	La distribución t-Student con $\nu$ grados de libertad y parámetro de localización $\mu$:
+	\[
+	p_\mu(x) = \frac{\Gamma((\nu+1)/2)}{\sqrt{\nu\pi}\,\Gamma(\nu/2)} \left(1 + \frac{(x-\mu)^2}{\nu}\right)^{-(\nu+1)/2}.
+	\]
+	Esta familia \emph{no} es exponencial (no hay estadístico suficiente de dimensión finita), pero la métrica de Fisher está bien definida.
+\end{example}
+
+\begin{center}
+	\begin{tikzpicture}
+		\node[draw, rounded corners, fill=AccentLight!20, minimum width=2.5cm, minimum height=1cm] (exp) at (0,0) {Exponenciales};
+		\node[draw, rounded corners, fill=Accent!20, minimum width=2.5cm, minimum height=1cm] (gen) at (4,0) {Generales};
+		\node[below=0.3cm] at (exp.south) {\scriptsize Geometría limpia};
+		\node[below=0.3cm] at (gen.south) {\scriptsize Geometría rica};
+		\draw[->, thick, AccentDark] (exp) -- (gen) node[midway, above] {\scriptsize generalización};
+	\end{tikzpicture}
+\end{center}
+
+\section{Geometría de información cuántica}
+
+La geometría de la información se extiende naturalmente al caso cuántico, donde las ``distribuciones'' son \textbf{estados cuánticos} (operadores densidad).
+
+\begin{definition}[Estado cuántico]
+	Un \textbf{estado cuántico} es un operador densidad $\rho$ que satisface: $\rho \ge 0$, $\operatorname{Tr}(\rho) = 1$.
+\end{definition}
+
+\begin{definition}[Métrica de Bures]
+	La \textbf{métrica de Bures} es la métrica cuántica natural:
+	\[
+	d_B(\rho, \sigma) = \arccos\left(\operatorname{Tr}\sqrt{\sqrt{\rho}\,\sigma\sqrt{\rho}}\right).
+	\]
+	Es la generalización cuántica de la métrica de Fisher--Rao.
+\end{definition}
+
+\begin{theorem}[Relación con la métrica de Fisher]
+	Para estados cuánticos puros $|\psi\rangle$, la métrica de Bures reduce a la métrica de Fubini--Study, que es la métrica de Fisher--Rao para amplitudes de probabilidad.
+\end{theorem}
+
+\section{Aprendizaje de variedades}
+
+\begin{definition}[Aprendizaje de variedades]
+	El \textbf{aprendizaje de variedades} (manifold learning) es el problema de reconstruir una variedad de baja dimensión incrustada en un espacio de alta dimensión a partir de datos observados.
+\end{definition}
+
+\begin{proposition}[Conexión con la geometría de la información]
+	Cuando los datos son muestras de una distribución, la variedad aprendida puede interpretarse como una \textbf{variedad estadística}, y los métodos de aprendizaje de variedades (Isomap, LLE, t-SNE) son aproximaciones de geodésicas en la métrica de Fisher.
+\end{proposition}
+
+\section{Geometría de information $\alpha$-$\beta$}
+
+\begin{definition}[$\alpha$-$\beta$-divergencia]
+	La \textbf{$\alpha$-$\beta$-divergencia} generaliza la KL y las $f$-divergencias:
+	\[
+	D^{(\alpha,\beta)}(p \| q) = \frac{4}{1-\alpha^2}\left(1 - \sum_x p(x)^{(1+\alpha)/2} q(x)^{(1-\alpha)/2}\right)
+	\]
+	para $\alpha \ne \pm 1$, con extensiones por continuidad.
+\end{definition}
+
+\begin{theorem}[Propiedades]
+	\begin{enumerate}
+		\item Para $\alpha = \beta = 0$: $D^{(0,0)} = D_{\mathrm{KL}}$ (divergencia KL).
+		\item Para $\alpha = 1$: $D^{(1,\beta)}$ es una $f$-divergencia.
+		\item Para $\beta = 0$: $D^{(\alpha,0)}$ es una divergencia de Bregman.
+	\end{enumerate}
+\end{theorem}
+
+\section{Conexiones de Wasserstein}
+
+\begin{definition}[Distancia de Wasserstein]
+	La \textbf{distancia de Wasserstein} de orden 2 entre dos distribuciones $p$ y $q$ en $\mathbb{R}^d$ es:
+	\[
+	W_2(p, q) = \inf_{\gamma \in \Pi(p,q)} \left(\int \|x - y\|^2 \, d\gamma(x,y)\right)^{1/2}
+	\]
+	donde $\Pi(p,q)$ es el conjunto de acoplamientos (joint distributions) con marginales $p$ y $q$.
+\end{definition}
+
+\begin{proposition}[Ventajas de Wasserstein]
+	La distancia de Wasserstein tiene ventajas sobre la KL:
+	\begin{itemize}
+		\item Es una métrica verdadera (simétrica, satisface triangular).
+		\item Está bien definida incluso cuando las distribuciones no tienen soporte común.
+		\item Codifica la ``geometría del espacio muestral'' (no solo la probabilidad).
+	\end{itemize}
+\end{proposition}
+
+\section{Optimal Transport y geometría}
+
+\begin{theorem}[Kantorovich--Rubinstein]
+	La distancia de Wasserstein de orden 1 puede expresarse como:
+	\[
+	W_1(p, q) = \sup_{\|f\|_L \le 1} \left(\mathbb{E}_p[f(x)] - \mathbb{E}_q[f(x)]\right)
+	\]
+	donde el supremo es sobre funciones 1-Lipschitz.
+\end{theorem}
+
+\begin{example}[Transporte óptimo en imágenes]
+	En procesamiento de imágenes, el transporte óptimo se usa para comparar histogramas de color, transferir estilos y alinear registros médicos.
+\end{example}
+
+\section{Geometría de información y aprendizaje profundo}
+
+\subsection{El espacio de parámetros de una red neuronal}
+
+\begin{proposition}[Geometría del loss landscape]
+	El loss landscape de una red neuronal puede interpretarse como una \textbf{variedad estadística} con métrica de Fisher inducida por los datos.  Los mínimos locales corresponden a ``valles'' en esta variedad.
+\end{proposition}
+
+\subsection{Batch normalization y geometría}
+
+\begin{theorem}[Batch normalization como proyección]
+	La batch normalization es equivalente a una proyección $e$-exponencial de las activaciones sobre la familia de distribuciones normalizadas.
+\end{theorem}
+
+\section{Código Python: transporte óptimo}
+
+\begin{lstlisting}[language=Python, style=PythonStyle]
+import numpy as np
+from scipy.optimize import linprog
+
+def earth_movers_distance_1d(p, q, x):
+    """Calcula la distancia de Wasserstein 1D entre distribuciones discretas."""
+    # Funcion de distribucion acumulada
+    cdf_p = np.cumsum(p)
+    cdf_q = np.cumsum(q)
+    
+    # W1 = integral de |F_p - F_q|
+    w1 = np.trapz(np.abs(cdf_p - cdf_q), x)
+    return w1
+
+# Ejemplo
+x = np.array([0, 1, 2, 3, 4])
+p = np.array([0.1, 0.2, 0.4, 0.2, 0.1])
+q = np.array([0.2, 0.1, 0.1, 0.4, 0.2])
+
+w1 = earth_movers_distance_1d(p, q, x)
+print(f"Wasserstein-1 distance: {w1:.4f}")
+
+# Verificacion con KL
+from scipy.stats import entropy
+p_smooth = p + 1e-10
+q_smooth = q + 1e-10
+kl = entropy(p_smooth, q_smooth)
+print(f"KL divergence: {kl:.4f}")
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, style=PythonStyle]
+# Geodesicas en el espacio de Gaussianas
+def gaussian_geodesic(mu0, sigma0, mu1, sigma1, t):
+    """Geodesica entre dos Gaussianas en coordenadas de Fisher."""
+    # Coordenadas naturales
+    eta0 = np.array([mu0/sigma0**2, -1/(2*sigma0**2)])
+    eta1 = np.array([mu1/sigma1**2, -1/(2*sigma1**2)])
+    
+    # Interpolacion en eta (geodesica exponencial)
+    eta_t = (1 - t) * eta0 + t * eta1
+    
+    # Conversion a mu, sigma
+    sigma_t = np.sqrt(-1 / (2 * eta_t[1]))
+    mu_t = eta_t[0] * sigma_t**2
+    
+    return mu_t, sigma_t
+
+# Ejemplo
+mu0, sigma0 = 0, 1
+mu1, sigma1 = 3, 2
+
+for t in [0, 0.25, 0.5, 0.75, 1.0]:
+    mu_t, sigma_t = gaussian_geodesic(mu0, sigma0, mu1, sigma1, t)
+    print(f"t={t:.2f}: mu={mu_t:.3f}, sigma={sigma_t:.3f}")
+\end{lstlisting}
+
+\section{Ejercicios}
+
+\subsection*{Variedades generales}
+\begin{enumerate}
+	\item Para la familia t-Student con $\nu = 5$ y parámetro de localización $\mu$, calcule la métrica de Fisher.
+	\item ¿Por qué la familia t-Student no es exponencial?
+	\item Demuestre que la métrica de Fisher está bien definida para cualquier familia paramétrica regular.
+\end{enumerate}
+
+\subsection*{Geometría cuántica}
+\begin{enumerate}[resume]
+	\item Para un qubit con estado $|\psi\rangle = \cos(\theta/2)|0\rangle + \sin(\theta/2)e^{i\phi}|1\rangle$, calcule la métrica de Bures.
+	\item Muestre que la métrica de Bures reduce a la métrica de Fubini--Study para estados puros.
+	\item ¿Cuál es la interpretación física de la distancia de Bures?
+\end{enumerate}
+
+\subsection*{Transporte óptimo}
+\begin{enumerate}[resume]
+	\item Calcule la distancia de Wasserstein $W_1$ entre $\mathrm{Bern}(0.3)$ y $\mathrm{Bern}(0.7)$.
+	\item Para distribuciones discretas $p = (0.5, 0.5)$ y $q = (0.2, 0.8)$ en $\{0, 1\}$, encuentre el transporte óptimo.
+	\item Muestre que $W_1$ es una métrica verdadera (simétrica, definitiva positiva, triangular).
+	\item (Reto) Demuestre el teorema de Kantorovich--Rubinstein para el caso unidimensional.
+\end{enumerate}
+
+\subsection*{Temas emergentes}
+\begin{enumerate}[resume]
+	\item Explique la conexión entre batch normalization y proyección exponencial.
+	\item Para una red neuronal con activación softmax, ¿cuál es la métrica de Fisher inducida?
+	\item ¿Cómo se relaciona la geometría de Wasserstein con la geometría de Fisher?
+	\item (Reto) Proponga una extensión de la divergencia KL para distribuciones con soportes diferentes usando transporte óptimo.
+\end{enumerate}

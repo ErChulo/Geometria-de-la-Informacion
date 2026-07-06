@@ -153,3 +153,22 @@
 	\item \textbf{Resp.:} Para softmax, el gradiente natural es $\tilde{\nabla} L = G^{-1} \nabla L$, donde $G = \text{diag}(p) - pp^T$ es la Fisher del categorical.  Esto equivale al gradiente estándar corregido por la curvatura de la salida.
 	\item \textbf{Resp.:} $\Delta\eta = I(\eta)^{-1} \partial L/\partial\eta$.  Para familia exponencial, $I(\eta) = \nabla^2 A(\eta)$, así que $\Delta\eta = (\nabla^2 A(\eta))^{-1} \nabla L$, que es invariante bajo reparametrizaciones.
 \end{enumerate}
+
+\section*{Capítulo 7: Temas Avanzados}
+
+\begin{enumerate}
+	\item \textbf{Resp.:} Para t-Student con $\nu = 5$: $I(\mu) = (\nu+1)/(2\nu) = 6/10 = 0.6$.
+	\item \textbf{Resp.:} La familia t-Student no es exponencial porque no existe un estadístico suficiente de dimensión finita; la función de verosimilitud no puede escribirse en la forma exponencial.
+	\item \textbf{Resp.:} La métrica de Fisher está bien definida porque la log-verosimilitud es diferenciable y la esperanza de su cuadrado es finita bajo condiciones de regularidad.
+	\item \textbf{Resp.:} Para $|\psi\rangle = \cos(\theta/2)|0\rangle + \sin(\theta/2)e^{i\phi}|1\rangle$, la métrica de Bures es $ds^2 = (d\theta^2 + \sin^2\theta \, d\phi^2)/4$.
+	\item \textbf{Resp.:} Para estados puros, $d_B = \arccos|\langle\psi|\phi\rangle|$, que es la distancia de Fubini--Study.
+	\item \textbf{Resp.:} La distancia de Bures mide la ``dificultad'' de distinguir dos estados cuánticos; está relacionada con la probabilidad de éxito en una prueba de hipótesis.
+	\item \textbf{Resp.:} Para Bernoulli, $W_1 = |p_1 - q_1| = |0.3 - 0.7| = 0.4$.
+	\item \textbf{Resp.:} Transporte óptimo: mover masa $0.3$ de posición $0$ a $1$.  Costo: $0.3 \times 1 = 0.3$.
+	\item \textbf{Resp.:} Simetría: $W_1(p,q) = W_1(q,p)$ porque el problema de transporte es simétrico.  Definida positiva: $W_1(p,q) = 0 \iff p = q$.  Triangular: por la optimalidad del acoplamiento.
+	\item \textbf{Resp.:} Para 1D, $W_1(p,q) = \int_{-\infty}^\infty |F_p(x) - F_q(x)| dx$, que es la integral de la diferencia absoluta de las CDFs.
+	\item \textbf{Resp.:} Batch normalization normaliza las activaciones a media 0 y varianza 1, lo que es equivalente a proyectar sobre la familia de distribuciones normalizadas (exponencial con moment constraints).
+	\item \textbf{Resp.:} Para softmax con $K$ clases, la Fisher es $G_{ij} = p_i(\delta_{ij} - p_j)$, que es la matriz de covarianza del categorical.
+	\item \textbf{Resp.:} Wasserstein incorpora la geometría del espacio muestral (distancias entre puntos), mientras que Fisher solo considera la estructura probabilística.  Wasserstein es más ``física'' pero computacionalmente más costosa.
+	\item \textbf{Resp.:} Una extensión es usar $W_2(p, q)^2$ como régimen de pérdida, o combinar KL con transporte óptimo para distribuciones con soportes diferentes.
+\end{enumerate}
