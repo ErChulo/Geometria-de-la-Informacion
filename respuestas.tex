@@ -111,3 +111,24 @@
 	\item \textbf{Resp.:} Para Cauchy $p_\theta(x) = 1/(\pi(1+(x-\theta)^2))$, la métrica de Fisher es $g = 1/2$ (constante).  La curvatura escalar es $R = 2/g = 4$ (constante positiva).
 	\item \textbf{Resp.:} Las $\alpha$-geodésicas en una familia exponencial satisfacen $\ddot\eta + \Gamma^{(\alpha)} \dot\eta^2 = 0$, que es de tipo Riccati cuando se expresa en coordenadas naturales.
 \end{enumerate}
+
+\section*{Capítulo 5: Geometría de la Inferencia}
+
+\begin{enumerate}
+	\item \textbf{Falso.} La información de Fisher \emph{no} es invariante bajo reparametrizaciones; se transforma como un tensor: $g_{ij}^{\text{nuevo}} = g_{kl} \frac{\partial\theta^k}{\partial\eta^i}\frac{\partial\theta^l}{\partial\eta^j}$.
+	\item \textbf{Resp.:} La cota de Cramér--Rao establece que $\operatorname{Var}(\hat\theta) \ge 1/(nI(\theta))$, es decir, la información de Fisher define la varianza mínima alcanzable.
+	\item \textbf{Resp.:} Ejemplo: la familia de Cauchy con parámetro de localización $\theta$ no tiene estadístico suficiente de dimensión finita.
+	\item \textbf{Resp.:} Los MLE son asintóticamente eficientes porque alcanzan la cota de Cramér--Rao en el límite $n \to \infty$, bajo condiciones de regularidad.
+	\item \textbf{Resp.:} La proyección $e$-exponencial minimiza $D_{\mathrm{KL}}(p_{\text{empírica}} \| p_\theta)$, que es equivalente a maximizar la verosimilitud.
+	\item \textbf{Resp.:} $I(\alpha) = \psi'(\alpha) - \psi'(\alpha+\beta)$ donde $\psi$ es la función digamma.
+	\item \textbf{Resp.:} $I = \begin{pmatrix} 1/\sigma^2 & 0 \\ 0 & 1/(2\sigma^2) \end{pmatrix}$ (diagonal).
+	\item \textbf{Resp.:} Cota C-R: $1/(nI(\lambda)) = \lambda/n = \lambda/50$.
+	\item \textbf{Resp.:} Varianza mínima: $1/(nI(p)) = p(1-p)/n = 0.25/200 = 0.00125$.
+	\item \textbf{Resp.:} $\operatorname{Var}(\bar{X}) = p(1-p)/n = 0.25/n$, que es exactamente la cota de Cramér--Rao.  $\checkmark$
+	\item \textbf{Resp.:} $I(X; T) = I(X; \theta)$ porque $T$ es suficiente.  Para Bernoulli, $I(X; T) = H(X) - H(X|T) = H(\text{Binomial}(n,p)) - H(\text{Bernoulli}(p))$.
+	\item \textbf{Resp.:} $I(\theta) = \operatorname{Var}_\theta(\partial \log p_\theta / \partial \theta)$ porque $\mathbb{E}[\partial \log p_\theta / \partial \theta] = 0$ (identidad de Fisher).
+	\item \textbf{Resp.:} Para la exponencial familiar, el MLE $\hat\theta$ satisface $\partial \log L / \partial \theta = 0$, que es equivalente a la proyección $e$-exponencial.
+	\item \textbf{Resp.:} Por el teorema de factorización de Fisher--Neyman, $p(x|\theta) = g(T(x), \theta) h(x)$, así que $p(x|T) = p(x)/p(T) = h(x)/\int h(x)dx$, que no depende de $\theta$.
+	\item \textbf{Resp.:} La transformación tensorial se deriva de la regla de cadena para derivadas parciales: $\partial_{\eta^i} = \sum_k \frac{\partial\theta^k}{\partial\eta^i} \partial_{\theta^k}$.
+	\item \textbf{Resp.:} $I(\eta) = \mathbb{E}[(\partial \ell / \partial \eta)^2] = \mathbb{E}[T(X)^2] - (\mathbb{E}[T(X)])^2 = \nabla^2 A(\eta)$ (varianza de la estadística suficiente).
+\end{enumerate}

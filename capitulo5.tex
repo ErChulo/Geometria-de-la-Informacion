@@ -1,0 +1,237 @@
+% !TeX root = main.tex
+
+\chapter{Geometría de la Inferencia}
+
+\begin{quotation}
+	\itshape
+	``La inferencia estadística es, en esencia, la geometría de la creencia actualizada.''
+\end{quotation}
+
+En capítulos anteriores desarrollamos la maquinaria geométrica: métricas, divergencias, conexiones y dualidades.  Ahora aplicamos esa maquinaria al problema central de la estadística: \textbf{inferir} parámetros desconocidos a partir de datos observados.
+
+La geometría de la inferencia conecta tres ideas fundamentales: la \textbf{información de Fisher} como medida de cuánto los datos informan sobre el parámetro, las \textbf{coordenadas suficientes} que capturan toda la información relevante, y la \textbf{cota de Cramér--Rao} que establece el límite fundamental de precisión.
+
+\section{Información de Fisher y suficiencia}
+
+\begin{definition}[Información de Fisher]
+	La \textbf{información de Fisher} de un parámetro $\theta$ es:
+	\[
+	I(\theta) = \mathbb{E}_\theta\!\left[\left(\frac{\partial \log p_\theta(X)}{\partial \theta}\right)^2\right] = -\mathbb{E}_\theta\!\left[\frac{\partial^2 \log p_\theta(X)}{\partial \theta^2}\right].
+	\]
+\end{definition}
+
+\begin{theorem}[Información de Fisher y métrica de Fisher]
+	La información de Fisher es la métrica de Fisher en el caso uniparamétrico: $I(\theta) = g_{11}(\theta)$.  En el caso multiparamétrico, la matriz de información de Fisher $I_{ij}(\theta) = g_{ij}(\theta)$ es la métrica de Fisher.
+\end{theorem}
+
+\begin{proof}[Demostración]
+	Por definición, $g_{ij}(\theta) = \mathbb{E}[\partial_i \ell \cdot \partial_j \ell]$ donde $\ell = \log p_\theta(X)$.  Para $i=j$: $g_{ii} = \mathbb{E}[(\partial_i \ell)^2]$.  Por la identidad de Fisher: $\mathbb{E}[\partial_i^2 \ell] = -g_{ii}$, así que $g_{ii} = -\mathbb{E}[\partial_i^2 \ell] = I_{ii}$.
+\end{proof}
+
+\begin{example}[Información de Fisher en distribuciones comunes]
+	\begin{itemize}
+		\item $\mathrm{Bern}(p)$: $I(p) = 1/(p(1-p))$.
+		\item $\mathrm{Poisson}(\lambda)$: $I(\lambda) = 1/\lambda$.
+		\item $\mathcal{N}(\mu, \sigma^2)$ con $\sigma^2$ fijo: $I(\mu) = 1/\sigma^2$.
+		\item $\mathrm{Exp}(\lambda)$: $I(\lambda) = 1/\lambda^2$.
+	\end{itemize}
+\end{example}
+
+\begin{center}
+	\begin{tikzpicture}
+		\begin{axis}[
+			width=10cm, height=6cm,
+			xlabel={$p$},
+			ylabel={$I(p)$},
+			domain=0.05:0.95,
+			samples=100,
+			axis lines=left,
+			ymax=50,
+			grid=both,
+			grid style={gray!30},
+			tick style={black},
+		]
+			\addplot[Accent, thick] {1/(x*(1-x))};
+			\node[AccentDark] at (axis cs:0.5,2) {$I(p) = \frac{1}{p(1-p)}$};
+			\addplot[AccentDark, dashed] coordinates {(0.5,0) (0.5,50)};
+			\node[AccentDark] at (axis cs:0.5,45) {$p=0.5$};
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+
+\section{Estadísticas suficientes y reducción}
+
+\begin{definition}[Estadística suficiente]
+	Una estadística $T(X)$ es \textbf{suficiente} para $\theta$ si la distribución condicional de $X$ dado $T(X)$ no depende de $\theta$.
+\end{definition}
+
+\begin{theorem}[Factorización de Fisher--Neyman]
+	$T(X)$ es suficiente para $\theta$ si y solo si la verosimilitud puede factorizarse como:
+	\[
+	L(\theta; x) = g(T(x), \theta) \cdot h(x).
+	\]
+\end{theorem}
+
+\begin{example}[Suficiencia en Bernoulli]
+	Para $n$ muestras $X_1, \ldots, X_n$ de $\mathrm{Bern}(p)$, la verosimilitud es:
+	\[
+	L(p; x) = p^{\sum x_i}(1-p)^{n-\sum x_i}.
+	\]
+	El estadístico $T = \sum X_i$ es suficiente.  La distribución de $T$ es $\mathrm{Binomial}(n, p)$.
+\end{example}
+
+\section{Cota de Cramér--Rao}
+
+\begin{theorem}[Cramér--Rao]
+	Para cualquier estimador insesgado $\hat\theta$ de $\theta$:
+	\[
+	\operatorname{Var}(\hat\theta) \ge \frac{1}{n I(\theta)}.
+	\]
+\end{theorem}
+
+\begin{proof}[Demostración (sketch)]
+	Sea $T = \sum_{i=1}^n \partial \log p_\theta(X_i)/\partial \theta$ el score.  Entonces $\mathbb{E}[T] = 0$ y $\operatorname{Var}(T) = n I(\theta)$.  Por la desigualdad de Cauchy--Schwarz:
+	\[
+	\operatorname{Var}(\hat\theta) \operatorname{Var}(T) \ge (\operatorname{Cov}(\hat\theta, T))^2.
+	\]
+	Por la identidad de Fisher, $\operatorname{Cov}(\hat\theta, T) = 1$ (para estimadores insesgados).  Sustituyendo: $\operatorname{Var}(\hat\theta) \ge 1/(n I(\theta))$.
+\end{proof}
+
+\begin{corollary}[Eficiencia asintótica]
+	Un estimador es \textbf{asintóticamente eficiente} si alcanza la cota de Cramér--Rao asintóticamente.  Los estimadores de máxima verosimilitud son asintóticamente eficientes bajo condiciones de regularidad.
+\end{corollary}
+
+\section{Geometría de la estimación}
+
+La geometría de la inferencia proporciona una interpretación visual de la estimación.
+
+\begin{proposition}[Geometría de la proyección]
+	La estimación de máxima verosimilitud es equivalente a la proyección $e$-exponencial de la distribución empírica sobre la familia paramétrica.
+\end{proposition}
+
+\begin{center}
+	\begin{tikzpicture}
+		\node[draw, circle, fill=AccentLight, minimum size=2cm] (emp) at (0,0) {Empírica};
+		\node[draw, ellipse, fill=Accent!20, minimum width=4cm, minimum height=1.5cm] (fam) at (4,0) {Familia $\{p_\theta\}$};
+		\node[draw, circle, fill=Accent, minimum size=0.8cm] (mle) at (3.5,0) {$\hat\theta_{ML}$};
+		\draw[->, thick, AccentDark] (emp) -- (mle) node[midway, above] {proyección $e$};
+		\node[below=0.5cm] at (emp.south) {Distribución empírica};
+		\node[below=0.5cm] at (fam.south) {Modelo paramétrico};
+	\end{tikzpicture}
+\end{center}
+
+\section{Información de Fisher y curvatura}
+
+\begin{theorem}[Información de Fisher y curvatura]
+	La curvatura de la métrica de Fisher mide la ``resistencia'' del modelo a los cambios en el parámetro.  Una curvatura alta indica que pequeños cambios en $\theta$ producen grandes cambios en la distribución.
+\end{theorem}
+
+\begin{example}[Curvatura en Bernoulli]
+	La curvatura escalar de la métrica de Fisher para $\mathrm{Bern}(p)$ es $R = 2$ (constante).  Esto indica que la geometría del espacio de Bernoulli es uniformemente curvada.
+\end{example}
+
+\section{Información mutua y suficiencia}
+
+\begin{definition}[Información mutua]
+	La \textbf{información mutua} entre $X$ y $Y$ es:
+	\[
+	I(X; Y) = D_{\mathrm{KL}}(p_{X,Y} \| p_X p_Y) = \sum_{x,y} p(x,y) \log \frac{p(x,y)}{p(x)p(y)}.
+	\]
+\end{definition}
+
+\begin{theorem}[Suficiencia e información mutua]
+	Si $T(X)$ es suficiente para $\theta$, entonces $I(X; \theta) = I(T(X); \theta)$.  Es decir, $T$ captura \emph{toda} la información sobre $\theta$ que contiene $X$.
+\end{theorem}
+
+\section{Código Python: información de Fisher y eficiencia}
+
+\begin{lstlisting}[language=Python, style=PythonStyle]
+import numpy as np
+from scipy import stats
+
+def fisher_information_bernoulli(p):
+    """Informacion de Fisher para Bernoulli(p)."""
+    return 1 / (p * (1 - p))
+
+def fisher_information_poisson(lam):
+    """Informacion de Fisher para Poisson(lambda)."""
+    return 1 / lam
+
+def fisher_information_normal(mu, sigma2):
+    """Informacion de Fisher para N(mu, sigma2)."""
+    return 1 / sigma2
+
+def cramerrao_lower_bound(p, n):
+    """Cota de Cramer-Rao para Bernoulli(p) con n muestras."""
+    I = fisher_information_bernoulli(p)
+    return 1 / (n * I)
+
+# Verificacion
+p = 0.5
+n = 100
+I = fisher_information_bernoulli(p)
+cr_bound = cramerrao_lower_bound(p, n)
+print(f"I(Bernoulli(0.5)) = {I:.4f}")
+print(f"Cota C-R para n=100: {cr_bound:.6f}")
+
+# Simulacion
+n_sims = 10000
+samples = np.random.binomial(1, p, size=(n_sims, n))
+mle_estimates = samples.mean(axis=1)
+var_mle = mle_estimates.var()
+print(f"Varianza MLE estimada: {var_mle:.6f}")
+print(f"Ratio Var/Cota: {var_mle / cr_bound:.4f}")
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, style=PythonStyle]
+# Eficiencia asintotica del MLE
+def asymptotic_efficiency(true_p, n_values):
+    """Verifica la eficiencia asintotica del MLE."""
+    I = fisher_information_bernoulli(true_p)
+    results = []
+    for n in n_values:
+        samples = np.random.binomial(1, true_p, size=(10000, n))
+        mle = samples.mean(axis=1)
+        var_est = mle.var()
+        cr_bound = 1 / (n * I)
+        efficiency = cr_bound / var_est
+        results.append((n, var_est, cr_bound, efficiency))
+    return results
+
+# Verificacion
+n_vals = [10, 50, 100, 500, 1000]
+results = asymptotic_efficiency(0.5, n_vals)
+print("n, Var(MLE), Cota-CR, Eficiencia")
+for n, var_est, cr, eff in results:
+    print(f"{n:5d}, {var_est:.6f}, {cr:.6f}, {eff:.4f}")
+\end{lstlisting}
+
+\section{Ejercicios}
+
+\subsection*{Conceptuales}
+\begin{enumerate}
+	\item Verdadero o falso: La información de Fisher es invariante bajo reparametrizaciones del parámetro.
+	\item ¿Cuál es la relación entre la información de Fisher y la varianza mínima de un estimador insesgado?
+	\item Defina una estadística suficiente y dé un ejemplo donde no existe estadística suficiente de dimensión finita.
+	\item ¿Por qué los estimadores de máxima verosimilitud son asintóticamente eficientes?
+	\item Explique la conexión entre la proyección $e$-exponencial y la estimación de máxima verosimilitud.
+\end{enumerate}
+
+\subsection*{Cálculos}
+\begin{enumerate}[resume]
+	\item Calcule la información de Fisher para $\mathrm{Gamma}(\alpha, \beta)$ con $\beta$ conocido.
+	\item Para $\mathcal{N}(\mu, \sigma^2)$ con ambos parámetros desconocidos, calcule la matriz de información de Fisher.
+	\item Encuentre la cota de Cramér--Rao para el estimador de $\lambda$ en $\mathrm{Poisson}(\lambda)$ con $n = 50$.
+	\item Para $\mathrm{Bern}(p)$ con $n = 200$ muestras, calcule la varianza mínima de un estimador insesgado de $p$.
+	\item Verifique que el estimador $\bar{X}$ para $\mathrm{Bern}(p)$ alcanza la cota de Cramér--Rao.
+	\item Calcule la información mutua entre $X$ y $T(X) = \sum X_i$ para $n$ muestras de $\mathrm{Bern}(p)$.
+\end{enumerate}
+
+\subsection*{Teóricos}
+\begin{enumerate}[resume]
+	\item Demuestre que la información de Fisher es la varianza del score: $I(\theta) = \operatorname{Var}_\theta(\partial \log p_\theta / \partial \theta)$.
+	\item Muestre que la cota de Cramér--Rao se alcanza para la distribución exponencial familiar.
+	\item Demuestre que si $T(X)$ es suficiente, entonces la distribución condicional de $X$ dado $T$ no depende de $\theta$.
+	\item (Reto) Demuestre que la información de Fisher se transforma como un tensor bajo cambios de coordenadas: $g_{ij}^{\text{nuevo}} = g_{kl} \frac{\partial\theta^k}{\partial\eta^i}\frac{\partial\theta^l}{\partial\eta^j}$.
+	\item (Reto) Para una familia exponencial, muestre que la información de Fisher es el Hessiano de la función de partición: $I(\eta) = \nabla^2 A(\eta)$.
+\end{enumerate}
