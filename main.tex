@@ -28,6 +28,7 @@
 	
 	% Prólogo en frontmatter (números romanos, sin capítulo numerado)
 	\include{Prologo}
+	\addtocontents{toc}{\protect\enlargethispage{-\baselineskip}}
 	\cleardoublepage
 	
 	\mainmatter
@@ -35,18 +36,29 @@
 	% Asegura que el siguiente capítulo sea el 0 y muestre número grande
 	\setcounter{chapter}{0}
 	\include{capitulo0}
+	\addtocontents{toc}{\protect\enlargethispage{-\baselineskip}}
 	\include{capitulo1}
+	\addtocontents{toc}{\protect\enlargethispage{-\baselineskip}}
 	\include{capitulo2}
+	\addtocontents{toc}{\protect\enlargethispage{-\baselineskip}}
 	\include{capitulo3}
+	\addtocontents{toc}{\protect\enlargethispage{-\baselineskip}}
 	\include{capitulo4}
+	\addtocontents{toc}{\protect\enlargethispage{-\baselineskip}}
 	\include{capitulo5}
+	\addtocontents{toc}{\protect\enlargethispage{-\baselineskip}}
 	\include{capitulo6}
+	\addtocontents{toc}{\protect\enlargethispage{-\baselineskip}}
 	\include{capitulo7}
+	\addtocontents{toc}{\protect\enlargethispage{-\baselineskip}}
 	
 	\backmatter
 	% Bibliografía / apéndices (si aplica)
 	\include{respuestas}
+	\addtocontents{toc}{\protect\enlargethispage{-\baselineskip}}
 	\include{apendice_mathematica}
+	\addtocontents{toc}{\protect\enlargethispage{-\baselineskip}}
 	\include{bibliografia}
+	\addtocontents{toc}{\protect\enlargethispage{-\baselineskip}}
 	
 \end{document}
