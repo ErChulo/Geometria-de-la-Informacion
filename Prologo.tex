@@ -12,18 +12,11 @@
 	\emph{\guillemotleft Tu única brújula fiable es la curvatura de tu propia incertidumbre.\guillemotright}
 \end{flushright}
 
-Este libro parte de una tensión de todos los días: el mundo sigue $p(x)$ (la \textbf{verdad}) y nosotros trabajamos con $q_\theta(x)$ (el \textbf{modelo}, con parámetro $\theta$).
-Para evitar ambigüedades, usaremos:
-\begin{itemize}
-	\item \textbf{Verdad:} $p(x)$.
-	\item \textbf{Modelo:} $q_\theta(x)$.
-	\item \textbf{Prior:} $\pi(\theta)$.
-	\item \textbf{Posterior:} $\pi(\theta\mid x)$.
-\end{itemize}
+Este libro parte de una tensión de todos los días: el mundo sigue una distribución verdadera $p(x)$ y nosotros trabajamos con un modelo $p_\theta(x)$ con parámetro $\theta$.
 
 Bayes da una receta de actualización limpia usando el modelo:
 \[
-\pi(\theta\mid x)\;\propto\;\pi(\theta)\,q_\theta(x).
+\pi(\theta\mid x)\;\propto\;\pi(\theta)\,p_\theta(x).
 \]
 Entonces, ¿para qué geometría de la información (GI)? Para ponerle \emph{geometría} al espacio de distribuciones y convertir varias reglas sueltas en \textbf{principios invariantes}: rectas, proyecciones y sensibilidades que no dependen de cómo parametrices el modelo.
 
@@ -41,7 +34,7 @@ Estos cambios no deberían alterar \emph{las conclusiones} cuando no cambian la 
 \begin{enumerate}
 	\item \textbf{Métrica elegida por invariancia (Chentsov).} Si exiges que las distancias no cambien al aplicar transformaciones estocásticas que no pierden información (estadísticos suficientes), la métrica Riemanniana queda determinada (salvo constante): \emph{Fisher--Rao}. Representante típico:
 	\[
-	g_{ij}(\theta)\;=\;\mathrm{E}_{\theta}\!\big[\partial_i \log q_\theta(X)\,\partial_j \log q_\theta(X)\big].
+	g_{ij}(\theta)\;=\;\mathrm{E}_{\theta}\!\big[\partial_i \log p_\theta(X)\,\partial_j \log p_\theta(X)\big].
 	\]
 	No es cuestión de gusto: es una \emph{unicidad} por invariancia. La sensibilidad refleja información, no coordenadas.
 	
@@ -77,7 +70,7 @@ Una \emph{divergencia} $D(p\Vert q)$ no es (necesariamente) simétrica: los erro
 
 \textbf{Dos esquemas de actualización (con lectura actuarial)}
 
-Imagina que, tras ver datos nuevos, quieres acercar $q_\theta(x)$ a $p(x)$. Hay dos esquemas muy usados, con interpretación directa en \emph{credibilidad}:
+Imagina que, tras ver datos nuevos, quieres acercar $p_\theta(x)$ a la distribución verdadera. Hay dos esquemas muy usados, con interpretación directa en \emph{credibilidad}:
 
 \begin{enumerate}
 	\item \textbf{Esquema por momentos (credibilidad clásica, B{\"u}hlmann--Straub).}

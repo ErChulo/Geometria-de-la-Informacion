@@ -210,7 +210,7 @@ for t in [0, 0.25, 0.5, 0.75, 1.0]:
 	\item[$\star\star$] Para un qubit con estado $|\psi\rangle = \cos(\theta/2)|0\rangle + \sin(\theta/2)e^{i\phi}|1\rangle$, calcule la métrica de Bures.
 	\item[$\star\star\star$] Muestre que la métrica de Bures reduce a la métrica de Fubini--Study para estados puros.
 	\item[$\star$] ¿Cuál es la interpretación física de la distancia de Bures?
-	\item[$\star\star\star$] Para un sistema de dos qubits, describa por qué la geometría del espacio de estados entrelazados es fundamentalmente diferente a la de estados separables.
+	\item[$\star\star\star$] Para un qubit puro $|\psi\rangle = \cos(\theta/2)|0\rangle + \sin(\theta/2)e^{i\phi}|1\rangle$, muestre que la métrica de Bures induce una distancia $d_B(|\psi\rangle, |\phi\rangle) = \arccos(|\langle\psi|\phi\rangle|)$. Calcule esta distancia para $|0\rangle$ y $(|0\rangle+|1\rangle)/\sqrt{2}$.
 	\item[$\star\star$] Compare la métrica de Bures con la distancia trace: ¿cuándo coinciden y cuándo difieren?
 \end{enumerate}
 
@@ -220,7 +220,7 @@ for t in [0, 0.25, 0.5, 0.75, 1.0]:
 	\item[$\star\star$] Calcule la distancia de Wasserstein $W_1$ entre $\mathrm{Bern}(0.3)$ y $\mathrm{Bern}(0.7)$.
 	\item[$\star\star$] Para distribuciones discretas $p = (0.5, 0.5)$ y $q = (0.2, 0.8)$ en $\{0, 1\}$, encuentre el transporte óptimo.
 	\item[$\star\star\star$] Muestre que $W_1$ es una métrica verdadera (simétrica, definitiva positiva, triangular).
-	\item[$\star\star\star\star$] (Reto) Demuestre el teorema de Kantorovich--Rubinstein para el caso unidimensional.
+	\item[$\star\star\star$] Para distribuciones discretas univariadas con soporte en $\{x_1 < x_2 < \cdots < x_k\}$, muestre que $W_1(p,q) = \sum_{i=1}^{k-1} |F_p(x_i) - F_q(x_i)| \cdot (x_{i+1} - x_i)$, donde $F$ es la función de distribución acumulada. Use esta fórmula para calcular $W_1$ entre $\mathrm{Uniforme}(0,1)$ y $\mathrm{Uniforme}(0.25,0.75)$ discretizadas en puntos $\{0, 0.25, 0.5, 0.75, 1\}$.
 	\item[$\star\star\star$] Para $\mathrm{Uniforme}(0,1)$ y $\mathrm{Uniforme}(0,2)$, calcule $W_2^2$ y compare con la divergencia KL.
 	\item[$\star\star$] Explique por qué la distancia de Wasserstein es preferible a la KL para comparar histogramas de imágenes.
 	\item[$\star\star\star$] Para distribuciones Gaussianas univariadas, muestre que $W_2^2(\mathcal{N}(\mu_1, \sigma_1^2), \mathcal{N}(\mu_2, \sigma_2^2)) = (\mu_1 - \mu_2)^2 + (\sigma_1 - \sigma_2)^2$.
@@ -232,8 +232,8 @@ for t in [0, 0.25, 0.5, 0.75, 1.0]:
 	\item[$\star$] Para una red neuronal con activación softmax, ¿cuál es la métrica de Fisher inducida?
 	\item[$\star$] ¿Cómo se relaciona la geometría de Wasserstein con la geometría de Fisher?
 	\item[$\star\star\star$] Para un modelo de lenguaje con softmax, muestre que la perplejidad está relacionada con la divergencia KL entre la distribución de datos y la distribución del modelo.
-	\item[$\star\star\star$] Discuta por qué el gradiente natural es computacionalmente costoso para redes neuronales profundas y cómo las aproximaciones (K-FAC) mitigan este problema.
-	\item[$\star\star\star\star$] (Reto) Proponga una extensión de la divergencia KL para distribuciones con soportes diferentes usando transporte óptimo.
+	\item[$\star\star\star$] El gradiente natural requiere invertir la matriz de Fisher $I(\theta)$, lo cual cuesta $O(p^3)$ para $p$ parámetros. Proponga una aproximación diagonal $I(\theta) \approx \operatorname{diag}(I(\theta))$ que reduce el cómputo a $O(p)$. Compare la dirección del paso con la del gradiente estándar para un modelo Bernoulli con datos simulados.
+	\item[$\star\star\star$] Proponga una divergencia híbrida que combine KL y Wasserstein: $D_\alpha(p \| q) = \alpha \cdot D_{\mathrm{KL}}(p \| q) + (1-\alpha) \cdot W_2^2(p,q)$ para $\alpha \in [0,1]$. ¿Qué ventajas tiene sobre KL pura cuando los soportes de $p$ y $q$ no se superponen completamente?
 \end{enumerate}
 
 \subsection*{Qué gana con GI}

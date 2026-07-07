@@ -34,6 +34,14 @@
 	\item \textbf{Resp.:} Hessiano negativo de la log-verosimilitud.
 	\item \textbf{Resp.:} Covarianza del score.
 	\item \textbf{Resp.:} Porque define la única medida de volumen invariante (Prior de Jeffreys).
+	\item \textbf{Resp.:} La información de Fisher mide cuánto ``cambia'' la distribución cuando varía el parámetro: alta Fisher = distribución sensible a $\theta$.
+	\item \textbf{Resp.:} $I(\alpha) = \beta/\alpha^2$ (para $\mathrm{Gamma}(\alpha,\beta)$ con $\beta$ conocido).
+	\item \textbf{Resp.:} Los parámetros $\mu$ y $\sigma$ son ortogonales porque $I_{12} = 0$: la información cruzada entre media y desviación es nula.
+	\item \textbf{Resp.:} $ds = \sqrt{2}\, d\sigma/\sigma$, lo que integra a $\sqrt{2}\ln(\sigma_2/\sigma_1)$.
+	\item \textbf{Resp.:} Es isométrico a $\mathbb{H}^2$ con factor de escala; la porción $\sigma > 0$ es todo el semiplano.
+	\item \textbf{Resp.:} $\eta = \log(\lambda) \implies d\lambda/d\eta = \lambda$. $I(\eta) = (1/\lambda^2)\lambda^2 = 1 = I(\lambda)\cdot e^{2\eta}$. Significa que en coordenadas naturales la información es constante.
+	\item \textbf{Resp.:} $\operatorname{Var}(\hat\lambda) \ge \lambda/n$. Para Poisson, $\bar X$ es insesgado y alcanza la cota.
+	\item \textbf{Resp.:} $\det I = 2/\sigma^4 \to \infty$ cuando $\sigma \to 0$: el volumen de la métrica diverge, indicando que distribuciones con varianza muy pequeña son ``infinitamente sensibles''.
 \end{enumerate}
 
 \section*{Capítulo 2: Divergencias y la Geometría de Bregman}
@@ -164,14 +172,14 @@
 	\item \textbf{Resp.:} La familia t-Student no es exponencial porque no existe un estadístico suficiente de dimensión finita; la función de verosimilitud no puede escribirse en la forma exponencial.
 	\item \textbf{Resp.:} La métrica de Fisher está bien definida porque la log-verosimilitud es diferenciable y la esperanza de su cuadrado es finita bajo condiciones de regularidad.
 	\item \textbf{Resp.:} Para $|\psi\rangle = \cos(\theta/2)|0\rangle + \sin(\theta/2)e^{i\phi}|1\rangle$, la métrica de Bures es $ds^2 = (d\theta^2 + \sin^2\theta \, d\phi^2)/4$.
-	\item \textbf{Resp.:} Para estados puros, $d_B = \arccos|\langle\psi|\phi\rangle|$, que es la distancia de Fubini--Study.
-	\item \textbf{Resp.:} La distancia de Bures mide la ``dificultad'' de distinguir dos estados cuánticos; está relacionada con la probabilidad de éxito en una prueba de hipótesis.
+	\item \textbf{Resp.:} Para estados puros $|\psi\rangle, |\phi\rangle$, $d_B = \arccos(|\langle\psi|\phi\rangle|)$. Para $|0\rangle$ y $(|0\rangle+|1\rangle)/\sqrt{2}$: $d_B = \arccos(1/\sqrt{2}) = \pi/4$.
+	\item \textbf{Resp.:} Para $\mathrm{Uniforme}(0,1)$ y $\mathrm{Uniforme}(0.25,0.75)$ discretizadas: $W_1 = 0.25 \times 0.25 + 0.25 \times 0.25 = 0.125$.
 	\item \textbf{Resp.:} Para Bernoulli, $W_1 = |p_1 - q_1| = |0.3 - 0.7| = 0.4$.
 	\item \textbf{Resp.:} Transporte óptimo: mover masa $0.3$ de posición $0$ a $1$.  Costo: $0.3 \times 1 = 0.3$.
 	\item \textbf{Resp.:} Simetría: $W_1(p,q) = W_1(q,p)$ porque el problema de transporte es simétrico.  Definida positiva: $W_1(p,q) = 0 \iff p = q$.  Triangular: por la optimalidad del acoplamiento.
-	\item \textbf{Resp.:} Para 1D, $W_1(p,q) = \int_{-\infty}^\infty |F_p(x) - F_q(x)| dx$, que es la integral de la diferencia absoluta de las CDFs.
-	\item \textbf{Resp.:} Batch normalization normaliza las activaciones a media 0 y varianza 1, lo que es equivalente a proyectar sobre la familia de distribuciones normalizadas (exponencial con moment constraints).
+	\item \textbf{Resp.:} Para distribuciones discretas: $W_1(p,q) = \sum_i |F_p(x_i) - F_q(x_i)| (x_{i+1}-x_i)$. Para Uniforme(0,1) vs Uniforme(0.25,0.75): $W_1 \approx 0.125$.
+	\item \textbf{Resp.:} La aproximación diagonal reemplaza $I(\theta)^{-1}$ por $\operatorname{diag}(I(\theta))^{-1}$, reduciendo el cómputo de $O(p^3)$ a $O(p)$. La dirección del paso difiere porque ignora correlaciones entre parámetros, pero captura la escala de cada uno.
+	\item \textbf{Resp.:} Una extensión híbrida: $D_\alpha(p\|q) = \alpha \cdot D_{\mathrm{KL}}(p\|q) + (1-\alpha) \cdot W_2^2(p,q)$, donde $\alpha$ controla el trade-off entre coincidencia de soporte y geometría del espacio muestral.
 	\item \textbf{Resp.:} Para softmax con $K$ clases, la Fisher es $G_{ij} = p_i(\delta_{ij} - p_j)$, que es la matriz de covarianza del categorical.
 	\item \textbf{Resp.:} Wasserstein incorpora la geometría del espacio muestral (distancias entre puntos), mientras que Fisher solo considera la estructura probabilística.  Wasserstein es más ``física'' pero computacionalmente más costosa.
-	\item \textbf{Resp.:} Una extensión es usar $W_2(p, q)^2$ como régimen de pérdida, o combinar KL con transporte óptimo para distribuciones con soportes diferentes.
 \end{enumerate}

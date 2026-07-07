@@ -27,11 +27,76 @@ Para medir distancias en esta variedad, introducimos la \textbf{Matriz de Inform
 
 Dada una función de log-verosimilitud $\ell(\theta; x) = \log p(x; \theta)$, la métrica de Fisher $g_{ij}(\theta)$ se define como la covarianza del score:
 
-\[ g_{ij}(\theta) = E_\theta \left[ \frac{\partial \ell}{\partial \theta^i} \frac{\partial \ell}{\partial \theta^j} \right] = \int_{\mathcal{X}} p(x; \theta) \frac{\partial \ell}{\partial \theta^i} \frac{\partial \ell}{\partial \theta^j} \, dx \]
+\[ g_{ij}(\theta) = \mathrm{E}_\theta \left[ \frac{\partial \ell}{\partial \theta^i} \frac{\partial \ell}{\partial \theta^j} \right] = \int_{\mathcal{X}} p(x; \theta) \frac{\partial \ell}{\partial \theta^i} \frac{\partial \ell}{\partial \theta^j} \, dx \]
 
 Bajo condiciones de regularidad, esto es equivalente a la esperanza del Hessiano negativo de la log-verosimilitud (la curvatura de la sorpresa):
 
-\[ g_{ij}(\theta) = -E_\theta \left[ \frac{\partial^2 \ell}{\partial \theta^i \partial \theta^j} \right] \]
+\[ g_{ij}(\theta) = -\mathrm{E}_\theta \left[ \frac{\partial^2 \ell}{\partial \theta^i \partial \theta^j} \right] \]
+
+\begin{definition}[Información de Fisher]
+	En dimensión $n = 1$, la métrica de Fisher se reduce a la \textbf{información de Fisher}:
+	\[
+	I(\theta) = \mathrm{E}_\theta\!\left[\left(\frac{\partial \log p_\theta(X)}{\partial \theta}\right)^2\right] = -\mathrm{E}_\theta\!\left[\frac{\partial^2 \log p_\theta(X)}{\partial \theta^2}\right].
+	\]
+	En el caso general, la matriz $[I_{ij}] = [g_{ij}]$ actúa como una métrica Riemanniana en el espacio de parámetros.
+\end{definition}
+
+\subsection{Ejemplos de cálculo de la métrica de Fisher}
+
+\paragraph{Bernoulli.} Para $X \sim \mathrm{Bern}(p)$ con $p \in (0,1)$:
+\[
+\log p(x;p) = x \log p + (1-x)\log(1-p), \qquad
+\frac{\partial \log p}{\partial p} = \frac{x}{p} - \frac{1-x}{1-p}.
+\]
+\[
+\frac{\partial^2 \log p}{\partial p^2} = -\frac{x}{p^2} - \frac{1-x}{(1-p)^2} \;\;\Longrightarrow\;\;
+I(p) = -\mathrm{E}\!\left[\frac{\partial^2 \log p}{\partial p^2}\right] = \frac{1}{p} + \frac{1}{1-p} = \frac{1}{p(1-p)}.
+\]
+Cuando $p$ se acerca a $0$ o $1$, la información diverge: las distribuciones casi degeneradas son extremadamente sensibles a cambios en $p$.
+
+\paragraph{Poisson.} Para $X \sim \mathrm{Poisson}(\lambda)$ con $\lambda > 0$:
+\[
+\log p(x;\lambda) = -\lambda + x \log \lambda - \log(x!), \qquad
+I(\lambda) = \frac{1}{\lambda}.
+\]
+A mayor tasa $\lambda$, menor información por observación: las distribuciones con alta media son ``más difíciles'' de distinguir.
+
+\paragraph{Exponencial.} Para $X \sim \mathrm{Exp}(\lambda)$ con $\lambda > 0$:
+\[
+\log p(x;\lambda) = \log \lambda - \lambda x, \qquad
+I(\lambda) = \frac{1}{\lambda^2}.
+\]
+
+\paragraph{Normal.} Para $X \sim \mathcal{N}(\mu, \sigma^2)$ con $\sigma^2$ fijo:
+\[
+I(\mu) = \frac{1}{\sigma^2}.
+\]
+Si ambos $\mu$ y $\sigma$ son desconocidos, la matriz de información es:
+\[
+I(\mu, \sigma) = \begin{pmatrix} 1/\sigma^2 & 0 \\ 0 & 2/\sigma^2 \end{pmatrix}.
+\]
+
+\begin{center}
+	\begin{tikzpicture}
+		\begin{axis}[
+			width=10cm, height=6cm,
+			xlabel={$p$},
+			ylabel={$I(p)$},
+			domain=0.05:0.95,
+			samples=100,
+			axis lines=left,
+			ymax=20,
+			grid=both,
+			grid style={gray!30},
+			tick style={black},
+			title={Información de Fisher: Bernoulli},
+		]
+			\addplot[Accent, thick] {1/(x*(1-x))};
+			\node[AccentDark] at (axis cs:0.5,5) {$I(p) = \frac{1}{p(1-p)}$};
+			\addplot[AccentDark, dashed] coordinates {(0.5,0) (0.5,20)};
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
 
 \section{Interpretación Geométrica}
 
@@ -41,30 +106,91 @@ La métrica de Fisher $g$ define un producto interno en el espacio tangente $T_\
 
 Esto nos permite medir la longitud de curvas en la variedad estadística. La distancia entre dos distribuciones $p_{\theta_1}$ y $p_{\theta_2}$ es la longitud de la geodésica (el camino más corto) que las conecta bajo esta métrica.
 
-Esta distancia, la \textbf{distancia de Fisher-Rao}, cuantifica qué tan distinguibles son dos distribuciones basándose en muestras observadas. Si la información de Fisher es alta, una pequeña perturbación en los parámetros resulta en un gran cambio en la distribución (gran distancia estadística).
+\begin{center}
+	\begin{tikzpicture}[scale=0.8]
+		\draw[thick, Accent, fill=AccentLight!10, rounded corners] (0,0) to[out=10,in=170] (6,0) to[out=-10,in=190] (6,3) to[out=10,in=170] (0,3) -- cycle;
+		\node[AccentDark, font=\small] at (3,1.5) {Variedad $S$};
+		\fill[AccentDark] (1.5,2) circle (2pt) node[above, font=\small] {$p_{\theta_1}$};
+		\fill[AccentDark] (4.5,1.5) circle (2pt) node[below right, font=\small] {$p_{\theta_2}$};
+		\draw[->, thick, AccentDark] (1.5,2) -- (4.5,1.5) node[midway, above, font=\scriptsize] {geodésica};
+		\begin{scope}[shift={(1.5,2)}]
+			\draw[->, thick, red!70!black] (0,0) -- (1.2,0.8) node[right, font=\scriptsize] {$d\theta$};
+			\draw[->, thick, blue!70!black] (0,0) -- (-0.8,1) node[left, font=\scriptsize] {$\delta\theta$};
+			\node[font=\scriptsize, red!70!black] at (0.6,-0.4) {$T_{\theta_1}S$};
+		\end{scope}
+	\end{tikzpicture}
+\end{center}
+
+La distancia, la \textbf{distancia de Fisher--Rao}, cuantifica qué tan distinguibles son dos distribuciones basándose en muestras observadas. Si la información de Fisher es alta, una pequeña perturbación en los parámetros resulta en un gran cambio en la distribución (gran distancia estadística).
+
+\begin{example}[Distancia de Fisher--Rao para $\mu$ en Normal]
+	Para $X \sim \mathcal{N}(\mu, \sigma^2)$ con $\sigma^2$ fijo, la geodésica entre $\mu_1$ y $\mu_2$ es una recta, y la distancia es:
+	\[
+	d(\mu_1, \mu_2) = \int_{\mu_1}^{\mu_2} \sqrt{I(\mu)} \, d\mu = \frac{|\mu_1 - \mu_2|}{\sigma}.
+	\]
+	La normalización por $\sigma$ captura la intuición: si $\sigma$ es grande (mucho ruido), dos medias cercanas son ``difíciles'' de distinguir.
+\end{example}
+
+\section{El caso bivariante: Normal $(\mu, \sigma)$}
+
+Cuando consideramos ambos parámetros $\mu$ y $\sigma$ como variables, la geometría se vuelve notablemente rica. La matriz de Fisher es:
+
+\[
+I(\mu, \sigma) = \begin{pmatrix} 1/\sigma^2 & 0 \\ 0 & 2/\sigma^2 \end{pmatrix}.
+\]
+
+El elemento off-diagonal es cero: $\mu$ y $\sigma$ son \emph{ortogonales} bajo la métrica de Fisher. Esto significa que, localmente, la información sobre la media es independiente de la información sobre la varianza.
+
+\begin{proposition}[Geometría hiperbólica del semiplano]
+	El espacio de parámetros $(\mu, \sigma)$ con $\sigma > 0$, dotado de la métrica de Fisher, es isométrico al \textbf{semiplano superior de Poincaré} $\mathbb{H}^2 = \{(\mu, \sigma) : \sigma > 0\}$ con métrica $ds^2 = \frac{d\mu^2 + 2\, d\sigma^2}{\sigma^2}$. Las geodésicas son semicírculos ortogonales al eje $\sigma = 0$ y verticales.
+\end{proposition}
+
+\begin{center}
+	\begin{tikzpicture}[scale=0.7]
+		\draw[->] (-4,0) -- (4,0) node[right] {$\mu$};
+		\draw[->] (0,0) -- (0,4.5) node[above] {$\sigma$};
+		\draw[thick, Accent!30, domain=-1.4:1.4, samples=100] plot ({\x}, {sqrt(1.5^2 - \x^2)}) node[right, font=\scriptsize] {geodésica};
+		\draw[thick, Accent!50, dashed] (2,0.5) -- (2,4) node[above, font=\scriptsize] {vert.};
+		\fill[AccentDark] (-1.2,1.5) circle (2pt) node[above left, font=\scriptsize] {$p_1$};
+		\fill[AccentDark] (1.8,1.2) circle (2pt) node[below right, font=\scriptsize] {$p_2$};
+		\node[font=\scriptsize, gray] at (3.5,0.5) {$\sigma=0$ (degenerada)};
+	\end{tikzpicture}
+\end{center}
+
+Las distribuciones con $\sigma$ pequeño (poca varianza) están ``lejos'' de las distribuciones con $\sigma$ grande, aún si sus medias son idénticas. Esta es la geometría hiperbólica subyacente: el eje $\sigma = 0$ es ``el infinito'' de la variedad.
 
 \section{Invariancia y Unicidad}
 
-Un resultado fundamental debido a Chentsov (1972) establece que la métrica de Fisher es la \emph{única} métrica Riemanniana (salvo factor escalar) en una variedad estadística que es invariante bajo \textbf{estadísticos suficientes}.
+Un resultado fundamental debido a Chentsov \cite{chentsov1982statistical} establece que la métrica de Fisher es la \emph{única} métrica Riemanniana (salvo factor escalar) en una variedad estadística que es invariante bajo \textbf{estadísticos suficientes}.
 
-Esto significa que si transformamos nuestros datos $x$ a través de una función $T(x)$ que no pierde información sobre $\theta$ (un estadístico suficiente), la geometría del espacio de parámetros permanece idéntica. Esta propiedad de invariancia confirma que la métrica de Fisher captura la estructura intrínseca de la información, independiente de la representación de los datos o de la parametrización elegida.
+\begin{theorem}[Chentsov, 1972]
+	Si $g$ es una métrica Riemanniana en una familia de distribuciones que es invariante bajo toda transformación estocástica suficiente (maps de Markov que preservan información), entonces $g$ es proporcional a la métrica de Fisher.
+\end{theorem}
 
-\section{Ejemplo: La Familia Normal Univariada}
+\textbf{Idea de la demostración.} Un \emph{map de Markov} $T : \mathcal{X} \to \mathcal{Y}$ transforma datos sin perder información: si $T(X)$ es suficiente para $\theta$, la geometría no debería cambiar. Chentsov muestra que existe un \emph{único} tensor simétrico positivo definido que es invariante bajo todos los maps de Markov suficientes. Dicho tensor es, necesariamente, la métrica de Fisher (hasta una constante).
 
-Consideremos la familia de distribuciones normales con media $\mu$ y desviación estándar $\sigma$ fija (por simplicidad, digamos $\sigma=1$).
-\[ p(x; \mu) = \frac{1}{\sqrt{2\pi}} \exp\left( -\frac{(x-\mu)^2}{2} \right) \]
+Esta propiedad de invariancia confirma que la métrica de Fisher captura la estructura intrínseca de la información, independiente de la representación de los datos o de la parametrización elegida.
 
-La log-verosimilitud es (ignorando constantes):
-\[ \ell(\mu; x) = -\frac{(x-\mu)^2}{2} \]
-La primera derivada es $\frac{\partial \ell}{\partial \mu} = x - \mu$.
-La segunda derivada es $\frac{\partial^2 \ell}{\partial \mu^2} = -1$.
+\section{Conexión con la cota de Cramér--Rao}
 
-La información de Fisher es:
-\[ g_{\mu\mu} = -E[-1] = 1 \]
+La métrica de Fisher tiene una consecuencia práctica directa: establece un límite inferior para la varianza de cualquier estimador insesgado.
 
-En este caso simple, la métrica es constante y el espacio es euclidiano. La distancia entre $\mathcal{N}(\mu_1, 1)$ y $\mathcal{N}(\mu_2, 1)$ es simplemente $|\mu_1 - \mu_2|$.
+\begin{theorem}[Cramér--Rao]
+	Para cualquier estimador insesgado $\hat\theta$ de $\theta$:
+	\[
+	\operatorname{Var}(\hat\theta) \ge \frac{1}{n \, I(\theta)}.
+	\]
+\end{theorem}
 
-Sin embargo, si consideramos tanto $\mu$ como $\sigma$ variables, la geometría se vuelve hiperbólica (espacio de Poincaré), lo cual veremos en capítulos posteriores.
+La inversa de la métrica de Fisher es, literalmente, la menor varianza alcanzable. Un modelo con información de Fisher alta (curvatura alta) permite estimación más precisa; uno con información baja, menos. La geometría decide los límites, no la ingeniería del estimador.
+
+\begin{example}[Cota de Cramér--Rao para Bernoulli]
+	Para $n$ muestras de $\mathrm{Bern}(p)$, la cota es:
+	\[
+	\operatorname{Var}(\hat p) \ge \frac{p(1-p)}{n}.
+	\]
+	El estimador $\hat p = \bar X$ (proporción muestral) alcanza esta cota asintóticamente: es \emph{eficiente}.
+\end{example}
 
 \section{Ejercicios}
 
@@ -74,6 +200,7 @@ Sin embargo, si consideramos tanto $\mu$ como $\sigma$ variables, la geometría 
 	\item[$\star$] (V/F) La métrica de Fisher depende del sistema de coordenadas elegido para los datos $x$.
 	\item[$\star$] Defina explícitamente el conjunto $S$ para la familia de distribuciones Bernoulli. ¿Cuál es el espacio de parámetros $\Theta$?
 	\item[$\star$] Escriba la función de log-verosimilitud para una sola observación $x$ de una Bernoulli($\theta$).
+	\item[$\star$] Explique con palabras qué representa la información de Fisher: ¿qué mide?
 \end{enumerate}
 
 \subsection*{Cálculo de Información de Fisher}
@@ -85,29 +212,38 @@ Sin embargo, si consideramos tanto $\mu$ como $\sigma$ variables, la geometría 
 	\item[$\star$] Calcule $I(\lambda)$ para la distribución Exponencial $p(x;\lambda) = \lambda e^{-\lambda x}$.
 	\item[$\star$] Calcule $I(\mu)$ para la Normal $\mathcal{N}(\mu, \sigma^2)$ asumiendo $\sigma^2$ conocido y fijo.
 	\item[$\star$] Calcule $I(\sigma)$ para la Normal $\mathcal{N}(0, \sigma^2)$ asumiendo $\mu=0$ conocido.
-	\item[$\star\star$] (Reto) Calcule la matriz de Información de Fisher $2\times2$ para la Normal $\mathcal{N}(\mu, \sigma^2)$ con ambos parámetros desconocidos.
+	\item[$\star\star$] Calcule la matriz de Información de Fisher $2\times2$ para la Normal $\mathcal{N}(\mu, \sigma^2)$ con ambos parámetros desconocidos.
 	\item[$\star\star$] Calcule $I(\theta)$ para la distribución de Pareto $p(x;\theta) = \theta x^{-\theta-1}$ para $x \ge 1$.
 	\item[$\star\star$] Calcule $I(p)$ para la distribución Geométrica $P(X=k) = (1-p)^{k-1}p$.
+	\item[$\star\star$] Calcule $I(\alpha)$ para la distribución $\mathrm{Gamma}(\alpha, \beta)$ con $\beta$ conocido.
 	\item[$\star\star\star$] Escriba la expresión para $I(\alpha)$ de una distribución Beta con $\beta$ fijo (en términos de funciones poligamma).
+\end{enumerate}
+
+\subsection*{Métrica en 2 parámetros}
+\begin{enumerate}[resume]
+	\item[$\star\star$] Para $\mathcal{N}(\mu, \sigma^2)$ con ambos parámetros desconocidos, muestre que los parámetros $\mu$ y $\sigma$ son ortogonales bajo la métrica de Fisher.
+	\item[$\star\star$] Calcule la distancia de Fisher--Rao infinitesimal entre $\mathcal{N}(0, \sigma_1)$ y $\mathcal{N}(0, \sigma_2)$ (media fija en 0).
+	\item[$\star\star\star$] Verifique que la métrica $ds^2 = \frac{d\mu^2 + 2\,d\sigma^2}{\sigma^2}$ corresponde al semiplano de Poincaré con un factor de escala. ¿Es $\mathbb{H}^2$ completo o solo isométrico a una porción?
 \end{enumerate}
 
 \subsection*{Cambio de Variables e Invariancia}
 \begin{enumerate}[resume]
 	\item[$\star\star$] Si $\eta = f(\theta)$ es una reparametrización, ¿cómo se relaciona $I(\eta)$ con $I(\theta)$? (Regla de transformación tensorial 1D).
 	\item[$\star\star\star$] Aplique lo anterior a la Bernoulli usando el parámetro logit $\eta = \log(\theta/(1-\theta))$. Calcule $I(\eta)$.
+	\item[$\star\star\star$] Verifique que para Poisson con reparametrización $\lambda = e^{\eta}$, la información de Fisher en $\eta$ es igual a la de $\lambda$ multiplicada por $e^{2\eta}$. ¿Qué significa esto geométricamente?
 \end{enumerate}
 
 \subsection*{Distancias y Geometría}
 \begin{enumerate}[resume]
-	\item[$\star\star$] Escriba la fórmula para la distancia de Fisher-Rao entre dos distribuciones parametrizadas por $\theta_1$ y $\theta_2$ en una variedad 1D.
-	\item[$\star\star$] Calcule la distancia de Fisher-Rao entre $\mathcal{N}(0, 1)$ y $\mathcal{N}(1, 1)$ (varianza fija).
-	\item[$\star\star\star$] Calcule la distancia de Fisher-Rao entre $\mathcal{N}(0, 1)$ y $\mathcal{N}(0, 2)$ (media fija).
+	\item[$\star\star$] Escriba la fórmula para la distancia de Fisher--Rao entre dos distribuciones parametrizadas por $\theta_1$ y $\theta_2$ en una variedad 1D.
+	\item[$\star\star$] Calcule la distancia de Fisher--Rao entre $\mathcal{N}(0, 1)$ y $\mathcal{N}(1, 1)$ (varianza fija).
+	\item[$\star\star\star$] Calcule la distancia de Fisher--Rao entre $\mathcal{N}(0, 1)$ y $\mathcal{N}(0, 2)$ (media fija).
 	\item[$\star\star\star\star$] (Reto) ¿Cuál es la distancia entre dos distribuciones categóricas (multinomiales) $p$ y $q$? (Pista: geometría esférica).
 \end{enumerate}
 
 \subsection*{Propiedades Teóricas}
 \begin{enumerate}[resume]
-	\item[$\star$] Enuncie la Cota de Cramér-Rao en términos de la Información de Fisher.
+	\item[$\star$] Enuncie la Cota de Cramér--Rao en términos de la Información de Fisher.
 	\item[$\star$] ¿Cuál es la varianza mínima asintótica para un estimador insesgado de $p$ en una Bernoulli?
 	\item[$\star$] ¿El estimador de máxima verosimilitud alcanza esta cota asintóticamente?
 	\item[$\star$] ¿Quién probó que la métrica de Fisher es la única invariante bajo estadísticos suficientes?
@@ -116,6 +252,8 @@ Sin embargo, si consideramos tanto $\mu$ como $\sigma$ variables, la geometría 
 	\item[$\star\star$] ¿Qué representa la curvatura de la función de log-verosimilitud en el máximo?
 	\item[$\star\star$] ¿Qué representa la varianza del score?
 	\item[$\star\star\star$] ¿Por qué es importante la raíz cuadrada del determinante de la métrica de Fisher en la inferencia Bayesiana?
+	\item[$\star\star\star$] Muestre que la cota de Cramér--Rao se alcanza exactamente para el estimador de $\lambda$ en $\mathrm{Poisson}(\lambda)$ con $n$ muestras.
+	\item[$\star\star\star$] Verifique que el determinante $\det I(\mu, \sigma)$ para la Normal bivariada es $2/\sigma^4$. Interprete: ¿qué significa que $\det I \to \infty$ cuando $\sigma \to 0$?
 \end{enumerate}
 
 \subsection*{Qué gana con GI}
