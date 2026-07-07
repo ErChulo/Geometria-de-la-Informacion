@@ -107,17 +107,23 @@ La métrica de Fisher $g$ define un producto interno en el espacio tangente $T_\
 Esto nos permite medir la longitud de curvas en la variedad estadística. La distancia entre dos distribuciones $p_{\theta_1}$ y $p_{\theta_2}$ es la longitud de la geodésica (el camino más corto) que las conecta bajo esta métrica.
 
 \begin{center}
-	\begin{tikzpicture}[scale=0.8]
-		\draw[thick, Accent, fill=AccentLight!10, rounded corners] (0,0) to[out=10,in=170] (6,0) to[out=-10,in=190] (6,3) to[out=10,in=170] (0,3) -- cycle;
-		\node[AccentDark, font=\small] at (3,1.5) {Variedad $S$};
-		\fill[AccentDark] (1.5,2) circle (2pt) node[above, font=\small] {$p_{\theta_1}$};
-		\fill[AccentDark] (4.5,1.5) circle (2pt) node[below right, font=\small] {$p_{\theta_2}$};
-		\draw[->, thick, AccentDark] (1.5,2) -- (4.5,1.5) node[midway, above, font=\scriptsize] {geodésica};
-		\begin{scope}[shift={(1.5,2)}]
-			\draw[->, thick, red!70!black] (0,0) -- (1.2,0.8) node[right, font=\scriptsize] {$d\theta$};
-			\draw[->, thick, blue!70!black] (0,0) -- (-0.8,1) node[left, font=\scriptsize] {$\delta\theta$};
-			\node[font=\scriptsize, red!70!black] at (0.6,-0.4) {$T_{\theta_1}S$};
-		\end{scope}
+	\begin{tikzpicture}[scale=0.85]
+		\draw[thick, Accent, fill=AccentLight!12, rounded corners=15pt]
+			(-0.5,0.2) .. controls (1.5,-0.4) and (4.5,-0.3) .. (6.5,0.8)
+			.. controls (7.2,2) and (5.5,3.5) .. (3.5,3.2)
+			.. controls (1.5,3) and (0,2.8) .. (-0.3,1.5)
+			.. controls (-0.5,0.8) and (-0.6,0.3) .. (-0.5,0.2);
+		\node[AccentDark, font=\small] at (3,1.2) {$\mathcal{M}$ (variedad)};
+		\fill[AccentDark] (2,2.6) circle (3pt);
+		\node[AccentDark, above=3pt, font=\small] at (2,2.6) {$p_{\theta_1}$};
+		\draw[thick, Accent!30] (0.6,2.3) -- (3.2,2.9);
+		\node[font=\tiny, Accent!60, right] at (3.2,2.9) {$T_{\theta_1}\mathcal{M}$};
+		\draw[->, thick, red!70!black] (2,2.6) -- (2.8,2.8) node[above, font=\scriptsize] {$d\theta$};
+		\draw[->, thick, blue!70!black] (2,2.6) -- (1.5,2.8) node[left, font=\scriptsize] {$\delta\theta$};
+		\fill[AccentDark] (5,1.5) circle (3pt);
+		\node[AccentDark, below=3pt, font=\small] at (5,1.5) {$p_{\theta_2}$};
+		\draw[->, AccentDark, thick] (2.2,2.5) .. controls (3.5,2.8) and (4.5,2.2) .. (4.8,1.7);
+		\node[AccentDark, font=\small] at (4,2.7) {geodésica};
 	\end{tikzpicture}
 \end{center}
 
