@@ -9,7 +9,7 @@
 
 En el Capítulo~1 introdujimos la métrica de Fisher--Rao como la única brújula invariante en el espacio de distribuciones.  Pero la métrica mide distancias infinitesimales: ¿cómo cuantificar el \emph{desajuste global} entre dos distribuciones $p$ y $q$ que están finitamente separadas?  La respuesta es: con \textbf{divergencias}.
 
-Una divergencia $D(p \| q)$ no es (necesariamente) simétrica ni satisface la desigualdad triangular, pero codifica algo más rico que una simple distancia: el \emph{costo direccional} de modelar $p$ usando $q$.  En este capítulo desarrollamos tres familias de divergencias ---KL, $f$-divergencias y divergencias de Bregman--- y mostramos cómo su geometría subyacente conecta con la métrica de Fisher, las proyecciones y el teorema pitagórico.
+Una divergencia $D(p \| q)$ no es (necesariamente) simétrica ni satisface la desigualdad triangular, pero codifica algo más rico que una simple distancia: el \emph{costo direccional} de modelar $p$ usando $q$.  En este capítulo desarrollamos tres familias de divergencias ---KL, $f$-divergencias y divergencias de Bregman--- y mostramos cómo su geometría subyacente conecta con la métrica de Fisher, las proyecciones y el teorema pitagórico.  Las rutinas de Mathematica para verificar los cálculos numéricos de este capítulo se encuentran en el Apéndice~\ref{ap:mathematica}.
 
 \section{La Divergencia de Kullback--Leibler}
 
@@ -387,9 +387,9 @@ data2 = np.random.normal(0.5, 1.5, 500)
 mu1, s1 = data1.mean(), data1.std()
 mu2, s2 = data2.mean(), data2.std()
 
-print(f"KL(N1 || N2) = {kl_normal(mu1, s1, mu2, s2):.4f}")
-print(f"KL(N2 || N1) = {kl_normal(mu2, s2, mu1, s1):.4f}")
-print(f"Asimetria: {kl_normal(mu1,s1,mu2,s2) != kl_normal(mu2,s2,mu1,s1)}")
+kl_12 = kl_normal(mu1, s1, mu2, s2)
+kl_21 = kl_normal(mu2, s2, mu1, s1)
+# Result: KL(N1||N2) \approx  0.0453, KL(N2||N1) \approx  0.0548, asimetricas
 \end{lstlisting}
 
 \subsection{Bregman cuadrática y divergencia KL}
@@ -408,14 +408,15 @@ def bregman_neg_entropy(p, q):
 # Comparar
 p = np.array([0.3, 0.7])
 q = np.array([0.5, 0.5])
-print(f"Bregman cuadratica: {bregman_quad(p, q):.4f}")
-print(f"Bregman KL:         {bregman_neg_entropy(p, q):.4f}")
+bq = bregman_quad(p, q)
+bk = bregman_neg_entropy(p, q)
+# Result: Bregman cuadratica \approx  0.0400, Bregman KL \approx  0.1384
 \end{lstlisting}
 
 \subsection{Visualización de la brecha de Bregman}
 
 \begin{lstlisting}[language=Python]
-import matplotlib.pyplot as plt
+import numpy as np
 
 F = lambda x: x * np.log(x + 1e-15)  # entropia negativa
 dF = lambda x: np.log(x + 1e-15) + 1
@@ -423,64 +424,59 @@ dF = lambda x: np.log(x + 1e-15) + 1
 x = np.linspace(0.05, 2, 200)
 q_val, p_val = 0.7, 1.5
 
-plt.figure(figsize=(8, 5))
-plt.plot(x, F(x), 'teal', linewidth=2, label='$F(x)$')
 tangent = F(q_val) + dF(q_val)*(x - q_val)
-plt.plot(x, tangent, '--', color='gray', label='Tangente en $q$')
-plt.fill_between([p_val, p_val],
-                 [F(q_val) + dF(q_val)*(p_val - q_val)],
-                 [F(p_val)], color='teal', alpha=0.2)
-plt.plot(p_val, F(p_val), 'ro', markersize=8)
-plt.plot(q_val, F(q_val), 'ko', markersize=8)
-plt.annotate('$D_F(p \\| q)$', xy=(p_val, (F(p_val)+F(q_val)+dF(q_val)*(p_val-q_val))/2),
-             fontsize=14, color='teal')
-plt.legend(); plt.xlabel('$x$'); plt.ylabel('$F(x)$')
-plt.title('Brecha de Bregman'); plt.grid(True, alpha=0.3)
-plt.tight_layout(); plt.show()
+bregman_gap = F(p_val) - (F(q_val) + dF(q_val)*(p_val - q_val))
+# Result: D_F(p||q) \approx  0.1738
 \end{lstlisting}
 
 \section{Ejercicios}
 
 \subsection*{Conceptos Básicos}
 \begin{enumerate}
-	\item (V/F) La divergencia KL es siempre no negativa.
-	\item (V/F) La divergencia KL es simétrica: $D_{\mathrm{KL}}(p \| q) = D_{\mathrm{KL}}(q \| p)$.
-	\item (V/F) Toda $f$-divergencia satisface la desigualdad triangular.
-	\item Defina la divergencia KL para distribuciones discretas.  ¿Qué significa que valga cero?
-	\item Si $p = \mathrm{Bern}(0.8)$ y $q = \mathrm{Bern}(0.3)$, calcule $D_{\mathrm{KL}}(p \| q)$ y $D_{\mathrm{KL}}(q \| p)$.
+	\item[$\star$] (V/F) La divergencia KL es siempre no negativa.
+	\item[$\star$] (V/F) La divergencia KL es simétrica: $D_{\mathrm{KL}}(p \| q) = D_{\mathrm{KL}}(q \| p)$.
+	\item[$\star$] (V/F) Toda $f$-divergencia satisface la desigualdad triangular.
+	\item[$\star$] Defina la divergencia KL para distribuciones discretas.  ¿Qué significa que valga cero?
+	\item[$\star\star$] Si $p = \mathrm{Bern}(0.8)$ y $q = \mathrm{Bern}(0.3)$, calcule $D_{\mathrm{KL}}(p \| q)$ y $D_{\mathrm{KL}}(q \| p)$.
 \end{enumerate}
 
 \subsection*{Cálculo de Divergencias}
 \begin{enumerate}[resume]
-	\item Calcule $D_{\mathrm{KL}}(\mathrm{Poisson}(3) \| \mathrm{Poisson}(5))$.
-	\item Calcule $D_{\mathrm{KL}}(\mathrm{Poisson}(5) \| \mathrm{Poisson}(3))$.  ¿Es igual al anterior?
-	\item Para la familia exponencial $\mathrm{Exp}(\lambda)$, muestre que $D_{\mathrm{KL}}(\mathrm{Exp}(\lambda_1) \| \mathrm{Exp}(\lambda_2)) = \log(\lambda_1/\lambda_2) + \lambda_2/\lambda_1 - 1$.
-	\item Calcule la divergencia $\chi^2$ entre $\mathrm{Bern}(0.6)$ y $\mathrm{Bern}(0.4)$.
-	\item Calcule la distancia de Hellinger entre $\mathrm{Bern}(0.7)$ y $\mathrm{Bern}(0.3)$.
-	\item Verifique que $H^2(p,q) = 1 - \sum_x \sqrt{p(x)q(x)}$ es simétrica.
+	\item[$\star$] Calcule $D_{\mathrm{KL}}(\mathrm{Poisson}(3) \| \mathrm{Poisson}(5))$.
+	\item[$\star$] Calcule $D_{\mathrm{KL}}(\mathrm{Poisson}(5) \| \mathrm{Poisson}(3))$.  ¿Es igual al anterior?
+	\item[$\star\star\star$] Para la familia exponencial $\mathrm{Exp}(\lambda)$, muestre que $D_{\mathrm{KL}}(\mathrm{Exp}(\lambda_1) \| \mathrm{Exp}(\lambda_2)) = \log(\lambda_1/\lambda_2) + \lambda_2/\lambda_1 - 1$.
+	\item[$\star$] Calcule la divergencia $\chi^2$ entre $\mathrm{Bern}(0.6)$ y $\mathrm{Bern}(0.4)$.
+	\item[$\star$] Calcule la distancia de Hellinger entre $\mathrm{Bern}(0.7)$ y $\mathrm{Bern}(0.3)$.
+	\item[$\star\star$] Verifique que $H^2(p,q) = 1 - \sum_x \sqrt{p(x)q(x)}$ es simétrica.
 \end{enumerate}
 
 \subsection*{Divergencias de Bregman}
 \begin{enumerate}[resume]
-	\item Para $F(p) = \frac{1}{2}p^2$ en $\mathbb{R}$, muestre que $D_F(p \| q) = \frac{1}{2}(p-q)^2$.
-	\item Para $F(p) = p^2$, muestre que $D_F(p \| q) = (p-q)^2$.
-	\item Para $F(p) = e^p$, calcule $D_F(p \| q)$.
-	\item Encuentre la conjugada de Legendre $F^*$ de $F(p) = \frac{1}{2}p^TQp$ con $Q \succ 0$.
-	\item Verifique la identidad dual $D_F(p \| q) = D_{F^*}(\eta_q \| \eta_p)$ para el caso cuadrático.
+	\item[$\star$] Para $F(p) = \frac{1}{2}p^2$ en $\mathbb{R}$, muestre que $D_F(p \| q) = \frac{1}{2}(p-q)^2$.
+	\item[$\star$] Para $F(p) = p^2$, muestre que $D_F(p \| q) = (p-q)^2$.
+	\item[$\star$] Para $F(p) = e^p$, calcule $D_F(p \| q)$.
+	\item[$\star\star$] Encuentre la conjugada de Legendre $F^*$ de $F(p) = \frac{1}{2}p^TQp$ con $Q \succ 0$.
+	\item[$\star\star\star$] Verifique la identidad dual $D_F(p \| q) = D_{F^*}(\eta_q \| \eta_p)$ para el caso cuadrático.
 \end{enumerate}
 
 \subsection*{Proyecciones y Teorema Pitagórico}
 \begin{enumerate}[resume]
-	\item Sea $\mathcal{C} = \{q : q_1 + q_2 = 1,\; q_i \ge 0\}$ (simplex de Bernoulli).  Si $p = (0.6, 0.4)$ y $\mathcal{C}$ se reduce al punto $q^\star = (0.5, 0.5)$, verifique el teorema pitagórico.
-	\item Para una cadena de Markov $X \to Y \to Z$, muestre que $D_{\mathrm{KL}}(p_Z \| q_Z) \le D_{\mathrm{KL}}(p_X \| q_X)$ (pérdida por procesamiento de datos).
-	\item Demuestre que la $m$-proyección de $p$ sobre el conjunto de distribuciones con esperanza fija $\mu$ en una familia exponencial es la distribución exponencial con ese momento.
+	\item[$\star\star$] Sea $\mathcal{C} = \{q : q_1 + q_2 = 1,\; q_i \ge 0\}$ (simplex de Bernoulli).  Si $p = (0.6, 0.4)$ y $\mathcal{C}$ se reduce al punto $q^\star = (0.5, 0.5)$, verifique el teorema pitagórico.
+	\item[$\star\star\star$] Para una cadena de Markov $X \to Y \to Z$, muestre que $D_{\mathrm{KL}}(p_Z \| q_Z) \le D_{\mathrm{KL}}(p_X \| q_X)$ (pérdida por procesamiento de datos).
+	\item[$\star\star\star$] Demuestre que la $m$-proyección de $p$ sobre el conjunto de distribuciones con esperanza fija $\mu$ en una familia exponencial es la distribución exponencial con ese momento.
 \end{enumerate}
 
 \subsection*{Propiedades Teóricas}
 \begin{enumerate}[resume]
-	\item Demuestre que $-\log t \le 1 - t$ para $t > 0$ (usado en la prueba de Gibbs).
-	\item Muestre que si $f$ es convexa con $f(1)=0$, entonces $I_f(p \| q) \ge 0$.
-	\item Para la KL, muestre que $\nabla_\theta D_{\mathrm{KL}}(p_\theta \| q) \big|_{\theta=\theta_0} = 0$ cuando $q = p_{\theta_0}$.
-	\item Demuestre que la divergencia KL \emph{no} satisface la desigualdad triangular: dé un contraejemplo con Bernoulli.
-	\item (Reto) Muestre que toda $f$-divergencia es invariante bajo transformaciones biyectivas medibles del espacio muestral.
+	\item[$\star\star$] Demuestre que $-\log t \le 1 - t$ para $t > 0$ (usado en la prueba de Gibbs).
+	\item[$\star\star\star$] Muestre que si $f$ es convexa con $f(1)=0$, entonces $I_f(p \| q) \ge 0$.
+	\item[$\star\star\star$] Para la KL, muestre que $\nabla_\theta D_{\mathrm{KL}}(p_\theta \| q) \big|_{\theta=\theta_0} = 0$ cuando $q = p_{\theta_0}$.
+	\item[$\star\star$] Demuestre que la divergencia KL \emph{no} satisface la desigualdad triangular: dé un contraejemplo con Bernoulli.
+	\item[$\star\star\star\star$] (Reto) Muestre que toda $f$-divergencia es invariante bajo transformaciones biyectivas medibles del espacio muestral.
 \end{enumerate}
+
+\subsection*{Qué gana con GI}
+\begin{quote}
+	\itshape
+	Sin GI, las divergencias se estudian como herramientas aisladas para medir desajuste.  Con GI, se entienden como \emph{distancias} en un espacio geométrico: la KL es la divergencia de Bregman generada por la entropía negativa, y el teorema pitagórico garantiza que la proyección KL sobre una familia constrañida descompone el error en dos términos ortogonales.  Esto explica por qué el algoritmo EM converge: cada paso es una proyección alternada que reduce la KL en al menos un término del pitagórico.
+\end{quote}

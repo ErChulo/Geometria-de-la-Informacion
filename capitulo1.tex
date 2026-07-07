@@ -2,7 +2,7 @@
 
 \begin{quotation}
 	\itshape
-	``Start with the Fisher–Rao metric'' is the technical instruction; ``start by acknowledging that your only reliable compass is the curvature of your own uncertainty'' is the philosophical password.
+	``Comienza con la métrica de Fisher--Rao'' es la instrucción técnica; ``comienza reconociendo que tu única brújula fiable es la curvatura de tu propia incertidumbre'' es la contraseña filosófica.
 \end{quotation}
 
 \section{El Espacio de las Probabilidades}
@@ -70,50 +70,56 @@ Sin embargo, si consideramos tanto $\mu$ como $\sigma$ variables, la geometría 
 
 \subsection*{Conceptos Básicos}
 \begin{enumerate}
-	\item (V/F) Una variedad estadística es un conjunto de parámetros sin estructura adicional.
-	\item (V/F) La métrica de Fisher depende del sistema de coordenadas elegido para los datos $x$.
-	\item Defina explícitamente el conjunto $S$ para la familia de distribuciones Bernoulli. ¿Cuál es el espacio de parámetros $\Theta$?
-	\item Escriba la función de log-verosimilitud para una sola observación $x$ de una Bernoulli($\theta$).
+	\item[$\star$] (V/F) Una variedad estadística es un conjunto de parámetros sin estructura adicional.
+	\item[$\star$] (V/F) La métrica de Fisher depende del sistema de coordenadas elegido para los datos $x$.
+	\item[$\star$] Defina explícitamente el conjunto $S$ para la familia de distribuciones Bernoulli. ¿Cuál es el espacio de parámetros $\Theta$?
+	\item[$\star$] Escriba la función de log-verosimilitud para una sola observación $x$ de una Bernoulli($\theta$).
 \end{enumerate}
 
 \subsection*{Cálculo de Información de Fisher}
 \begin{enumerate}[resume]
-	\item Calcule la primera derivada (score) de la log-verosimilitud de Bernoulli con respecto a $\theta$.
-	\item Calcule la segunda derivada de la log-verosimilitud de Bernoulli.
-	\item Calcule la Información de Fisher $I(\theta)$ tomando la esperanza del negativo de la segunda derivada.
-	\item Calcule $I(\lambda)$ para la distribución de Poisson $P(x;\lambda) = e^{-\lambda}\lambda^x/x!$.
-	\item Calcule $I(\lambda)$ para la distribución Exponencial $p(x;\lambda) = \lambda e^{-\lambda x}$.
-	\item Calcule $I(\mu)$ para la Normal $\mathcal{N}(\mu, \sigma^2)$ asumiendo $\sigma^2$ conocido y fijo.
-	\item Calcule $I(\sigma)$ para la Normal $\mathcal{N}(0, \sigma^2)$ asumiendo $\mu=0$ conocido.
-	\item (Reto) Calcule la matriz de Información de Fisher $2\times2$ para la Normal $\mathcal{N}(\mu, \sigma^2)$ con ambos parámetros desconocidos.
-	\item Calcule $I(\theta)$ para la distribución de Pareto $p(x;\theta) = \theta x^{-\theta-1}$ para $x \ge 1$.
-	\item Calcule $I(p)$ para la distribución Geométrica $P(X=k) = (1-p)^{k-1}p$.
-	\item Escriba la expresión para $I(\alpha)$ de una distribución Beta con $\beta$ fijo (en términos de funciones poligamma).
+	\item[$\star$] Calcule la primera derivada (score) de la log-verosimilitud de Bernoulli con respecto a $\theta$.
+	\item[$\star$] Calcule la segunda derivada de la log-verosimilitud de Bernoulli.
+	\item[$\star$] Calcule la Información de Fisher $I(\theta)$ tomando la esperanza del negativo de la segunda derivada.
+	\item[$\star$] Calcule $I(\lambda)$ para la distribución de Poisson $P(x;\lambda) = e^{-\lambda}\lambda^x/x!$.
+	\item[$\star$] Calcule $I(\lambda)$ para la distribución Exponencial $p(x;\lambda) = \lambda e^{-\lambda x}$.
+	\item[$\star$] Calcule $I(\mu)$ para la Normal $\mathcal{N}(\mu, \sigma^2)$ asumiendo $\sigma^2$ conocido y fijo.
+	\item[$\star$] Calcule $I(\sigma)$ para la Normal $\mathcal{N}(0, \sigma^2)$ asumiendo $\mu=0$ conocido.
+	\item[$\star\star$] (Reto) Calcule la matriz de Información de Fisher $2\times2$ para la Normal $\mathcal{N}(\mu, \sigma^2)$ con ambos parámetros desconocidos.
+	\item[$\star\star$] Calcule $I(\theta)$ para la distribución de Pareto $p(x;\theta) = \theta x^{-\theta-1}$ para $x \ge 1$.
+	\item[$\star\star$] Calcule $I(p)$ para la distribución Geométrica $P(X=k) = (1-p)^{k-1}p$.
+	\item[$\star\star\star$] Escriba la expresión para $I(\alpha)$ de una distribución Beta con $\beta$ fijo (en términos de funciones poligamma).
 \end{enumerate}
 
 \subsection*{Cambio de Variables e Invariancia}
 \begin{enumerate}[resume]
-	\item Si $\eta = f(\theta)$ es una reparametrización, ¿cómo se relaciona $I(\eta)$ con $I(\theta)$? (Regla de transformación tensorial 1D).
-	\item Aplique lo anterior a la Bernoulli usando el parámetro logit $\eta = \log(\theta/(1-\theta))$. Calcule $I(\eta)$.
+	\item[$\star\star$] Si $\eta = f(\theta)$ es una reparametrización, ¿cómo se relaciona $I(\eta)$ con $I(\theta)$? (Regla de transformación tensorial 1D).
+	\item[$\star\star\star$] Aplique lo anterior a la Bernoulli usando el parámetro logit $\eta = \log(\theta/(1-\theta))$. Calcule $I(\eta)$.
 \end{enumerate}
 
 \subsection*{Distancias y Geometría}
 \begin{enumerate}[resume]
-	\item Escriba la fórmula para la distancia de Fisher-Rao entre dos distribuciones parametrizadas por $\theta_1$ y $\theta_2$ en una variedad 1D.
-	\item Calcule la distancia de Fisher-Rao entre $\mathcal{N}(0, 1)$ y $\mathcal{N}(1, 1)$ (varianza fija).
-	\item Calcule la distancia de Fisher-Rao entre $\mathcal{N}(0, 1)$ y $\mathcal{N}(0, 2)$ (media fija).
-	\item (Reto) ¿Cuál es la distancia entre dos distribuciones categóricas (multinomiales) $p$ y $q$? (Pista: geometría esférica).
+	\item[$\star\star$] Escriba la fórmula para la distancia de Fisher-Rao entre dos distribuciones parametrizadas por $\theta_1$ y $\theta_2$ en una variedad 1D.
+	\item[$\star\star$] Calcule la distancia de Fisher-Rao entre $\mathcal{N}(0, 1)$ y $\mathcal{N}(1, 1)$ (varianza fija).
+	\item[$\star\star\star$] Calcule la distancia de Fisher-Rao entre $\mathcal{N}(0, 1)$ y $\mathcal{N}(0, 2)$ (media fija).
+	\item[$\star\star\star\star$] (Reto) ¿Cuál es la distancia entre dos distribuciones categóricas (multinomiales) $p$ y $q$? (Pista: geometría esférica).
 \end{enumerate}
 
 \subsection*{Propiedades Teóricas}
 \begin{enumerate}[resume]
-	\item Enuncie la Cota de Cramér-Rao en términos de la Información de Fisher.
-	\item ¿Cuál es la varianza mínima asintótica para un estimador insesgado de $p$ en una Bernoulli?
-	\item ¿El estimador de máxima verosimilitud alcanza esta cota asintóticamente?
-	\item ¿Quién probó que la métrica de Fisher es la única invariante bajo estadísticos suficientes?
-	\item ¿Qué divergencia induce localmente la métrica de Fisher?
-	\item Escriba la expansión de Taylor de segundo orden de la divergencia KL $D_{KL}(p_\theta || p_{\theta+\delta})$ en términos de $I(\theta)$.
-	\item ¿Qué representa la curvatura de la función de log-verosimilitud en el máximo?
-	\item ¿Qué representa la varianza del score?
-	\item ¿Por qué es importante la raíz cuadrada del determinante de la métrica de Fisher en la inferencia Bayesiana?
+	\item[$\star$] Enuncie la Cota de Cramér-Rao en términos de la Información de Fisher.
+	\item[$\star$] ¿Cuál es la varianza mínima asintótica para un estimador insesgado de $p$ en una Bernoulli?
+	\item[$\star$] ¿El estimador de máxima verosimilitud alcanza esta cota asintóticamente?
+	\item[$\star$] ¿Quién probó que la métrica de Fisher es la única invariante bajo estadísticos suficientes?
+	\item[$\star$] ¿Qué divergencia induce localmente la métrica de Fisher?
+	\item[$\star\star$] Escriba la expansión de Taylor de segundo orden de la divergencia KL $D_{KL}(p_\theta \| p_{\theta+\delta})$ en términos de $I(\theta)$.
+	\item[$\star\star$] ¿Qué representa la curvatura de la función de log-verosimilitud en el máximo?
+	\item[$\star\star$] ¿Qué representa la varianza del score?
+	\item[$\star\star\star$] ¿Por qué es importante la raíz cuadrada del determinante de la métrica de Fisher en la inferencia Bayesiana?
 \end{enumerate}
+
+\subsection*{Qué gana con GI}
+\begin{quote}
+	\itshape
+	Sin GI, la métrica de Fisher se define como la varianza del score y se usa como herramienta técnica.  Con GI, se entiende como la \emph{única} métrica invariante bajo transformaciones que preservan información (Chentsov).  Esto significa que cualquier conclusión derivada de Fisher--Rao---como la cota de Cramér--Rao o el prior de Jeffreys---es \emph{independiente de cómo parametrices el modelo}.  El resultado no es cuestión de gusto: es una propiedad geométrica del espacio de distribuciones.
+\end{quote}

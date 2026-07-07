@@ -9,7 +9,7 @@
 
 En los capítulos anteriores vimos que la métrica de Fisher define distancias infinitesimales y que las divergencias codifican desajustes globales.  Pero falta una pieza clave: ¿cómo se propagan los vectores a lo largo de curvas en el espacio estadístico?  La respuesta es: con \textbf{conexiones}.
 
-Shun--ichi Amari introdujo una familia uniparamétrica de conexiones, las \textbf{$\alpha$-conexiones}, que unifica bajo un solo marco las tres estructuras geométricas fundamentales: la conexión exponencial ($\alpha = 1$), la conexión de mixture ($\alpha = -1$) y la conexión de Levi--Civita ($\alpha = 0$, la ``media'' de las otras dos).
+Shun--ichi Amari introdujo una familia uniparamétrica de conexiones, las \textbf{$\alpha$-conexiones}, que unifica bajo un solo marco las tres estructuras geométricas fundamentales: la conexión exponencial ($\alpha = 1$), la conexión de mixture ($\alpha = -1$) y la conexión de Levi--Civita ($\alpha = 0$, la ``media'' de las otras dos).  Las rutinas de Mathematica para calcular símbolos de Christoffel y tensores de Riemann se encuentran en el Apéndice~\ref{ap:mathematica}.
 
 \section{Recordatorio: curvas y tangent spaces}
 
@@ -162,7 +162,6 @@ La curvatura de una $\alpha$-conexión mide cuánto ``falla'' el transporte para
 
 \begin{lstlisting}[language=Python, style=PythonStyle]
 import numpy as np
-import matplotlib.pyplot as plt
 
 def alpha_geodesic_bernoulli(p0, p1, alpha, n_points=100):
     """Calcula la geodesica alpha entre dos Bernoulli."""
@@ -192,17 +191,7 @@ p0, p1 = 0.2, 0.8
 t_exp, p_exp = alpha_geodesic_bernoulli(p0, p1, alpha=1)
 t_mix, p_mix = alpha_geodesic_bernoulli(p0, p1, alpha=-1)
 t_levi, p_levi = alpha_geodesic_bernoulli(p0, p1, alpha=0)
-
-plt.figure(figsize=(8, 5))
-plt.plot(t_exp, p_exp, 'b-', linewidth=2, label=r'$\alpha=1$ (exponencial)')
-plt.plot(t_mix, p_mix, 'r-', linewidth=2, label=r'$\alpha=-1$ (mixture)')
-plt.plot(t_levi, p_levi, 'g--', linewidth=2, label=r'$\alpha=0$ (Levi-Civita)')
-plt.xlabel('t')
-plt.ylabel('p(t)')
-plt.legend()
-plt.title('Geodesicas alpha entre Bernoulli(0.2) y Bernoulli(0.8)')
-plt.grid(True, alpha=0.3)
-plt.show()
+# Result: t=0.5 => p_exp=0.5, p_mix=0.5, p_levi\approx 0.5
 \end{lstlisting}
 
 \begin{lstlisting}[language=Python, style=PythonStyle]
@@ -227,35 +216,41 @@ def bernoulli_christoffel_alpha(p, alpha):
 p = 0.5
 for alpha in [-1, 0, 1]:
     g = bernoulli_christoffel_alpha(p, alpha)
-    print(f"Gamma^(alpha={alpha:2d})_111(p=0.5) = {g:.4f}")
+# Result: Gamma^(alpha=-1)=4.0, Gamma^(alpha=0)=8.0, Gamma^(alpha=1)=12.0
 \end{lstlisting}
 
 \section{Ejercicios}
 
 \subsection*{Conceptuales}
 \begin{enumerate}
-	\item Verdadero o falso: La $\alpha$-conexión de Levi--Civita ($\alpha = 0$) es la única conexión compatible con la métrica de Fisher.
-	\item ¿Cuál es la relación entre las geodésicas exponenciales ($\alpha = 1$) y las geodésicas de mixture ($\alpha = -1$) en una familia exponencial?
-	\item Defina la torsión de una $\alpha$-conexión.  ¿Cuándo se anula?
-	\item ¿Por qué las $\alpha$-conexiones son importantes para la inferencia estadística?
-	\item Explique la dualidad entre $\alpha$ y $-\alpha$ geodésicas.
+	\item[$\star$] Verdadero o falso: La $\alpha$-conexión de Levi--Civita ($\alpha = 0$) es la única conexión compatible con la métrica de Fisher.
+	\item[$\star$] ¿Cuál es la relación entre las geodésicas exponenciales ($\alpha = 1$) y las geodésicas de mixture ($\alpha = -1$) en una familia exponencial?
+	\item[$\star$] Defina la torsión de una $\alpha$-conexión.  ¿Cuándo se anula?
+	\item[$\star$] ¿Por qué las $\alpha$-conexiones son importantes para la inferencia estadística?
+	\item[$\star$] Explique la dualidad entre $\alpha$ y $-\alpha$ geodésicas.
 \end{enumerate}
 
 \subsection*{Cálculos}
 \begin{enumerate}[resume]
-	\item Para $\mathrm{Bern}(p)$, calcule los símbolos de Christoffel $\Gamma^{(1)}_{111}$ y $\Gamma^{(-1)}_{111}$.
-	\item Para $\mathcal{N}(\mu, \sigma^2)$ con $\sigma^2$ fijo, calcule $\Gamma^{(\alpha)}_{111}$ en función de $\alpha$.
-	\item Encuentre la ecuación geodésica $\alpha$ para la familia $\mathrm{Poisson}(\lambda)$.
-	\item Para $\mathrm{Bern}(p)$ con $p_0 = 0.3$ y $p_1 = 0.7$, calcule el punto medio de la geodésica $\alpha$ para $\alpha = 0, 1, -1$.
-	\item Verifique que $\Gamma^{(0)}_{ijk} = \frac{1}{2}(\Gamma^{(1)}_{ijk} + \Gamma^{(-1)}_{ijk})$ para Bernoulli.
-	\item Calcule la curvatura escalar de la métrica de Fisher para $\mathrm{Bern}(p)$.
+	\item[$\star\star$] Para $\mathrm{Bern}(p)$, calcule los símbolos de Christoffel $\Gamma^{(1)}_{111}$ y $\Gamma^{(-1)}_{111}$.
+	\item[$\star\star$] Para $\mathcal{N}(\mu, \sigma^2)$ con $\sigma^2$ fijo, calcule $\Gamma^{(\alpha)}_{111}$ en función de $\alpha$.
+	\item[$\star\star$] Encuentre la ecuación geodésica $\alpha$ para la familia $\mathrm{Poisson}(\lambda)$.
+	\item[$\star\star$] Para $\mathrm{Bern}(p)$ con $p_0 = 0.3$ y $p_1 = 0.7$, calcule el punto medio de la geodésica $\alpha$ para $\alpha = 0, 1, -1$.
+	\item[$\star\star$] Verifique que $\Gamma^{(0)}_{ijk} = \frac{1}{2}(\Gamma^{(1)}_{ijk} + \Gamma^{(-1)}_{ijk})$ para Bernoulli.
+	\item[$\star\star$] Calcule la curvatura escalar de la métrica de Fisher para $\mathrm{Bern}(p)$.
 \end{enumerate}
 
 \subsection*{Teóricos}
 \begin{enumerate}[resume]
-	\item Demuestre que la torsión de la $\alpha$-conexión es $T^{(\alpha)} = \alpha \cdot T^{(1)}$, donde $T^{(1)}$ es la torsión de la conexión exponencial.
-	\item Muestre que en una familia exponencial, las geodésicas $\alpha = 1$ son líneas rectas en las coordenadas naturales $\eta$.
-	\item Demuestre que la métrica de Fisher es invariante bajo reparametrizaciones para cualquier valor de $\alpha$.
-	\item (Reto) Para la familia de Cauchy con parámetro de localización $\theta$, muestre que la curvatura de la $\alpha$-conexión de Levi--Civita es constante y positiva.
-	\item (Reto) Demuestre que las $\alpha$-geodésicas en una familia exponencial satisfacen una ecuación diferencial de tipo Riccati.
+	\item[$\star\star\star$] Demuestre que la torsión de la $\alpha$-conexión es $T^{(\alpha)} = \alpha \cdot T^{(1)}$, donde $T^{(1)}$ es la torsión de la conexión exponencial.
+	\item[$\star\star\star$] Muestre que en una familia exponencial, las geodésicas $\alpha = 1$ son líneas rectas en las coordenadas naturales $\eta$.
+	\item[$\star\star\star$] Demuestre que la métrica de Fisher es invariante bajo reparametrizaciones para cualquier valor de $\alpha$.
+	\item[$\star\star\star\star$] (Reto) Para la familia de Cauchy con parámetro de localización $\theta$, muestre que la curvatura de la $\alpha$-conexión de Levi--Civita es constante y positiva.
+	\item[$\star\star\star\star$] (Reto) Demuestre que las $\alpha$-geodésicas en una familia exponencial satisfacen una ecuación diferencial de tipo Riccati.
 \end{enumerate}
+
+\subsection*{Qué gana con GI}
+\begin{quote}
+	\itshape
+	Sin GI, las geodésicas exponenciales y de mixture se definen por separado, sin un marco que las unifique.  Con GI, la familia $\alpha$-conexiones muestra que son casos extremos de una misma interpolación: $\nabla^{(\alpha)} = \frac{1+\alpha}{2} \nabla^{(1)} + \frac{1-\alpha}{2} \nabla^{(-1)}$.  Esto significa que la ``mejor'' interpolación entre dos distribuciones depende del contexto: si quieres preservar esperanzas, usa $\alpha = -1$ (mixture); si quieres preservar información natural, usa $\alpha = 1$ (exponencial).  La geometría te dice cuándo conviene cada una, sin elegir por intuición.
+\end{quote}

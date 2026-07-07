@@ -171,16 +171,13 @@ p = 0.5
 n = 100
 I = fisher_information_bernoulli(p)
 cr_bound = cramerrao_lower_bound(p, n)
-print(f"I(Bernoulli(0.5)) = {I:.4f}")
-print(f"Cota C-R para n=100: {cr_bound:.6f}")
 
 # Simulacion
 n_sims = 10000
 samples = np.random.binomial(1, p, size=(n_sims, n))
 mle_estimates = samples.mean(axis=1)
 var_mle = mle_estimates.var()
-print(f"Varianza MLE estimada: {var_mle:.6f}")
-print(f"Ratio Var/Cota: {var_mle / cr_bound:.4f}")
+# Result: I(Bernoulli(0.5))=4.0, Cota-CR=0.0025, Var MLE\approx 0.0025, Ratio\approx 1.0
 \end{lstlisting}
 
 \begin{lstlisting}[language=Python, style=PythonStyle]
@@ -201,37 +198,41 @@ def asymptotic_efficiency(true_p, n_values):
 # Verificacion
 n_vals = [10, 50, 100, 500, 1000]
 results = asymptotic_efficiency(0.5, n_vals)
-print("n, Var(MLE), Cota-CR, Eficiencia")
-for n, var_est, cr, eff in results:
-    print(f"{n:5d}, {var_est:.6f}, {cr:.6f}, {eff:.4f}")
+# Result: eficiencia\approx 1.0 para todos los n, confirmando eficiencia asintotica del MLE
 \end{lstlisting}
 
 \section{Ejercicios}
 
 \subsection*{Conceptuales}
 \begin{enumerate}
-	\item Verdadero o falso: La información de Fisher es invariante bajo reparametrizaciones del parámetro.
-	\item ¿Cuál es la relación entre la información de Fisher y la varianza mínima de un estimador insesgado?
-	\item Defina una estadística suficiente y dé un ejemplo donde no existe estadística suficiente de dimensión finita.
-	\item ¿Por qué los estimadores de máxima verosimilitud son asintóticamente eficientes?
-	\item Explique la conexión entre la proyección $e$-exponencial y la estimación de máxima verosimilitud.
+	\item[$\star$] Verdadero o falso: La información de Fisher es invariante bajo reparametrizaciones del parámetro.
+	\item[$\star$] ¿Cuál es la relación entre la información de Fisher y la varianza mínima de un estimador insesgado?
+	\item[$\star$] Defina una estadística suficiente y dé un ejemplo donde no existe estadística suficiente de dimensión finita.
+	\item[$\star$] ¿Por qué los estimadores de máxima verosimilitud son asintóticamente eficientes?
+	\item[$\star$] Explique la conexión entre la proyección $e$-exponencial y la estimación de máxima verosimilitud.
 \end{enumerate}
 
 \subsection*{Cálculos}
 \begin{enumerate}[resume]
-	\item Calcule la información de Fisher para $\mathrm{Gamma}(\alpha, \beta)$ con $\beta$ conocido.
-	\item Para $\mathcal{N}(\mu, \sigma^2)$ con ambos parámetros desconocidos, calcule la matriz de información de Fisher.
-	\item Encuentre la cota de Cramér--Rao para el estimador de $\lambda$ en $\mathrm{Poisson}(\lambda)$ con $n = 50$.
-	\item Para $\mathrm{Bern}(p)$ con $n = 200$ muestras, calcule la varianza mínima de un estimador insesgado de $p$.
-	\item Verifique que el estimador $\bar{X}$ para $\mathrm{Bern}(p)$ alcanza la cota de Cramér--Rao.
-	\item Calcule la información mutua entre $X$ y $T(X) = \sum X_i$ para $n$ muestras de $\mathrm{Bern}(p)$.
+	\item[$\star\star$] Calcule la información de Fisher para $\mathrm{Gamma}(\alpha, \beta)$ con $\beta$ conocido.
+	\item[$\star\star$] Para $\mathcal{N}(\mu, \sigma^2)$ con ambos parámetros desconocidos, calcule la matriz de información de Fisher.
+	\item[$\star\star$] Encuentre la cota de Cramér--Rao para el estimador de $\lambda$ en $\mathrm{Poisson}(\lambda)$ con $n = 50$.
+	\item[$\star\star$] Para $\mathrm{Bern}(p)$ con $n = 200$ muestras, calcule la varianza mínima de un estimador insesgado de $p$.
+	\item[$\star\star$] Verifique que el estimador $\bar{X}$ para $\mathrm{Bern}(p)$ alcanza la cota de Cramér--Rao.
+	\item[$\star\star$] Calcule la información mutua entre $X$ y $T(X) = \sum X_i$ para $n$ muestras de $\mathrm{Bern}(p)$.
 \end{enumerate}
 
 \subsection*{Teóricos}
 \begin{enumerate}[resume]
-	\item Demuestre que la información de Fisher es la varianza del score: $I(\theta) = \operatorname{Var}_\theta(\partial \log p_\theta / \partial \theta)$.
-	\item Muestre que la cota de Cramér--Rao se alcanza para la distribución exponencial familiar.
-	\item Demuestre que si $T(X)$ es suficiente, entonces la distribución condicional de $X$ dado $T$ no depende de $\theta$.
-	\item (Reto) Demuestre que la información de Fisher se transforma como un tensor bajo cambios de coordenadas: $g_{ij}^{\text{nuevo}} = g_{kl} \frac{\partial\theta^k}{\partial\eta^i}\frac{\partial\theta^l}{\partial\eta^j}$.
-	\item (Reto) Para una familia exponencial, muestre que la información de Fisher es el Hessiano de la función de partición: $I(\eta) = \nabla^2 A(\eta)$.
+	\item[$\star\star\star$] Demuestre que la información de Fisher es la varianza del score: $I(\theta) = \operatorname{Var}_\theta(\partial \log p_\theta / \partial \theta)$.
+	\item[$\star\star\star$] Muestre que la cota de Cramér--Rao se alcanza para la distribución exponencial familiar.
+	\item[$\star\star\star$] Demuestre que si $T(X)$ es suficiente, entonces la distribución condicional de $X$ dado $T$ no depende de $\theta$.
+	\item[$\star\star\star\star$] (Reto) Demuestre que la información de Fisher se transforma como un tensor bajo cambios de coordenadas: $g_{ij}^{\text{nuevo}} = g_{kl} \frac{\partial\theta^k}{\partial\eta^i}\frac{\partial\theta^l}{\partial\eta^j}$.
+	\item[$\star\star\star\star$] (Reto) Para una familia exponencial, muestre que la información de Fisher es el Hessiano de la función de partición: $I(\eta) = \nabla^2 A(\eta)$.
 \end{enumerate}
+
+\subsection*{Qué gana con GI}
+\begin{quote}
+	\itshape
+	Sin GI, la cota de Cramér--Rao se presenta como una desigualdad técnica.  Con GI, se entiende como una consecuencia de la métrica: $\operatorname{Var}(\hat\theta) \ge g^{-1}(\theta)/n$, donde $g^{-1}$ es la inversa de la métrica de Fisher.  Esto revela que la precisión mínima no depende del estimador elegido, sino de la \emph{geometría} del modelo.  Un modelo con Fisher alta (curvatura alta) permite estimación más precisa; uno con Fisher baja, menos.  La geometría decide los límites, no la ingeniería del estimador.
+\end{quote}

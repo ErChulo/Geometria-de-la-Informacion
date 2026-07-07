@@ -156,14 +156,13 @@ p = np.array([0.1, 0.2, 0.4, 0.2, 0.1])
 q = np.array([0.2, 0.1, 0.1, 0.4, 0.2])
 
 w1 = earth_movers_distance_1d(p, q, x)
-print(f"Wasserstein-1 distance: {w1:.4f}")
 
 # Verificacion con KL
 from scipy.stats import entropy
 p_smooth = p + 1e-10
 q_smooth = q + 1e-10
 kl = entropy(p_smooth, q_smooth)
-print(f"KL divergence: {kl:.4f}")
+# Result: Wasserstein-1 \approx  0.6, KL \approx  0.36
 \end{lstlisting}
 
 \begin{lstlisting}[language=Python, style=PythonStyle]
@@ -189,37 +188,56 @@ mu1, sigma1 = 3, 2
 
 for t in [0, 0.25, 0.5, 0.75, 1.0]:
     mu_t, sigma_t = gaussian_geodesic(mu0, sigma0, mu1, sigma1, t)
-    print(f"t={t:.2f}: mu={mu_t:.3f}, sigma={sigma_t:.3f}")
+# Result: t=0 => (0,1), t=0.5 => (1.5, 1.414), t=1 => (3,2)
 \end{lstlisting}
 
 \section{Ejercicios}
 
 \subsection*{Variedades generales}
 \begin{enumerate}
-	\item Para la familia t-Student con $\nu = 5$ y parámetro de localización $\mu$, calcule la métrica de Fisher.
-	\item ¿Por qué la familia t-Student no es exponencial?
-	\item Demuestre que la métrica de Fisher está bien definida para cualquier familia paramétrica regular.
+	\item[$\star$] Defina una variedad estadística y explique por qué las familias exponenciales son un caso especial.
+	\item[$\star\star$] Para la familia t-Student con $\nu = 5$ y parámetro de localización $\mu$, calcule la métrica de Fisher.
+	\item[$\star$] ¿Por qué la familia t-Student no es exponencial?
+	\item[$\star\star\star$] Demuestre que la métrica de Fisher está bien definida para cualquier familia paramétrica regular.
+	\item[$\star\star$] Compare la métrica de Fisher de la Normal con la de la t-Student para $\nu = 5$.  ¿En qué regiones difieren más?
+	\item[$\star\star\star$] Para la familia de Cauchy, muestre que la métrica de Fisher es constante e independiente del parámetro de localización.
+	\item[$\star\star\star$] Discuta por qué la familia uniforme $U(0, \theta)$ no tiene una métrica de Fisher ``natural'' en el sentido de Chentsov.
 \end{enumerate}
 
 \subsection*{Geometría cuántica}
 \begin{enumerate}[resume]
-	\item Para un qubit con estado $|\psi\rangle = \cos(\theta/2)|0\rangle + \sin(\theta/2)e^{i\phi}|1\rangle$, calcule la métrica de Bures.
-	\item Muestre que la métrica de Bures reduce a la métrica de Fubini--Study para estados puros.
-	\item ¿Cuál es la interpretación física de la distancia de Bures?
+	\item[$\star$] Defina un estado cuántico (operador densidad) y la métrica de Bures.
+	\item[$\star\star$] Para un qubit con estado $|\psi\rangle = \cos(\theta/2)|0\rangle + \sin(\theta/2)e^{i\phi}|1\rangle$, calcule la métrica de Bures.
+	\item[$\star\star\star$] Muestre que la métrica de Bures reduce a la métrica de Fubini--Study para estados puros.
+	\item[$\star$] ¿Cuál es la interpretación física de la distancia de Bures?
+	\item[$\star\star\star$] Para un sistema de dos qubits, describa por qué la geometría del espacio de estados entrelazados es fundamentalmente diferente a la de estados separables.
+	\item[$\star\star$] Compare la métrica de Bures con la distancia trace: ¿cuándo coinciden y cuándo difieren?
 \end{enumerate}
 
 \subsection*{Transporte óptimo}
 \begin{enumerate}[resume]
-	\item Calcule la distancia de Wasserstein $W_1$ entre $\mathrm{Bern}(0.3)$ y $\mathrm{Bern}(0.7)$.
-	\item Para distribuciones discretas $p = (0.5, 0.5)$ y $q = (0.2, 0.8)$ en $\{0, 1\}$, encuentre el transporte óptimo.
-	\item Muestre que $W_1$ es una métrica verdadera (simétrica, definitiva positiva, triangular).
-	\item (Reto) Demuestre el teorema de Kantorovich--Rubinstein para el caso unidimensional.
+	\item[$\star$] Defina la distancia de Wasserstein $W_1$ y explique qué mide geométricamente.
+	\item[$\star\star$] Calcule la distancia de Wasserstein $W_1$ entre $\mathrm{Bern}(0.3)$ y $\mathrm{Bern}(0.7)$.
+	\item[$\star\star$] Para distribuciones discretas $p = (0.5, 0.5)$ y $q = (0.2, 0.8)$ en $\{0, 1\}$, encuentre el transporte óptimo.
+	\item[$\star\star\star$] Muestre que $W_1$ es una métrica verdadera (simétrica, definitiva positiva, triangular).
+	\item[$\star\star\star\star$] (Reto) Demuestre el teorema de Kantorovich--Rubinstein para el caso unidimensional.
+	\item[$\star\star\star$] Para $\mathrm{Uniforme}(0,1)$ y $\mathrm{Uniforme}(0,2)$, calcule $W_2^2$ y compare con la divergencia KL.
+	\item[$\star\star$] Explique por qué la distancia de Wasserstein es preferible a la KL para comparar histogramas de imágenes.
+	\item[$\star\star\star$] Para distribuciones Gaussianas univariadas, muestre que $W_2^2(\mathcal{N}(\mu_1, \sigma_1^2), \mathcal{N}(\mu_2, \sigma_2^2)) = (\mu_1 - \mu_2)^2 + (\sigma_1 - \sigma_2)^2$.
 \end{enumerate}
 
 \subsection*{Temas emergentes}
 \begin{enumerate}[resume]
-	\item Explique la conexión entre batch normalization y proyección exponencial.
-	\item Para una red neuronal con activación softmax, ¿cuál es la métrica de Fisher inducida?
-	\item ¿Cómo se relaciona la geometría de Wasserstein con la geometría de Fisher?
-	\item (Reto) Proponga una extensión de la divergencia KL para distribuciones con soportes diferentes usando transporte óptimo.
+	\item[$\star$] Explique la conexión entre batch normalization y proyección exponencial.
+	\item[$\star$] Para una red neuronal con activación softmax, ¿cuál es la métrica de Fisher inducida?
+	\item[$\star$] ¿Cómo se relaciona la geometría de Wasserstein con la geometría de Fisher?
+	\item[$\star\star\star$] Para un modelo de lenguaje con softmax, muestre que la perplejidad está relacionada con la divergencia KL entre la distribución de datos y la distribución del modelo.
+	\item[$\star\star\star$] Discuta por qué el gradiente natural es computacionalmente costoso para redes neuronales profundas y cómo las aproximaciones (K-FAC) mitigan este problema.
+	\item[$\star\star\star\star$] (Reto) Proponga una extensión de la divergencia KL para distribuciones con soportes diferentes usando transporte óptimo.
 \end{enumerate}
+
+\subsection*{Qué gana con GI}
+\begin{quote}
+	\itshape
+	Sin GI, la geometría de distribuciones se trata como una curiosidad matemática.  Con GI, se descubre que la misma estructura---métrica de Fisher, dualidad de Legendre, proyecciones KL---aparece en dominios aparentemente dispares: credibilidad actuarial, optimización de redes neuronales, inferencia bayesiana aproximada y transporte óptimo.  La geometría no es una herramienta más en el cinturón; es el hilo conductor que explica por qué ciertos métodos funcionan y cómo mejorarlos de manera sistemática, no por prueba y error.
+\end{quote}

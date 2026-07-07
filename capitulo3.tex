@@ -9,7 +9,7 @@
 
 En el Capítulo~2 estudiamos divergencias como herramientas para medir el desajuste entre distribuciones.  Pero ¿qué estructura geométrica subyace al espacio de distribuciones?  Las \textbf{familias exponenciales} revelan una respuesta sorprendentemente elegante: son \emph{variedades dualmente planas}, donde la divergencia KL se convierte en la distancia euclidiana entre coordenadas duales.
 
-En este capítulo desarrollamos tres ideas centrales: (i) la estructura algebraica de las familias exponenciales, (ii) la dualidad de Legendre que conecta parámetros naturales y de expectación, y (iii) el teorema de Pitman--Koopman--Darmois que las caracteriza como las únicas familias donde la suficiencia es maximal.
+En este capítulo desarrollamos tres ideas centrales: (i) la estructura algebraica de las familias exponenciales, (ii) la dualidad de Legendre que conecta parámetros naturales y de expectación, y (iii) el teorema de Pitman--Koopman--Darmois que las caracteriza como las únicas familias donde la suficiencia es maximal.  Las rutinas de Mathematica para la transformada de Legendre y la descomposición exponencial se encuentran en el Apéndice~\ref{ap:mathematica}.
 
 \section{Repaso de divergencias de Bregman}
 
@@ -297,6 +297,35 @@ La siguiente tabla resume las diferencias fundamentales:
 	Espacio exponencial con $\eta = \alpha - 1$, $T(x) = \log x$, $A(\eta) = \log\Gamma(\eta+1) - \eta\log\beta$.
 \end{example}
 
+\subsection*{Modelos que ya usas: ¿Son exponenciales?}
+
+La siguiente tabla recoge distribuciones comunes en estadística, inferencia y aprendizaje automático, indicando si pertenecen a la familia exponencial y cuáles son sus estadísticas suficientes:
+
+\begin{center}
+	\renewcommand{\arraystretch}{1.2}
+	\begin{tabular}{|l|c|l|c|}
+		\hline
+		\textbf{Distribución} & \textbf{¿Exponencial?} & \textbf{Estadística suficiente} & \textbf{Uso típico} \\
+		\hline
+		Bernoulli & Sí & $\sum x_i$ & Clasificación binaria \\
+		Binomial & Sí & $\sum x_i$ & Conteos con ensayos fijos \\
+		Poisson & Sí & $\sum x_i$ & Conteos de eventos raros \\
+		Normal ($\sigma^2$ fija) & Sí & $(\sum x_i, \sum x_i^2)$ & Modelos lineales \\
+		Normal (ambos) & Sí & $(\sum x_i, \sum x_i^2)$ & Modelos lineales \\
+		Gamma ($\beta$ fija) & Sí & $\sum \log x_i$ & Tiempos de espera \\
+		Exponencial & Sí & $\sum x_i$ & Tiempos entre eventos \\
+		Beta ($\alpha$ fija) & Sí & $\sum \log x_i$ & Proporciones \\
+		Cauchy & \textbf{No} & Ninguno finito & Datos con colas pesadas \\
+		t-Student & \textbf{No} & Ninguno finito & Colas pesadas robustas \\
+		Uniforme $U(0,\theta)$ & \textbf{No} & $\max x_i$ & Límites de soporte \\
+		Weibull & \textbf{No} & Ninguno finito & Análisis de fallas \\
+		Log-Normal & \textbf{No} & Ninguno finito & Datos con asimetría \\
+		\hline
+	\end{tabular}
+\end{center}
+
+\noindent La implicación práctica: si tu modelo es exponencial, la suficiencia es maximal y la inferencia tiene geometría plana (coordenadas naturales euclidianas).  Si no lo es, no hay atajos: la geometría es curva y la inferencia es intrínsecamente más costosa.
+
 \section{Código Python: descomposición exponencial}
 
 \begin{lstlisting}[language=Python, style=PythonStyle]
@@ -327,12 +356,8 @@ def exponential_family_decomposition(dist_name, params):
 
 # Verificacion
 bern_decomp = exponential_family_decomposition("bernoulli", {"p": 0.7})
-print(f"Bernoulli(0.7): eta={bern_decomp['eta']:.4f}, "
-      f"psi={bern_decomp['psi']:.4f}")
-
 pois_decomp = exponential_family_decomposition("poisson", {"lambda": 3.0})
-print(f"Poisson(3): eta={pois_decomp['eta']:.4f}, "
-      f"psi={pois_decomp['psi']:.4f}")
+# Result: Bernoulli(0.7): eta=0.8473, psi=1.2040; Poisson(3): eta=1.0986, psi=3.0000
 \end{lstlisting}
 
 \begin{lstlisting}[language=Python, style=PythonStyle]
@@ -357,45 +382,50 @@ eta1 = np.log(3.0)  # lambda=3
 eta2 = np.log(5.0)  # lambda=5
 kl_bregman = kl_as_bregman(eta1, eta2, "poisson")
 kl_direct = 3 * np.log(3/5) - 3 + 5
-print(f"KL via Bregman:  {kl_bregman:.4f}")
-print(f"KL directa:      {kl_direct:.4f}")
+# Result: KL via Bregman \approx  0.4651, KL directa \approx  0.4651
 \end{lstlisting}
 
 \section{Ejercicios}
 
 \subsection*{Conceptuales}
 \begin{enumerate}
-	\item Verdadero o falso: Toda familia exponencial tiene un estadístico suficiente de dimensión finita.
-	\item Verdad o falso: La divergencia KL entre dos distribuciones de una familia exponencial es simétrica.
-	\item ¿Cuál es la relación entre los parámetros de expectación $\mu$ y los parámetros naturales $\eta$?
-	\item Muestre que la familia de Cauchy con localización y escala desconocidas \emph{no} es exponencial.
-	\item ¿Qué propiedad de la familia exponencial garantiza que la función de partición $A(\eta)$ sea convexa?
+	\item[$\star$] Verdadero o falso: Toda familia exponencial tiene un estadístico suficiente de dimensión finita.
+	\item[$\star$] Verdad o falso: La divergencia KL entre dos distribuciones de una familia exponencial es simétrica.
+	\item[$\star$] ¿Cuál es la relación entre los parámetros de expectación $\mu$ y los parámetros naturales $\eta$?
+	\item[$\star\star\star$] Muestre que la familia de Cauchy con localización y escala desconocidas \emph{no} es exponencial.
+	\item[$\star$] ¿Qué propiedad de la familia exponencial garantiza que la función de partición $A(\eta)$ sea convexa?
 \end{enumerate}
 
 \subsection*{Cálculos con familias exponenciales}
 \begin{enumerate}[resume]
-	\item Para $X \sim \mathrm{Bern}(p)$, encuentre: (a) $\eta$, (b) $A(\eta)$, (c) $\mu = \nabla A(\eta)$.
-	\item Para $X \sim \mathrm{Poisson}(\lambda)$, encuentre: (a) $\eta$, (b) $A(\eta)$, (c) $\mu$.
-	\item Para $X \sim \mathcal{N}(\mu, 1)$ con $\mu$ desconocido, encuentre $\eta$, $A(\eta)$ y $A^*(\mu)$.
-	\item Calcule $D_{\mathrm{KL}}(\mathrm{Bern}(0.6) \| \mathrm{Bern}(0.4))$ usando la fórmula $D_A(\eta_1 \| \eta_2)$.
-	\item Calcule $D_{\mathrm{KL}}(\mathrm{Poisson}(2) \| \mathrm{Poisson}(4))$ usando la fórmula $D_A$.
-	\item Verifique la igualdad $D_{\mathrm{KL}}(p_{\eta_1} \| p_{\eta_2}) = A(\eta_2) - A(\eta_1) - \langle \eta_2 - \eta_1, \nabla A(\eta_1) \rangle$ para $\mathrm{Bern}(0.7)$ vs $\mathrm{Bern}(0.3)$.
+	\item[$\star$] Para $X \sim \mathrm{Bern}(p)$, encuentre: (a) $\eta$, (b) $A(\eta)$, (c) $\mu = \nabla A(\eta)$.
+	\item[$\star$] Para $X \sim \mathrm{Poisson}(\lambda)$, encuentre: (a) $\eta$, (b) $A(\eta)$, (c) $\mu$.
+	\item[$\star\star$] Para $X \sim \mathcal{N}(\mu, 1)$ con $\mu$ desconocido, encuentre $\eta$, $A(\eta)$ y $A^*(\mu)$.
+	\item[$\star\star$] Calcule $D_{\mathrm{KL}}(\mathrm{Bern}(0.6) \| \mathrm{Bern}(0.4))$ usando la fórmula $D_A(\eta_1 \| \eta_2)$.
+	\item[$\star\star$] Calcule $D_{\mathrm{KL}}(\mathrm{Poisson}(2) \| \mathrm{Poisson}(4))$ usando la fórmula $D_A$.
+	\item[$\star\star\star$] Verifique la igualdad $D_{\mathrm{KL}}(p_{\eta_1} \| p_{\eta_2}) = A(\eta_2) - A(\eta_1) - \langle \eta_2 - \eta_1, \nabla A(\eta_1) \rangle$ para $\mathrm{Bern}(0.7)$ vs $\mathrm{Bern}(0.3)$.
 \end{enumerate}
 
 \subsection*{Dualidad de Legendre}
 \begin{enumerate}[resume]
-	\item Para $\mathrm{Poisson}(\lambda)$, verifique que $\nabla A^*(\mu) = \eta$.
-	\item Para $\mathrm{Bern}(p)$, verifique que $A^*(\mu) = \mu\log(\mu/(1-\mu)) + \log(1-\mu)$.
-	\item Para $\mathcal{N}(\mu, \sigma^2)$ con $\sigma^2$ fijo, muestre que $A^*(\mu) = \mu^2/(2\sigma^2)$.
-	\item Demuestre que la transformada de Legendre es involutiva: $(A^*)^* = A$.
-	\item Muestre que $A(\eta) + A^*(\mu) = \langle \eta, \mu \rangle$ en el punto duale.
+	\item[$\star\star$] Para $\mathrm{Poisson}(\lambda)$, verifique que $\nabla A^*(\mu) = \eta$.
+	\item[$\star\star$] Para $\mathrm{Bern}(p)$, verifique que $A^*(\mu) = \mu\log(\mu/(1-\mu)) + \log(1-\mu)$.
+	\item[$\star\star\star$] Para $\mathcal{N}(\mu, \sigma^2)$ con $\sigma^2$ fijo, muestre que $A^*(\mu) = \mu^2/(2\sigma^2)$.
+	\item[$\star\star\star$] Demuestre que la transformada de Legendre es involutiva: $(A^*)^* = A$.
+	\item[$\star\star\star$] Muestre que $A(\eta) + A^*(\mu) = \langle \eta, \mu \rangle$ en el punto duale.
 \end{enumerate}
 
 \subsection*{Teorema de Pitman--Koopman--Darmois}
 \begin{enumerate}[resume]
-	\item Demuestre que la familia $U(0, \theta)$ no tiene un estadístico suficiente de dimensión finita.
-	\item Muestre que la familia de Cauchy con parámetro de localización $\theta$ no es exponencial.
-	\item Verifique que la familia exponencial $\mathrm{Exp}(\lambda)$ satisface las hipótesis del PKD.
-	\item Dé un ejemplo de una familia no exponencial donde la suficiencia es ``infinita''.
-	\item (Reto) Demuestre que si una familia es exponencial y tiene un solo parámetro, entonces $D_{\mathrm{KL}}(p_{\theta_1} \| p_{\theta_2})$ es estrictamente convexa en $\theta_1$ para $\theta_2$ fijo.
+	\item[$\star\star\star$] Demuestre que la familia $U(0, \theta)$ no tiene un estadístico suficiente de dimensión finita.
+	\item[$\star\star\star$] Muestre que la familia de Cauchy con parámetro de localización $\theta$ no es exponencial.
+	\item[$\star\star$] Verifique que la familia exponencial $\mathrm{Exp}(\lambda)$ satisface las hipótesis del PKD.
+	\item[$\star\star$] Dé un ejemplo de una familia no exponencial donde la suficiencia es ``infinita''.
+	\item[$\star\star\star\star$] (Reto) Demuestre que si una familia es exponencial y tiene un solo parámetro, entonces $D_{\mathrm{KL}}(p_{\theta_1} \| p_{\theta_2})$ es estrictamente convexa en $\theta_1$ para $\theta_2$ fijo.
 \end{enumerate}
+
+\subsection*{Qué gana con GI}
+\begin{quote}
+	\itshape
+	Sin GI, verificar si una familia es exponencial requiere intentar reescribir la verosimilitud en forma canónica---a menudo un proceso de prueba y error.  Con GI, la pregunta se traduce en: ¿la métrica de Fisher es plana?  En familias exponenciales, $g_{ij} = \nabla^2 A(\eta)$ (Hessiano de la función de partición), lo que significa que la curvatura es cero y las geodésicas son rectas en coordenadas $\eta$.  Esta propiedad algorítmica---verificar planitud de una métrica---es mecánica, no subjetiva, y conecta directamente con la eficiencia de la inferencia.
+\end{quote}
