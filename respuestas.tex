@@ -62,7 +62,10 @@
 	\item \textbf{Resp.:} Por la convexidad de $f$ y la desigualdad de Jensen.
 	\item \textbf{Resp.:} $\nabla_\theta D_{\mathrm{KL}}(p_\theta \| q)\big|_{\theta_0} = \mathbb{E}_{\theta_0}[\nabla_\theta \ell(\theta_0)] = 0$ (el score tiene esperanza cero).
 	\item \textbf{Resp.:} Ejemplo: $p = \mathrm{Bern}(0.9)$, $q = \mathrm{Bern}(0.5)$, $r = \mathrm{Bern}(0.1)$.  $D(p \| q) \approx 0.3681$, $D(q \| r) \approx 0.5108$, $D(p \| r) \approx 1.7578 > 0.3681 + 0.5108$ (se viola la desigualdad triangular).
-	\item \textbf{Resp.:} Sea $T$ bijección medible.  $I_f(p \| q) = \sum q(x) f(p(x)/q(x)) = \sum q(T^{-1}(y)) f(p(T^{-1}(y))/q(T^{-1}(y))) = I_f(p_T \| q_T)$.
+	\item \textbf{Resp.:} Sea $T$ bijección medible.  Entonces:
+	\[
+	I_f(p \| q) = \sum q(x) f\!\left(\frac{p(x)}{q(x)}\right) = \sum q(T^{-1}(y)) f\!\left(\frac{p(T^{-1}(y))}{q(T^{-1}(y))}\right) = I_f(p_T \| q_T).
+	\]
 \end{enumerate}
 
 \section*{Capítulo 3: Familias Exponenciales y Variedades Dualmente Planas}

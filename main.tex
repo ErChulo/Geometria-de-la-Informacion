@@ -1,9 +1,9 @@
-% src/main.tex — archivo principal (pdfLaTeX, oneside)
-\documentclass[12pt,oneside]{book}
+% src/main.tex — archivo principal (pdfLaTeX, twoside para impresión)
+\documentclass[12pt,twoside]{book}
 
-% Márgenes
+% Márgenes asimétricos (para encuadernación)
 \usepackage{geometry}
-\geometry{letterpaper, margin=1in}
+\geometry{letterpaper, inner=1.75in, outer=1in, top=1in, bottom=1.25in}
 
 % Versión del libro (define \BookVersion y \BookDate)
 \input{version}
@@ -25,10 +25,11 @@
 	\markboth{}{}    % limpia marcas de TOC
 	\pagestyle{fancy}
 	
-	\mainmatter
-	
-	% Prólogo (sin número)
+	% Prólogo en frontmatter (números romanos, sin capítulo numerado)
 	\include{Prologo}
+	\cleardoublepage
+	
+	\mainmatter
 	
 	% Asegura que el siguiente capítulo sea el 0 y muestre número grande
 	\setcounter{chapter}{0}

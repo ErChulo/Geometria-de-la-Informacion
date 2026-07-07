@@ -44,8 +44,9 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt}
 \linespread{1.04}
+\raggedbottom
+\fussy
 \emergencystretch=2em
-\sloppy
 
 % ====== Headers/footers (oneside) ======
 \setlength{\headheight}{26pt}
@@ -65,11 +66,30 @@
 
 % ====== Chapter/Section titles (big chapter number) ======
 \newcommand{\ChapterLabel}{\textsf{Capítulo}}
+
+% Detecta recto (impar) / verso (par) y posiciona el número en el margen exterior
+% Outer margin: 1in = 28.45275pt; Text width: 5in = 142.26378pt (letter, inner=1.75in, outer=1in)
+% Number width: ~3.5cm = 99.58464pt (66pt digits, ~3 chars)
+% Shift = -(outer_margin + gap + number_width) to go from text-left into outer margin
+\newlength{\bigNumOuterGap}
+\setlength{\bigNumOuterGap}{4pt}
+
 \newcommand{\ChapterBigNumber}{%
-	\makebox[0pt][l]{%
-		\hspace{-2.1cm}%
-		{\color{Accent}\sffamily\bfseries\fontsize{66}{66}\selectfont \thechapter}%
-	}%
+	\ifodd\value{page}%
+		% Recto (odd page): outer = right margin
+		% Shift the number to the RIGHT of the text block
+		\makebox[0pt][r]{%
+			{\color{Accent}\sffamily\bfseries\fontsize{66}{66}\selectfont \thechapter}%
+			\hspace{\bigNumOuterGap}%
+		}%
+	\else%
+		% Verso (even page): outer = left margin
+		% Shift the number to the LEFT of the text block
+		\makebox[0pt][l]{%
+			\hspace{-2.5cm}%
+			{\color{Accent}\sffamily\bfseries\fontsize{66}{66}\selectfont \thechapter}%
+		}%
+	\fi%
 }
 
 \titleformat{\chapter}[display]
@@ -117,6 +137,7 @@
 \newtheorem{remark}{Observación}[chapter]
 
 % ====== Code listings style ======
+% Local sloppiness for code blocks (avoid overfull in long lines)
 \lstset{
 	basicstyle=\small\ttfamily,
 	keywordstyle=\color{AccentDark}\bfseries,
@@ -133,7 +154,9 @@
 	xleftmargin=8pt,
 	xrightmargin=8pt,
 	framerule=0.5pt,
-	rulecolor=\color{Accent!30}
+	rulecolor=\color{Accent!30},
+	prebreak=\textbackslash,
+	postbreak=\textbackslash
 }
 
 % Python-specific style
