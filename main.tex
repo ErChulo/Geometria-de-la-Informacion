@@ -26,6 +26,7 @@
 	\pagestyle{fancy}
 	
 	% Prólogo en frontmatter (números romanos, sin capítulo numerado)
+	\addtocontents{toc}{\protect\clearpage}
 	\include{Prologo}
 	\cleardoublepage
 	
@@ -33,19 +34,30 @@
 	
 	% Asegura que el siguiente capítulo sea el 0 y muestre número grande
 	\setcounter{chapter}{0}
+	\addtocontents{toc}{\protect\clearpage}
 	\include{capitulo0}
+	\addtocontents{toc}{\protect\clearpage}
 	\include{capitulo1}
+	\addtocontents{toc}{\protect\clearpage}
 	\include{capitulo2}
+	\addtocontents{toc}{\protect\clearpage}
 	\include{capitulo3}
+	\addtocontents{toc}{\protect\clearpage}
 	\include{capitulo4}
+	\addtocontents{toc}{\protect\clearpage}
 	\include{capitulo5}
+	\addtocontents{toc}{\protect\clearpage}
 	\include{capitulo6}
+	\addtocontents{toc}{\protect\clearpage}
 	\include{capitulo7}
 	
 	\backmatter
 	% Bibliografía / apéndices (si aplica)
+	\addtocontents{toc}{\protect\clearpage}
 	\include{respuestas}
+	\addtocontents{toc}{\protect\clearpage}
 	\include{apendice_mathematica}
+	\addtocontents{toc}{\protect\clearpage}
 	\include{bibliografia}
 	
 \end{document}
