@@ -15,7 +15,7 @@
   - _comparar_
   - _actualizar_\n
 
-el conocimiento **_incompleto_**?
+  el conocimiento **_incompleto_**?
 
 ## 🌟 Filosofia de la Ciencia
 ## 🌟 Por qué geometrizar familias probabilisticas
