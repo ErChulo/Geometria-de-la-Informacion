@@ -9,14 +9,6 @@
 ---
 
 ## 🌟 Epistemologia
-
-- ¿Como
-  - _representar_
-  - _comparar_
-  - _actualizar_\n
-
-  el conocimiento **_incompleto_**?
-
 ## 🌟 Filosofia de la Ciencia
 ## 🌟 Por qué geometrizar familias probabilisticas
 
