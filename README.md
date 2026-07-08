@@ -13,7 +13,8 @@
   - _representar_
   - _comparar_
   - _actualizar_
- el conocimiento **_incompleto_**?
+
+el conocimiento **_incompleto_**?
 
 ## 🌟 Filosofia de la Ciencia
 ## 🌟 Por qué geometrizar familias probabilisticas
