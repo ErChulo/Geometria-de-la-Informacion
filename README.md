@@ -9,10 +9,11 @@
 ---
 
 ## 🌟 Epistemologia
+
 - ¿Como
   - _representar_
   - _comparar_
-  - _actualizar_
+  - _actualizar_\n
 
 el conocimiento **_incompleto_**?
 
