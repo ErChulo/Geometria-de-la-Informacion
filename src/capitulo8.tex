@@ -860,7 +860,7 @@ En 2018, Jacot, Hongler y Gabriel demostraron que las redes neuronales profundas
 		
 		% OLS subspace (finite-dimensional, line)
 		\draw[AccentDark!60, very thick] (0.5,0.0) -- (7.0,1.0);
-		\node[AccentDark, font=\footnotesize] at (3.5,1.3) {OLS: span\{1, x, x^2\} (finito-dim)};
+		\node[AccentDark, font=\footnotesize] at (3.5,1.3) {OLS: span$\{1, x, x^2\}$ (finito-dim)};
 		
 		% KRR curve
 		\draw[Accent, very thick, smooth, domain=0.5:7.0, samples=30] plot (\x, {0.35*sin(\x*45) + 0.6});
@@ -870,8 +870,8 @@ En 2018, Jacot, Hongler y Gabriel demostraron que las redes neuronales profundas
 		\draw[AccentLight, dashed, thick, fill=AccentLight!15] (3.5,1.2) ellipse (2.5 and 0.7);
 		\node[AccentDark, font=\footnotesize, align=center] at (3.5,1.85) {NTK: $f_\theta \in$ RKHS\\ (ancho $\to \infty$)};
 		
-		% Newton's methods
-		\node[Accent, font=\footnotesize, align=center] at (3.5,-0.6) {$\langle\cdot,\cdot\rangle_{\mathcal{H}_k}$ elige la geometr\'ia;\\ la arquitectura / datos eligen el kernel};
+		% Newton's methods\node[Accent, font=\footnotesize] at (3.5,-0.4) {$\langle\cdot,\cdot\rangle_{\mathcal{H}_k}$} elige la geometr\'ia;};
+		\node[Accent, font=\footnotesize] at (3.5,-0.85) {la arquitectura / datos eligen el kernel};
 	\end{tikzpicture}
 	
 	\smallskip
@@ -887,7 +887,7 @@ En 2018, Jacot, Hongler y Gabriel demostraron que las redes neuronales profundas
 
 \bigskip
 \noindent
-\textbf{Pregunta a tu LLM:} ``\¿Por qu\'e kernel ridge regression, Gaussian processes y Neural Tangent Kernel son tres manifestaciones del mismo objeto: regresi\'on RKHS?  Dame un ejemplo donde la elecci\'on del kernel (no de los datos ni del modelo) cambia el resultado.''
+\textbf{Pregunta a tu LLM:} ``¿Por qu\'e kernel ridge regression, Gaussian processes y Neural Tangent Kernel son tres manifestaciones del mismo objeto: regresi\'on RKHS?  Dame un ejemplo donde la elecci\'on del kernel (no de los datos ni del modelo) cambia el resultado.''
 
 \section{Ejercicios}
 

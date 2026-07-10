@@ -98,7 +98,7 @@
 
 \begin{enumerate}
 	\item \textbf{Verdadero.} Por el teorema de Pitman--Koopman--Darmois: suficiencia de dimensión finita implica familia exponencial.
-	\item \textbf{Falso.} La KL es asimétrica: $D_{\mathrm{KL}}(p_{\eta_1} \| p_{\eta_2}) = D_A(\eta_1 \| \eta_2)$ pero $D_A(\eta_1 \| \eta_2) \ne D_A(\eta_2 \| \eta_1)$.
+	\item \textbf{Falso.} La asimetría de KL aparece con un cruce de subíndices al pasar de distribuciones a coordenadas naturales: $D_{\mathrm{KL}}(p_{\eta_1} \| p_{\eta_2}) = D_A(\eta_2 \| \eta_1)$, $D_{\mathrm{KL}}(p_{\eta_2} \| p_{\eta_1}) = D_A(\eta_1 \| \eta_2)$, y estas son distintas porque $D_A$ no es simétrica.
 	\item \textbf{Resp.:} $\mu = \nabla A(\eta)$, es decir, los parámetros de expectación son el gradiente de la función de partición.
 	\item \textbf{Resp.:} La densidad de Cauchy con localización $\theta$ es $p_\theta(x) = 1/(\pi(1+(x-\theta)^2))$.  No hay forma de escribirla como $\exp(\eta T(x) - A(\theta))$ porque el denominador es una función aditiva de $(x-\theta)^2$, no multiplicativa.
 	\item \textbf{Resp.:} La convexidad de $A$ se deriva de la desigualdad de Jensen: $A(\eta) = \log\mathbb{E}[e^{\eta T(X)}] \ge \eta \cdot \mathbb{E}[T(X)]$, y el Hessiano $\nabla^2 A(\eta) = \mathrm{Var}_\eta(T(X)) \succ 0$.
@@ -120,7 +120,7 @@
 	\item \textbf{Resp.:} Para una familia exponencial uniparamétrica, $D_{\mathrm{KL}}(p_{\theta_1} \| p_{\theta_2}) = A(\eta_2) - A(\eta_1) - (\eta_2 - \eta_1)\nabla A(\eta_1)$.  El Hessiano respecto a $\eta_1$ es $-\nabla^2 A(\eta_1) - \nabla^2 A(\eta_1) = -2\nabla^2 A(\eta_1) \prec 0$, lo que implica convexidad estricta.
 \end{enumerate}
 
-## Ejercicios avanzados (Cap.~3)
+\section*{Ejercicios avanzados (Cap.~3)}
 \begin{enumerate}
 	\item \textbf{[Gamma $\to$ exponencial]} $\eta=\alpha-1$, $T(x)=\log x$, $A(\eta)=\log\Gamma(\eta+1)-\eta\log\beta$, $h(x)=\beta\cdot 1/[x\cdot x!\cdot 0!]=\beta\cdot x^0$ (con factor de normalizaci\'on).
 	\item \textbf{[PKD Bernoulli]} $L_n(p;x)=\prod p^{x_i}(1-p)^{1-x_i}=p^T(1-p)^{n-T}=g(T(x),p)\cdot 1$, con $T(x)=\sum x_i$. El estad\'istico $T$ captura toda la informaci\'on; dimensional 1, finita.
@@ -142,7 +142,7 @@
 	\item \textbf{Resp.:} Para Poisson, $\ell = x\log\lambda - \lambda$.  $\partial_\lambda \ell = x/\lambda - 1$.  $\partial_\lambda^2 \ell = -x/\lambda^2$.  $\partial_\lambda^3 \ell = 2x/\lambda^3$.  $\Gamma^{(\alpha)}_{111} = \mathbb{E}[2x/\lambda^3] + \alpha/4 \cdot \mathbb{E}[-x/\lambda^2]^2 \cdot \mathbb{E}[x/\lambda - 1]$.  Simplificando: $\Gamma^{(1)}_{111} = 2/\lambda^2$, $\Gamma^{(-1)}_{111} = 2/\lambda^2$, $\Gamma^{(\alpha)}_{111} = 2/\lambda^2$ (independiente de $\alpha$ para Poisson).
 	\item \textbf{Resp.:} Para $\alpha=0$ (Levi--Civita): $p(0) = (p_0 + p_1)/2 = 0.5$.  Para $\alpha=1$ (exponencial): $\eta(0) = (\eta_0 + \eta_1)/2 = (\log(0.3/0.7) + \log(0.7/0.3))/2 = 0$, así que $p = 0.5$.  Para $\alpha=-1$ (mixture): $p(0) = (p_0 + p_1)/2 = 0.5$.  Todos dan $p = 0.5$ (caso simétrico).
 	\item \textbf{Resp.:} Para Bernoulli, $\Gamma^{(1)}_{111} = (1-2p)/(p^3(1-p)^3)$ y $\Gamma^{(-1)}_{111} = (2p-1)/(p^3(1-p)^3)$.  Verificación: $\Gamma^{(0)}_{111} = (1/2)((1-2p)/(p^3(1-p)^3) + (2p-1)/(p^3(1-p)^3)) = 0$.  Esto es consistente con la métrica de Fisher siendo $g = 1/(p(1-p))$, cuya derivada es $(2p-1)/(p^2(1-p)^2)$.
-	\item \textbf{Resp.:} La curvatura escalar de la métrica de Fisher para Bernoulli es $R = 2$ (constante positiva).  Esto se calcula como $R = g^{11} R_{1111}$, donde $R_{1111}$ es la componente del tensor de Riemann.
+	\item \textbf{Resp.: (corregido ante error histórico)} En 1D el tensor de Riemann vale $R^1_{111} = 0$ por la antisimetría $R^a_{bcd} = -R^a_{bdc}$ aplicada al único par posible $(b,d) = (1,1)$. Por tanto la curvatura escalar es $R = g^{11} R_{1 1 1 1} = 0$, no $R = 2$. La cantidad $1/(p(1-p))$ es el componente $g_{11}$ de la métrica de Fisher, \textbf{no} la curvatura. Las geodésicas $\alpha=1$ (rectas en $\eta$) y $\alpha=-1$ (rectas en $p$) son líneas rectas en sus coordenadas respectivas — confirmación visual de $R=0$. Para tener curvatura genuinamente no trivial hay que examinar al menos una familia con $\ge 2$ parámetros (Normal biparamétrica, Multinomial).
 	\item \textbf{Resp.:} La torsión es $T^{(\alpha)} = \alpha(\Gamma^{(1)} - \Gamma^{(-1)})$.  Para $\alpha=0$, $T=0$ (Levi--Civita).  Para $\alpha \ne 0$, la torsión es proporcional a $\alpha$.
 	\item \textbf{Resp.:} En una familia exponencial con parámetros naturales $\eta$, la conexión exponencial tiene $\Gamma^{(1)}_{ijk} = \mathbb{E}[\partial_i \partial_j \ell \cdot \partial_k \ell] = \partial_i \partial_j A \cdot \delta_{jk}$ (por la propiedad de la familia exponencial), lo que da geodésicas rectas en $\eta$.
 	\item \textbf{Resp.:} La métrica de Fisher es invariante bajo reparametrizaciones porque se define como la esperanza del cuadrado del score, que es invariante bajo cambios de coordenadas (propiedad de suficiencia).
@@ -240,7 +240,7 @@
 
 \section*{Ejercicios avanzados (Cap.~7)}
 \begin{enumerate}
-	\item \textbf{[Cauchy Fisher]} Para $\theta$ localizaci\'on, $\partial_\theta\ell = 2(x-\theta)/(1+(x-\theta)^2)$. Cuadrado esperado bajo $P_\theta$: $\int \frac{1}{\pi}\frac{4u^2}{(1+u^2)^2}\,du=1/2$, donde $u=x-\theta$. Por tanto $I(\theta)=1/2$ (constante, independiente de $\theta$; geometr\'ia plana).
+	\item \textbf{[Cauchy Fisher (CORREGIDO)]} Para $\theta$ localizaci\'on, $\partial_\theta\ell = 2(x-\theta)/(1+(x-\theta)^2)$. Cuadrado esperado bajo $P_\theta$: $\int \frac{1}{\pi}\frac{4u^2}{(1+u^2)^2}\,du=1/2$, donde $u=x-\theta$. Por tanto $I(\theta)=1/2$ (constante, métrica plana — geodésicas rectas). \textbf{Curvatura escalar $R=0$}: en 1D el tensor de Riemann se anula por antisimetría sin importar el valor constante de $g$. La vieja afirmación ``$R=2/g=4$'' confundía $g$ (la métrica) con $R$ (la curvatura intrínseca). Para curvatura genuinamente no trivial necesitas al menos 2 parámetros libres.
 	\item \textbf{[Bures qubit]} $ds^2=\tfrac{1}{4}(d\theta^2+\sin^2\theta\,d\phi^2)$. Cobertura completa $\theta\in[0,\pi],\phi\in[0,2\pi]$ da \'area $4\pi$, t\'ipica de $S^2$ con un factor 1/2 en la m\'etrica (esfera de radio 1/2).
 	\item \textbf{[$W_1$ 1D]} Por dualidad de Kantorovich, el acoplamiento \'optimo ordena las FDA mon\'otonamente. La integral $\int|F_p-F_q|$ tiene una versi\'on discreta: $\sum |F_p(x_i)-F_q(x_i)|(x_{i+1}-x_i)$. Verifica con discretizaci\'on fina.
 	\item \textbf{[t-Student no exp]} Verosimilitud conjunta: $\prod(1+(x_i-\mu)^2/\nu)^{-(\nu+1)/2}$. No factoriza en un n\'umero finito de $T(x)$ (los t\'erminos $(x_i-\mu)^2$ no son aditivamente separables sin un t\'ermino global).
