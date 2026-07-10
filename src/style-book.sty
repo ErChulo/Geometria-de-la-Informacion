@@ -46,7 +46,13 @@
 \linespread{1.04}
 \flushbottom
 \fussy
-\emergencystretch=2em
+\emergencystretch=4em
+% Suppress arg-less frame warnings on lstlistings by tightening margins
+\makeatletter
+\@ifdefinable\@listingsboxsep{%
+  \def\@listingsboxsep{\setlength{\fboxsep}{4pt}}%
+}
+\makeatother
 
 % ====== Headers/footers (oneside) ======
 \setlength{\headheight}{26pt}
@@ -179,6 +185,8 @@
 	showstringspaces=false,
 	columns=fullflexible,
 	breaklines=true,
+	extendedchars=true,
+	literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1 {¿}{{?`}}1 {¡}{{!`}}1,
 	framerule=0.5pt,
 	rulecolor=\color{Accent!30},
 	morekeywords={self,True,False,None,as,with,lambda,def,class,return,if,elif,else,for,while,in,not,and,or,is,import,from,try,except,finally,raise,yield,assert,break,continue,pass,del,global,nonlocal}

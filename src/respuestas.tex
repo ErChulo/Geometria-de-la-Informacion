@@ -124,7 +124,7 @@
 \begin{enumerate}
 	\item \textbf{[Gamma $\to$ exponencial]} $\eta=\alpha-1$, $T(x)=\log x$, $A(\eta)=\log\Gamma(\eta+1)-\eta\log\beta$, $h(x)=\beta\cdot 1/[x\cdot x!\cdot 0!]=\beta\cdot x^0$ (con factor de normalizaci\'on).
 	\item \textbf{[PKD Bernoulli]} $L_n(p;x)=\prod p^{x_i}(1-p)^{1-x_i}=p^T(1-p)^{n-T}=g(T(x),p)\cdot 1$, con $T(x)=\sum x_i$. El estad\'istico $T$ captura toda la informaci\'on; dimensional 1, finita.
-	\item \textbf{[Softmax es exp-fam]} $p(x;\eta)=\prod\pi_i^{\mathbb{1}_x{=}i}=\exp(\eta^\top e_x - \log\sum e^{\eta_i})$. Identificamos $T(x)=e_x\in\mathbb{R}^{K-1}$, $\eta=(\eta_1,\dots,\eta_{K-1})$ despreciando la redundancia $\sum\pi_i=1$, $A(\eta)=\log\sum_je^{\eta_j}$, $h(x)=1$.
+	\item \textbf{[Softmax es exp-fam]} $p(x;\eta)=\prod\pi_i^{\mathbb{1}_{x=i}}=\exp(\eta^\top e_x - \log\sum e^{\eta_i})$. Identificamos $T(x)=\mathbf{e}_x\in\mathbb{R}^{K-1}$, $\eta=(\eta_1,\dots,\eta_{K-1})$ despreciando la redundancia $\sum\pi_i=1$, $A(\eta)=\log\sum_je^{\eta_j}$, $h(x)=1$.
 	\item \textbf{[MLE vs. moment]} Para 2 mezclas de Normales univariadas $(w_1,\mu_1,\sigma_1^2,w_2,\mu_2,\sigma_2^2)$: MLE maximiza likelihood y es sesgado para muestras peque\~nas; moment-matching iguala 5 momentos a las medias emp\'iricas y es exacto en 5 par\'ametros. Difieren cuando los momentos son m\'as que los par\'ametros (subidentificable) o cuando MLE est\'a en una regi\'on ``plana'' del likelihood.
 	\item \textbf{[Cauchy no es exp.]} $\log p_\theta(x)=-\log\pi-\log(1+(x-\theta)^2)$. Como $-\log(1+(x-\theta)^2)$ no es lineal en ninguna $T(x)$ de dimensi\'on finita, no puede escribirse como $\eta T(x)-A(\theta)$.
 \end{enumerate}
