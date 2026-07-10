@@ -1,14 +1,34 @@
-# LaTeX generated files
-*.aux
-*.log
-*.out
-*.toc
-*.synctex.gz
-*.pdf
-*.fls
-*.fdb_latexmk
-*.dvi
+# =============================================================================
+# Companion notebooks — Geometría-IG
+# =============================================================================
+# Directorios + archivos que NO deben versionar:
 
-# Editor files
+# Cache de datos descargados (MNIST 60k opcional, etc.)
+notebooks/.cache/
+
+# Jupyter runtime / checkpoints / outputs intermedios
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+
+# Python bytecache
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments (recomendado NO commitear; el lector crea el suyo)
+.venv/
+venv/
+env/
+
+# Editor / OS noise
+.DS_Store
 *.swp
 *~
+.idea/
+.vscode/
+
+# =============================================================================
+# (El src/.gitignore ya cubre *.aux, *.log, *.pdf, etc. del build LaTeX.)
+# =============================================================================

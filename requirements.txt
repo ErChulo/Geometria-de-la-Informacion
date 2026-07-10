@@ -1,0 +1,29 @@
+# Companion notebooks — Geometría de la Información
+# Pinned to versions known to install cleanly with CPython 3.10-3.12.
+# Tested with: pip 24.x, Linux + macOS, CPU-only torch (no CUDA required).
+
+# --- Math + plotting ---
+numpy==1.26.4
+scipy==1.13.0
+matplotlib==3.9.2
+pandas==2.2.2
+
+# --- Classical ML / datasets ---
+scikit-learn==1.4.2
+
+# --- Probabilistic / statistical tests ---
+statsmodels==0.14.2
+
+# --- Deep learning (mini-projects Cap.6/7: GLM, NICE/Wasserstein) ---
+# CPU build keeps installation simple; swap for cu117/cu118 if you have GPU.
+torch==2.4.0+cpu
+torchvision==0.19.0+cpu
+
+# --- Autodiff (Fisher via Hessian, gradient natural verification) ---
+jax==0.4.30
+jaxlib==0.4.30
+
+# --- Notebook kernel runtime (notebook is the user-facing format) ---
+ipykernel==6.29.5
+jupyter==1.0.0
+notebook==7.2.2

@@ -262,6 +262,69 @@ La inversa de la métrica de Fisher es, literalmente, la menor varianza alcanzab
 	\item[$\star\star\star$] Verifique que el determinante $\det I(\mu, \sigma)$ para la Normal bivariada es $2/\sigma^4$. Interprete: ¿qué significa que $\det I \to \infty$ cuando $\sigma \to 0$?
 \end{enumerate}
 
+\subsection*{Ejercicios avanzados}
+\begin{enumerate}[resume]
+	\item[$\star$] \textbf{Invariancia tensorial.} (V/F) ¿La métrica de Fisher es invariante bajo reparametrización del parámetro $\theta$? \textit{Pregunta a tu LLM:} «En Bernoulli, si cambio a $\eta=\log(p/(1-p))$, ¿qué le pasa a $I(p)$?»
+	\item[$\star\star$] \textbf{Fisher Multinomial.} Para $X\sim\mathrm{Categorical}(\pi_1,\pi_2,\pi_3)$ con $\sum\pi_i=1$, calcule la matriz de Fisher $I(\pi)\in\mathbb{R}^{3\times 3}$ y muestre que $\det I=0$ (la familia vive en el simplex $2$-dimensional). \textit{Pista:} el score es $\partial_{\pi_k}\log p = \mathbb{1}_{X=k}/\pi_k - 1$; use la restricción $\sum\pi_k=1$ como ligadura.
+	\item[$\star\star\star$] \textbf{Invariancia tensorial.} Demuestre que bajo $\eta=\log(p/(1-p))$ en Bernoulli se cumple $g^{\eta}_{\eta\eta}=g^p_{pp}(dp/d\eta)^2$, y verifique numéricamente con $p=0.3$ y $p=0.7$. \textit{Verifica con:} $I(\eta)\stackrel{?}{=}(1/(p(1-p)))\cdot(\theta(1-\theta))^2 \cdot (4 e^\eta/(1+e^\eta)^2)$ en $\eta=0$.
+	\item[$\star\star\star$] \textbf{Pareto + Cramér-Rao.} Para $X\sim\mathrm{Pareto}(\theta)$ con $p_\theta(x)=\theta x^{-\theta-1}$ ($x\ge 1$), calcule $I(\theta)$ y demuestre que $\hat\theta = n/\sum\log X_i$ alcanza la cota de Cramér-Rao asintóticamente. \textit{Verifica con:} simulación con $n=10^5$, $\theta=2$.
+	\item[$\star\star\star\star$] \textbf{Mini-proy: Geodésicas en $\mathbb{H}^2$.} Implemente las tres $\alpha$-geodésicas ($\alpha=-1,0,1$) entre $\mathcal{N}(0,1)$ y $\mathcal{N}(3,2^2)$ sobre $(\mu,\sigma)$. \textit{Hint:} para $\alpha=1$ (exponencial), la geodésica es recta en $\eta=(\mu/\sigma^2,-1/(2\sigma^2))^T$. \textit{Discuta:} ¿cuál cruza $\sigma=0$?
+\end{enumerate}
+
+\subsection*{Ejercicios avanzados}
+\begin{enumerate}[resume]
+	\item[$\star$] (V/F) Toda $f$-divergencia satisface la desigualdad triangular. \textit{Pregunta a tu LLM:} «¿Por qué Hellinger sí pero KL no es métrica?»
+	\item[$\star\star$] Para $p=(0.7,0.2,0.1)$ y $q=(0.4,0.4,0.2)$, calcule $D_{\mathrm{KL}}(p\|q)$ y Jensen--Shannon $J(p,q)$. \textit{Pista:} $J(p,q)=\tfrac{1}{2} D_{\mathrm{KL}}(p\|m)+\tfrac{1}{2} D_{\mathrm{KL}}(q\|m)$ con $m=(p+q)/2$.
+	\item[$\star\star$] Calcule 5 $f$-divergencias ($f(t)=t\log t$, $-\log t$, $(t-1)^2$, $(1-\sqrt{t})^2$, $|t-1|$) entre dos Bernoulli y grafique la asimetría $D_f(p\|q)-D_f(q\|p)$ para 1000 pares $(p,q)$. \textit{Verifica con:} la única ``métrica verdadera'' (Hellinger) tiene asimetría 0.
+	\item[$\star\star\star$] Para $f(t)=(t-1)^2$, demuestre que $D_f(p\|q)=\sum(p-q)^2/q$ (link con $\chi^2$ clásico). \textit{Hint:} sustituya y use $\sum p=\sum q=1$.
+	\item[$\star\star\star\star$] \textbf{Mini-proy: KL vs Wasserstein sobre MNIST.} Entrene dos clasificadores: uno con pérdida KL y otro con Wasserstein-2 sobre pares de dígitos $8\times 8$ perturbados. Reporte accuracy y robustez adversaria ante 5 niveles de ruido gaussiano $\sigma\in[0,0.3]$. \textit{Discuta:} ¿en qué la métrica W es más robusta?
+\end{enumerate}
+
+\subsection*{Ejercicios avanzados}
+\begin{enumerate}[resume]
+	\item[$\star\star$] \textbf{Gamma = exponencial.} Descomponga $\mathrm{Gamma}(\alpha{=}3,\beta{=}2)$ en la forma $h(x)\exp(\eta T(x)-A(\eta))$; identifique $\eta$, $T$, $A$ y $h$. \textit{Pista:} la densidad es $\beta^\alpha/\Gamma(\alpha)\,x^{\alpha-1}e^{-\beta x}=\exp((\alpha{-}1)\log x\cdot (\cdots))$.
+	\item[$\star\star\star$] \textbf{PKD para Bernoulli.} Demuestre por qué basta $T(x)=x$ como estadística suficiente para $\mathrm{Bern}(p)$. \textit{Hint:} factorice la verosimilitud de $n$ muestras en $g(T(x),p)\cdot h(x)$.
+	\item[$\star\star\star$] \textbf{Softmax es exponencial.} Muestre que la categórica $K$-aria $\mathrm{Categorical}(\pi_1,\dots,\pi_K)$ con $\pi_i=e^{\eta_i}/\sum_j e^{\eta_j}$ es familia exponencial con $\eta=(\eta_1,\dots,\eta_{K-1})^T$, $T(x)=(e_x_1,\dots,e_x_{K-1})^T$, $A(\eta)=\log\sum_j e^{\eta_j}$.
+	\item[$\star\star\star\star$] \textbf{MLE vs. moment matching.} Implemente máxima verosimilitud y moment-matching en mezclas de 2 normales univariadas con 1000 muestras sintéticas y compare sesgo/viés cuadrático medio en cada componente. \textit{Discuta:} ¿cuándo difieren, y por qué PKD no aplica?
+	\item[$\star\star\star$] Muestre que la familia de Cauchy $p_\theta(x)=1/(\pi(1+(x-\theta)^2))$ \emph{no} es familia exponencial (sin estadístico suficiente de dimensión finita). \textit{Hint:} $\log p_\theta=-\log\pi-\log(1+(x-\theta)^2)$ no es lineal en $T(x)$.
+\end{enumerate}
+
+\subsection*{Ejercicios avanzados}
+\begin{enumerate}[resume]
+	\item[$\star$] (V/F) La $\alpha$-conexión tiene torsión si y solo si la familia no es dualmente plana. \textit{Pregunta a tu LLM:} «¿Por qué la dual planitud hace que $\Gamma^{(1)}=\Gamma^{(-1)}$?»
+	\item[$\star\star$] En $\mathrm{Bern}(p)$, grafique las tres $\alpha$-geodésicas ($\alpha=-1,0,1$) entre $p=0.2$ y $p=0.8$. \textit{Verifica con:} la $\alpha=1$ pasa por $\eta=(\log 0.2/0.8+\log 0.8/0.2)/2=0$ (punto medio $p=0.5$).
+	\item[$\star\star\star$] Demuestre que $T^{(\alpha)}=\alpha(\Gamma^{(1)}-\Gamma^{(-1)})$. \textit{Pista:} escriba los símbolos de Christoffel explícitamente y observe el cambio al permutar índices $j,k$.
+	\item[$\star\star\star$] Demuestre que las $\alpha$-geodésicas en una familia exponencial satisfacen $\ddot\eta+\Gamma^{(\alpha)}\dot\eta^2=0$ (Riccati). \textit{Hint:} aplique $\alpha$-conexión a la geodésica en coordenadas $\eta$.
+	\item[$\star\star\star\star$] \textbf{Mini-proy.} Implemente el cálculo numérico de geodésicas $\alpha$ en $(\mu,\sigma)$ entre dos Gaussianas (RK4 sobre la ODE geodésica). Represente las tres variantes en 2D. \textit{Discuta:} ¿cuál cruza el ``infinito'' $\sigma=0$?
+\end{enumerate}
+
+\subsection*{Ejercicios avanzados}
+\begin{enumerate}[resume]
+	\item[$\star$] (V/F) Toda distribución tiene un estadístico suficiente de dimensión finita. \textit{Pregunta a tu LLM:} «¿Por qué Cauchy rompe esa intuición?»
+	\item[$\star\star$] Calcule $I(\lambda)$ para $\mathrm{Pareto}(\theta)$ con $\theta$ desconocido y densidad $\theta x^{-\theta-1}$. \textit{Verifica con:} $I(\theta)=1/\theta^2$.
+	\item[$\star\star\star$] Para $\mathrm{Poisson}(\lambda)$ con $n=50$ muestras, derive $\operatorname{Var}(\hat\lambda)$ para MLE y compárelo con la cota $1/(50 I(50))$. \textit{Verifica con:} similación con $10^4$ repeticiones.
+	\item[$\star\star\star$] Demuestre que la familia de Cauchy con parámetro de localización $\theta$ no admite estadístico suficiente de dimensión finita. \textit{Hint:} afecte a dos puntos $x,y$: el likelihood depende de ellos de manera acoplada.
+	\item[$\star\star\star\star$] \textbf{Mini-proy.} Muestre empíricamente que la métrica ANY covariante invariante bajo Markov morphisms es proporcional a Fisher. Use Bernoulli: genere 10000 muestras, calcule $I(p)$ bajo 3 Markov morphisms diferentes (subsampling, ruido simétrico, binning) y reporte la razón.
+\end{enumerate}
+
+\subsection*{Ejercicios avanzados}
+\begin{enumerate}[resume]
+	\item[$\star$] Defina la entropía cruzada binaria en términos de Bregman. \textit{Pregunta a tu LLM:} «¿Qué $F$ da $H(p,q)=-p\log q-(1-p)\log(1-q)$?»
+	\item[$\star\star$] Para Bühlmann con EPV$=2$ y VHM$=8$ calcule $Z$ para $n=20$. \textit{Verifica con:} $Z=20/(20+\text{EPV}/\text{VHM})=20/24\approx 0.833$.
+	\item[$\star\star\star$] Muestre que la pérdida de entropía cruzada binaria es una divergencia de Bregman con $F(x)=-x\log x-(1-x)\log(1-x)$. \textit{Pista:} verifique $D_F(p\|q)=H(p,q)$.
+	\item[$\star\star\star$] Para VI con prior $\mathcal{N}(0,\tau^2)$ y likelihood $\mathcal{N}(\theta,1)$, derive $\mu_q,\sigma_q$ para $n$ datos. \textit{Verifica con:} posterior exacto igual por conjugación.
+	\item[$\star\star\star\star$] \textbf{Mini-proy GLM (estrella del libro).} Implemente regresión Poisson con offset, regularization L2; compare: GD sobre $\eta$, GD sobre $\mu$, Newton sobre ambos, gradiente natural. Reporte convergencia (iteraciones a tol=1e-8) sobre un dataset sintético ($n=1000$). \textit{Discuta:} ¿cuál converge más rápido?
+\end{enumerate}
+
+\subsection*{Ejercicios avanzados}
+\begin{enumerate}[resume]
+	\item[$\star\star$] Calcule la métrica de Fisher de $\mathrm{Cauchy}$ con localización $\theta$. \textit{Pista:} use $\partial_\theta \ell = 2(x-\theta)/(1+(x-\theta)^2)$ y tome esperanza bajo $P_\theta$.
+	\item[$\star\star\star$] Para un qubit $|\psi\rangle=\cos(\theta/2)|0\rangle+\sin(\theta/2)e^{i\phi}|1\rangle$, la métrica de Bures induce $ds^2=(d\theta^2+\sin^2\theta\,d\phi^2)/4$; identifique su tipo métrico ($S^2$?). \textit{Verifica con:} $\int\theta\in[0,\pi],\phi\in[0,2\pi]$ cubre la esfera.
+	\item[$\star\star\star$] \textbf{Wasserstein 1D.} Para distribuciones discretas $p,q$ con soporte $\{x_1<\cdots<x_k\}$, demuestre $W_1(p,q)=\sum_{i=1}^{k-1}|F_p(x_i)-F_q(x_i)|(x_{i+1}-x_i)$, donde $F$ es la FDA. \textit{Pista:} el acoplamiento óptimo ordena ambas FDA y aplica ``northwest corner''.
+	\item[$\star\star\star$] \textbf{T-Student =?} Demuestre que la familia t-Student con $\nu$ g.l.\\ y localización $\mu$ no tiene estadístico suficiente de dimensión finita. \textit{Verifica con:} la verosimilitud conjunta de $n$ muestras no factoriza.
+	\item[$\star\star\star\star$] \textbf{Mini-proy Wasserstein.} Entrene un flow normalizado simple (NICE: 4 capas de acoplamiento affine + permutaciones) sobre MNIST $8\times 8$ con pérdida Wasserstein-2. Reporte log-likelihood aproximado y muestras visualmente. \textit{Discuta:} ¿cómo el costo Wasserstein cambia la dinámica de entrenamiento?
+\end{enumerate}
+
 \subsection*{Qué gana con GI}
 \begin{quote}
 	\itshape

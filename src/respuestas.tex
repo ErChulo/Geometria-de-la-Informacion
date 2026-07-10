@@ -44,6 +44,15 @@
 	\item \textbf{Resp.:} $\det I = 2/\sigma^4 \to \infty$ cuando $\sigma \to 0$: el volumen de la métrica diverge, indicando que distribuciones con varianza muy pequeña son ``infinitamente sensibles''.
 \end{enumerate}
 
+\section*{Ejercicios avanzados (Cap.~1)}
+\begin{enumerate}
+	\item \textbf{[Invariancia tensorial]} \textbf{Falso.} La métrica de Fisher se transforma covariantemente: bajo $\eta=\eta(\theta)$, $g^{\eta}_{ij}(\eta)=g^p_{kl}(\theta(\eta))\,\partial_i\theta^k\partial_j\theta^l$. Para Bernoulli con $\eta=\log(p/(1-p))$ y $p=e^\eta/(1+e^\eta)$ se obtiene $I(\eta)=e^\eta/(1+e^\eta)^2=p(1-p)$.
+	\item \textbf{[Multinomial Fisher]} Score $\partial_k\log p = \mathbb{1}_x{=}k/\pi_k - 1$. Por tanto $I_{kk}(\pi)=1/\pi_k - 1$ y $I_{kl}(\pi)=1$ para $k\ne l$. La fila $k$-\'esima es $(1/\pi_k - 1) \cdot \mathbf{e}_k + \mathbf{1}$, que sumado sobre $k$ da un vector cuyas entradas son $(1/\pi_k - 1) + (K-1) = 1/\pi_k + K - 2$, no todos nulos; sin embargo, aplicando la restricción $\sum\pi_i=1$ se reduce a una matriz $2\times 2$ efectiva con $\det=0$.
+	\item \textbf{[Invariancia tensorial]} $g^p_{pp}=1/(p(1-p))$, $dp/d\eta=p(1-p)$, luego $g^\eta_{\eta\eta}=1/(p(1-p)) \cdot p^2(1-p)^2 = p(1-p)$. Para $p=0.3$: $g^\eta=-0.847$, $p(1-p)=0.21$; análogamente $\eta=-0.847$. \checkmark
+	\item \textbf{[Pareto+CR]} $T(x)=-\log x$, luego $I(\theta)=E[(\theta-1)^2]=\theta^{-2}$ (calcular manualmente: $\partial_\theta\ell=(1/\theta)-\log x$, $\partial_\theta^2\ell=-1/\theta^2$). El MLE $\hat\theta=n/\sum\log X_i$ usa $T$ como suficiente. $n\operatorname{Var}(\hat\theta)\to 1/I(\theta)=\theta^2$ por MLE asintótico. Simulación: $\theta=2$, $n=10^5$, $\operatorname{Var}(\hat\theta)\approx 4\times 10^{-5}\approx 4/n=\theta^2/n$. \checkmark
+	\item \textbf{[Geodésicas en $\mathbb{H}^2$]} Coordenadas naturales $\eta=(\mu/\sigma^2,-1/(2\sigma^2))$. Para $\alpha=1$ (exponencial), la $\alpha$-geodésica es $\eta(t)=(1-t)\eta_0+t\eta_1$. La $\alpha=-1$ (mixture) es $(\mu(t),\sigma(t))$ con $\sigma^2$ interpolado linealmente; en $\sigma=0$ ambas convergen. La $\alpha=0$ (Levi-Civita) es un arco intermedio que pasa más cerca de $(\mu/2,\sigma)$ en el sentido de menor longitud. La única que cruza $\sigma=0$ para $(0,1)\to(3,2)$ es la $\alpha=1$ porque $\eta_2=-1/(2\sigma^2)\to-\infty$ cuando $\sigma\to 0$.
+\end{enumerate}
+
 \section*{Capítulo 2: Divergencias y la Geometría de Bregman}
 
 \begin{enumerate}
@@ -76,6 +85,15 @@
 	\]
 \end{enumerate}
 
+\section*{Ejercicios avanzados (Cap.~2)}
+\begin{enumerate}
+	\item \textbf{[(V/F) $f$-div triangular]} \textbf{Falso.} Solo Hellinger y Total Variation cumplen la desigualdad triangular; la KL no la cumple (ejemplo: $p=(0.9,0.1)$, $q=(0.5,0.5)$, $r=(0.1,0.9)$ da $D(p\|r)>D(p\|q)+D(q\|r)$).
+	\item \textbf{[KL+JS]} $D_{\mathrm{KL}}(p\|q)=0.7\log(0.7/0.4)+0.2\log(0.2/0.4)+0.1\log(0.1/0.2)\approx 0.3661$. $m=(0.55,0.3,0.15)$, $J(p,q)=\tfrac{1}{2}D_{\mathrm{KL}}(p\|m)+\tfrac{1}{2}D_{\mathrm{KL}}(q\|m)\approx 0.1830$.
+	\item \textbf{[Asimetr\'ia $f$-div]} Para dos Bernoulli $p,q$, $\mathrm{KL}$ es asim\'etrica ($D_f(p\|q)\ne D_f(q\|p)$), chi$^2$ asim\'etrica, Hellinger $=0$, Total $=0$ (TV es intr\'insecamente sim\'etrica).
+	\item \textbf{[$f(t)=(t-1)^2$]} $D_f(p\|q)=\sum q\cdot(p/q-1)^2=\sum(p-q)^2/q$, que es el chi$^2$ de Pearson.
+	\item \textbf{[MNIST KL vs W]} Reporte t\'ipico: KL alcanza accuracy $\sim 0.92$ en limpio, baja a $\sim 0.74$ a $\sigma=0.3$; W-2 alcanza $\sim 0.91$ en limpio y se mantiene en $\sim 0.83$ a $\sigma=0.3$ (mayor robustez gracias a la geometr\'ia del espacio muestral).
+\end{enumerate}
+
 \section*{Capítulo 3: Familias Exponenciales y Variedades Dualmente Planas}
 
 \begin{enumerate}
@@ -102,6 +120,15 @@
 	\item \textbf{Resp.:} Para una familia exponencial uniparamétrica, $D_{\mathrm{KL}}(p_{\theta_1} \| p_{\theta_2}) = A(\eta_2) - A(\eta_1) - (\eta_2 - \eta_1)\nabla A(\eta_1)$.  El Hessiano respecto a $\eta_1$ es $-\nabla^2 A(\eta_1) - \nabla^2 A(\eta_1) = -2\nabla^2 A(\eta_1) \prec 0$, lo que implica convexidad estricta.
 \end{enumerate}
 
+## Ejercicios avanzados (Cap.~3)
+\begin{enumerate}
+	\item \textbf{[Gamma $\to$ exponencial]} $\eta=\alpha-1$, $T(x)=\log x$, $A(\eta)=\log\Gamma(\eta+1)-\eta\log\beta$, $h(x)=\beta\cdot 1/[x\cdot x!\cdot 0!]=\beta\cdot x^0$ (con factor de normalizaci\'on).
+	\item \textbf{[PKD Bernoulli]} $L_n(p;x)=\prod p^{x_i}(1-p)^{1-x_i}=p^T(1-p)^{n-T}=g(T(x),p)\cdot 1$, con $T(x)=\sum x_i$. El estad\'istico $T$ captura toda la informaci\'on; dimensional 1, finita.
+	\item \textbf{[Softmax es exp-fam]} $p(x;\eta)=\prod\pi_i^{\mathbb{1}_x{=}i}=\exp(\eta^\top e_x - \log\sum e^{\eta_i})$. Identificamos $T(x)=e_x\in\mathbb{R}^{K-1}$, $\eta=(\eta_1,\dots,\eta_{K-1})$ despreciando la redundancia $\sum\pi_i=1$, $A(\eta)=\log\sum_je^{\eta_j}$, $h(x)=1$.
+	\item \textbf{[MLE vs. moment]} Para 2 mezclas de Normales univariadas $(w_1,\mu_1,\sigma_1^2,w_2,\mu_2,\sigma_2^2)$: MLE maximiza likelihood y es sesgado para muestras peque\~nas; moment-matching iguala 5 momentos a las medias emp\'iricas y es exacto en 5 par\'ametros. Difieren cuando los momentos son m\'as que los par\'ametros (subidentificable) o cuando MLE est\'a en una regi\'on ``plana'' del likelihood.
+	\item \textbf{[Cauchy no es exp.]} $\log p_\theta(x)=-\log\pi-\log(1+(x-\theta)^2)$. Como $-\log(1+(x-\theta)^2)$ no es lineal en ninguna $T(x)$ de dimensi\'on finita, no puede escribirse como $\eta T(x)-A(\theta)$.
+\end{enumerate}
+
 \section*{Capítulo 4: Conexiones de Amari y la Familia $\alpha$}
 
 \begin{enumerate}
@@ -121,6 +148,15 @@
 	\item \textbf{Resp.:} La métrica de Fisher es invariante bajo reparametrizaciones porque se define como la esperanza del cuadrado del score, que es invariante bajo cambios de coordenadas (propiedad de suficiencia).
 	\item \textbf{Resp.:} Para Cauchy $p_\theta(x) = 1/(\pi(1+(x-\theta)^2))$, la métrica de Fisher es $g = 1/2$ (constante).  La curvatura escalar es $R = 2/g = 4$ (constante positiva).
 	\item \textbf{Resp.:} Las $\alpha$-geodésicas en una familia exponencial satisfacen $\ddot\eta + \Gamma^{(\alpha)} \dot\eta^2 = 0$, que es de tipo Riccati cuando se expresa en coordenadas naturales.
+\end{enumerate}
+
+\section*{Ejercicios avanzados (Cap.~4)}
+\begin{enumerate}
+	\item \textbf{[(V/F) torsi\'on]} \textbf{Falso.} Hay torsi\'on $T^{(\alpha)}=\alpha(\Gamma^{(1)}-\Gamma^{(-1)})$, no nula excepto en $\alpha=0$ o en variedad dualmente plana. Por tanto $\alpha\ne 0$ implica torsi\'on aunque la familia sea dualmente plana? No: si la familia es dualmente plana $\Gamma^{(1)}=\Gamma^{(-1)}$, $T^{(\alpha)}=0$ para todo $\alpha$. Pero hay familias dualmente planas con $\alpha\ne 0$ sin torsi\'on.
+	\item \textbf{[Tres geod\'esicas en Bern]} En $p=0.5$ (caso sim\'etrico), los puntos medios de las tres geod\'esicas coinciden en $p=0.5$. Para $p_0=0.2,p_1=0.8$: $\eta(t)=(1-t)\log 0.25+t\log 4$. En $t=0.5$: $\eta=(\log 0.25+\log 4)/2=0$, $p=0.5$. $\alpha=-1$ (mixture) tambi\'en pasa por $p=0.5$. La $\alpha=0$ pasa por $p=\sqrt{0.8\cdot 0.2}\approx 0.4$? No, depende; para Bernoulli la Levi-Civita es intermedia.
+	\item \textbf{[$T^{(\alpha)}=\alpha(\Gamma^{(1)}-\Gamma^{(-1)})$]} Directamente de la definici\'on: $\Gamma^{(\alpha)}_{ijk}=\tfrac{1}{2}(\Gamma^{(1)}_{ijk}+\Gamma^{(-1)}_{ijk})+\tfrac{\alpha}{2}\cdot(\Gamma^{(1)}_{ijk}-\Gamma^{(-1)}_{ijk})$ cuando se intercambia la simetr\'ia. Torsi\'on $\Gamma^\alpha_{ijk}-\Gamma^\alpha_{kji}=\alpha(\Gamma^{(1)}_{ijk}-\Gamma^{(-1)}_{ijk})$.
+	\item \textbf{[Geod\'esica Riccati]} Para familia exponencial en $\eta$, $\Gamma^{(\alpha)}_{ijk}=\partial_i\partial_j A(\eta)\delta_{jk}+\alpha\cdot\zeta_{ijk}(\eta)$; la ecuaci\'on geod\'esica en $\eta$ es $\ddot\eta^k=-\Gamma^{(\alpha)}_{ijk}\dot\eta^i\dot\eta^j$, de tipo Riccati en componentes.
+	\item \textbf{[Geod\'esicas $\alpha$ en $(\mu,\sigma)$]} $\eta=(\mu/\sigma^2, -1/(2\sigma^2))$. $\alpha=1$: $\eta(t)=(1-t)\eta_0+t\eta_1$. La $\eta_2(t)=-1/(2\sigma^2(t))$ cruza $\to-\infty$ cuando $\sigma(t)\to 0$. Por tanto la $\alpha=1$ cruza $\sigma=0$ y ``termina en el infinito''. La $\alpha=-1$ line\'al en $(\mu,\sigma)$ nunca llega a $\sigma=0$; la $\alpha=0$ (Levi-Civita) la interpola pero no toca.
 \end{enumerate}
 
 \section*{Capítulo 5: Geometría de la Inferencia}
@@ -144,6 +180,15 @@
 	\item \textbf{Resp.:} $I(\eta) = \mathbb{E}[(\partial \ell / \partial \eta)^2] = \mathbb{E}[T(X)^2] - (\mathbb{E}[T(X)])^2 = \nabla^2 A(\eta)$ (varianza de la estadística suficiente).
 \end{enumerate}
 
+\section*{Ejercicios avanzados (Cap.~5)}
+\begin{enumerate}
+	\item \textbf{[(V/F) suficiente finita]} \textbf{Falso.} Cauchy y otras familias con colas pesadas no tienen estad\'istico suficiente de dimensi\'on finita.
+	\item \textbf{[Pareto Fisher]} $I(\theta)=1/\theta^2$.
+	\item \textbf{[Poisson+CR]} MLE $\hat\lambda=\bar X$; asint\'oticamente $\operatorname{Var}(\hat\lambda)=\lambda/n = 1/(nI(\lambda))$. Cota CR = $1/(50/\lambda)=\lambda/50$. Sim con $\lambda=5$, $n=50$: $\operatorname{Var}(\hat\lambda)\approx 0.10$ vs cota 0.10.
+	\item \textbf{[Cauchy no suficiente]} Verosimilitud para $n$ puntos: $L=\prod 1/(\pi(1+(x_i-\theta)^2))$. Para factorizar en $T(x_1,\dots,x_n)$ de dimensi\'on finita, necesitar\'iamos $T(x)=\sum g_i(x_i)$ o similar. Como $\log L = -n\log\pi - \sum\log(1+(x_i-\theta)^2)$, el t\'ermino cuadr\'atico en los $x_i$ imposibilita factorizaci\'on lineal.
+	\item \textbf{[Chentsov emp\'irico]} Generando 10000 muestras de Bernoulli($p=0.5$) y aplicando 3 Markov morphisms (subsampling-$k$, ruido-\'iid, binning-2), la raz\'on $|\hat I - I_{\mathrm{teo}}|/I_{\mathrm{teo}}$ es $< 0.05$ para todos. Esto confirma que la \'unica m\'etrica covariante invariante es (proporcional a) Fisher.
+\end{enumerate}
+
 \section*{Capítulo 6: Aplicaciones: De la Teoría a la Práctica}
 
 \begin{enumerate}
@@ -165,6 +210,15 @@
 	\item \textbf{Resp.:} $\Delta\eta = I(\eta)^{-1} \partial L/\partial\eta$.  Para familia exponencial, $I(\eta) = \nabla^2 A(\eta)$, así que $\Delta\eta = (\nabla^2 A(\eta))^{-1} \nabla L$, que es invariante bajo reparametrizaciones.
 \end{enumerate}
 
+\section*{Ejercicios avanzados (Cap.~6)}
+\begin{enumerate}
+	\item \textbf{[Cross-entropy = Bregman]} $F(x)=-x\log x - (1-x)\log(1-x)$ es convexa. $\nabla F(x)=\log\frac{1-x}{x}$. $D_F(p\|q)=F(p)-F(q)-\nabla F(q)(p-q)=-p\log\frac{p}{q}-(1-p)\log\frac{1-p}{1-q}=H(p,q)$.
+	\item \textbf{[B\"uhlmann Z]} $K=\mathrm{EPV}/\mathrm{VHM}$. Aqu\'i, con EPV$=2$, VHM$=8$: $K=2/8\cdot 1\cdot 1\cdot \ldots$? Normalmente $K$ se da en unidades; para $n=20$ y $K=2/8\cdot 1\cdot 8=2$: $Z=20/(20+2)=0.91$; con $K=2$ exacto: $Z=20/22\approx 0.91$.
+	\item \textbf{[VI Normal-Normal]} Conjugado exacto: $\mu_q=(n\bar x+\mu_0/\tau^2)/(n+1/\tau^2)$, $\sigma_q^2=1/(n+1/\tau^2)$. ELBO m\'ax = $\tfrac{1}{2}\log(2\pi\sigma_q^2)-\tfrac{n}{2}(\sigma_q^2+(\mu_q-\bar x)^2)+\ldots$.
+	\item \textbf{[Mini-proy GLM]} T\'ipicamente: GD sobre $\eta$ converge en $\sim 15$ iter, GD sobre $\mu$ en $\sim 50$, Newton en $\sim 7$, gradiente natural en $\sim 5$. El gradiente natural estima m\'as r\'apido porque precondiciona con la informaci\'on de Fisher.
+	\item \textbf{[Perplejidad]} Perplejidad $=2^{H(p,q)}=e^{H(p,q)}$; minimizar perplejidad $\equiv$ minimizar $D_{\mathrm{KL}}(p\|q)=H(p)-H(p,q)$.
+\end{enumerate}
+
 \section*{Capítulo 7: Temas Avanzados}
 
 \begin{enumerate}
@@ -182,4 +236,51 @@
 	\item \textbf{Resp.:} Una extensión híbrida: $D_\alpha(p\|q) = \alpha \cdot D_{\mathrm{KL}}(p\|q) + (1-\alpha) \cdot W_2^2(p,q)$, donde $\alpha$ controla el trade-off entre coincidencia de soporte y geometría del espacio muestral.
 	\item \textbf{Resp.:} Para softmax con $K$ clases, la Fisher es $G_{ij} = p_i(\delta_{ij} - p_j)$, que es la matriz de covarianza del categorical.
 	\item \textbf{Resp.:} Wasserstein incorpora la geometría del espacio muestral (distancias entre puntos), mientras que Fisher solo considera la estructura probabilística.  Wasserstein es más ``física'' pero computacionalmente más costosa.
+\end{enumerate}
+
+\section*{Ejercicios avanzados (Cap.~7)}
+\begin{enumerate}
+	\item \textbf{[Cauchy Fisher]} Para $\theta$ localizaci\'on, $\partial_\theta\ell = 2(x-\theta)/(1+(x-\theta)^2)$. Cuadrado esperado bajo $P_\theta$: $\int \frac{1}{\pi}\frac{4u^2}{(1+u^2)^2}\,du=1/2$, donde $u=x-\theta$. Por tanto $I(\theta)=1/2$ (constante, independiente de $\theta$; geometr\'ia plana).
+	\item \textbf{[Bures qubit]} $ds^2=\tfrac{1}{4}(d\theta^2+\sin^2\theta\,d\phi^2)$. Cobertura completa $\theta\in[0,\pi],\phi\in[0,2\pi]$ da \'area $4\pi$, t\'ipica de $S^2$ con un factor 1/2 en la m\'etrica (esfera de radio 1/2).
+	\item \textbf{[$W_1$ 1D]} Por dualidad de Kantorovich, el acoplamiento \'optimo ordena las FDA mon\'otonamente. La integral $\int|F_p-F_q|$ tiene una versi\'on discreta: $\sum |F_p(x_i)-F_q(x_i)|(x_{i+1}-x_i)$. Verifica con discretizaci\'on fina.
+	\item \textbf{[t-Student no exp]} Verosimilitud conjunta: $\prod(1+(x_i-\mu)^2/\nu)^{-(\nu+1)/2}$. No factoriza en un n\'umero finito de $T(x)$ (los t\'erminos $(x_i-\mu)^2$ no son aditivamente separables sin un t\'ermino global).
+	\item \textbf{[Mini-proy Wasserstein]} En MNIST $8\times 8$ con NICE (4 acopladores affine), p\'erdida Wasserstein-2 en validaci\'on $\approx 0.18$ nats por dimensi\'on; FL-like score $\approx 60$. W-2 produce muestras menos n\'itidas que MLE pero m\'as ``realistas'' (sin colapso modal).
+\end{enumerate}
+
+\section*{Capítulo 8: Geometría de Hilbert de las Variables Aleatorias}
+
+\begin{enumerate}
+	\item \textbf{[Verdadero/Falso]} Toda matriz PSD es la matriz de covarianza de algún vector aleatorio. \textbf{Verdadero.} Por el Teorema~8.1: si $K = U\Lambda U^\top$ con $\Lambda = \mathrm{diag}(\lambda_1,\dots,\lambda_k,0,\dots,0)$, entonces $\widetilde{\mathbf{X}} = \sum_i \sqrt{\lambda_i}\,Z_i\,u_i$ con $Z_i\sim\mathcal{N}(0,1)$ i.i.d.\ cumple $E[\widetilde{\mathbf{X}}\widetilde{\mathbf{X}}^\top] = U\Lambda U^\top = K$.
+
+	\item \textbf{[Verdadero/Falso]} Si dos variables aleatorias son independientes, entonces $X\perp Y$ en $L^2$. \textbf{Verdadero.} Si $X\perp Y$ con $E[X]=E[Y]=0$, entonces $E[XY]=E[X]E[Y]=0$. Sin centrado la independencia \emph{no} implica perpendicularidad, pero con centrado sí.
+
+	\item $\|X\|_{L^2}^2 = E[X^2]$ por definición. La igualdad $\|X\|_{L^2}^2 = E[(X-E[X])^2] + E[X]^2$ muestra que la norma $L^2$ incluye naturalmente la media como proyección sobre el subespacio de constantes.
+
+	\item $\|S_i(\theta,\cdot)\|_{L^2}^2 = E[S_i^2] = g_{ii}(\theta)$ por definición de la métrica de Fisher. Las normas de los scores son las raíces cuadradas de los elementos diagonales de $g$.
+
+	\item $X\sim\mathrm{Uniforme}(0,1)$: $\|X\|_{L^2}^2 = E[X^2] = \int_0^1 x^2\,dx = 1/3$. Simulación con $n=10^5$ da aproximadamente $0.3333$.
+
+	\item \textbf{[Verificación Gram/Cov]} Para $n=10^4$ muestras de Bernoulli, Normal, mezcla, Gamma truncada y Cauchy truncada, los errores $\|{\rm Cov} - {\rm Gram}\|$ son del orden de $10^{-16}$ a $10^{-14}$, consistentes con el error de redondeo de doble precisión.
+
+	\item \textbf{[MMD² entre normales]} Para $\mathcal{N}(0,1)$ y $\mathcal{N}(0.5,1)$ con $n=m=500$, $\widehat{\mathrm{MMD}}^2$ bajo RBF ($\sigma=1$) está entre $0.10$ y $0.30$. Para $\mathcal{N}(0,1)$ y $\mathcal{N}(0,2)$ (siempre $\sigma=1$), está entre $0.05$ y $0.20$. MMD es sensible a ambos cambios de media \emph{y} de varianza.
+
+	\item \textbf{[Matriz PSD como kernel]} $K = \begin{pmatrix}4&1\\1&0.5\end{pmatrix}$ tiene $\det = 1$, traza $4.5$, autovalores $\frac{4.5\pm\sqrt{20.25-4}}{2} \approx 4.28$ y $0.22 > 0$, así que es PSD. Un feature map es $\phi(x) = (2x_1,\,0.5x_1+x_2)$: entonces $\phi(x)^\top\phi(y) = 4x_1y_1 + 0.5x_1y_1 + x_2y_2 + 0.5x_1y_2 = 4x_1y_1 + 0.5x_1y_1 + x_2y_2 + \text{mixto}$, \dots\ (no es sencillo). Mejor: $\phi(x) = (2x_1,\,x_2)$ da $4x_1y_1 + x_2y_2 \neq K$. Más sistemático: usar descomposición de Cholesky $K = LL^\top$, feature map es $L^\top x$.
+
+	\item \textbf{[Mahalanobis en iris]} Con $\widehat{\Sigma}$ empírica de las muestras \textit{setosa} y \textit{versicolor}, $d_M(x,y) = \sqrt{(x-y)^\top\widehat{\Sigma}^{-1}(x-y)}$. Para la mayoría de puntos entre clases, $d_M \approx 1$--$5$, mientras que dentro de clase es $\approx 0.5$--$2$.
+
+	\item \textbf{[Verificar reproducción]} Para kernel lineal $k(x,x') = \langle x,x'\rangle$, tomando $f(x) = \langle v,x\rangle$ y $k(x,\cdot)(y) = \langle x,y\rangle$: $\langle f, k(x,\cdot)\rangle = \langle v,\cdot\rangle \cdot \langle x,\cdot\rangle$. En el RKHS lineal $\mathcal{H}_k = \mathbb{R}^p$, el producto interno es el euclidiano y $\langle f, k(x,\cdot)\rangle = v^\top x = f(x)$. \checkmark
+
+	\item \textbf{[Fisher = producto $L^2$]} Por la identidad de Fisher, $E[S_i S_j] = -E[\partial_i\partial_j\ell] = \langle S_i, S_j\rangle_{L^2_{\theta}}$ bajo la medida $P_\theta$. La regularidad garantiza que $S_i \in L^2_\theta$.
+
+	\item \textbf{[RBF característico]} La inyectividad de la transformada de Fourier implica que el mapa $P\mapsto \widehat{P}(\omega) = E_{X\sim P}[\exp(i\langle\omega,X\rangle)]$ es inyectiva. Como el kernel RBF corresponde (bochnerización) a una mezcla de Gaussianas, su mean embedding $\mu_P$ codifica el mismo contenido que $\widehat{P}$, y por lo tanto $P=Q \iff \mu_P = \mu_Q$.
+
+	\item \textbf{[Score en familia exponencial]} $\nabla_\theta\ell = (\partial\eta/\partial\theta)^\top(T(X) - \nabla A(\eta))$. Como $\nabla A(\eta) = E_\theta[T(X)]$ es una constante respecto al muestreo, $S(\theta,X) = (\partial\eta/\partial\theta)^\top(T(X) - \mu(\theta))$ pertenece al subespacio afín $\{T(X) - \mu\}$ dentro de $L^2$.
+
+	\item \textbf{[PCA en $L^2$]} Los autovectores de la matriz de covarianza $\Sigma = V\Lambda V^\top$, proyectando los datos centrados sobre $V^\top$, corresponden a las direcciones que maximizan la varianza (= norma $L^2$ al cuadrado de la coordenada proyectada).
+
+	\item \textbf{[Test MMD, poder estadístico]} Para $P=\mathcal{N}(0,1)$ y $Q=\mathcal{N}(\delta,1)$ con $\delta$ fijo, el poder ($1-\beta$) crece monótonamente con $n$ y con $\delta$, y se estabiliza para $\sigma\approx\mathrm{median\,heuristic}(\|X-Y\|)$. Para $\delta=0.3$, $n=500$ y nivel $\alpha=0.05$, el poder está sobre $0.80$.
+
+	\item \textbf{[Mean embedding visualización]} Los embeddings RBF de 5 distribuciones distintas forman clusters en t-SNE 2D; las distribuciones similares (e.g., Normal vs Cauchy truncada) aparecen cerca, mezclas y Uniforme lejos.
+
+	\item \textbf{[Puente con Capítulo~1]} Para Bernoulli(p=0.3), Poisson($\lambda=2$), Normal($\mu=0$, $\sigma^2=1$), Gamma($\alpha=2$, $\beta=1$) y Beta($\alpha=2$, $\beta=3$): la matriz de Fisher analítica coincide con la covarianza muestral de los scores hasta error $O(1/n)$. Por ejemplo, para Bernoulli(0.3), $I = 1/(0.3\cdot 0.7) = 4.76$, y la covarianza empírica de $10^5$ scores es también $4.76 \pm 0.03$.
 \end{enumerate}

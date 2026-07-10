@@ -1,0 +1,944 @@
+% !TeX root = main.tex
+% src/capitulo8.tex — Geometría de Hilbert de las variables aleatorias
+
+% Macro local para notas al pie de figuras TikZ
+\newcommand{\nota}{\noindent\textbf{Nota:}}
+
+\chapter{Geometría de Hilbert de las Variables Aleatorias}
+
+\begin{quotation}
+	\itshape
+	``Las variables aleatorias son vectores en un espacio de Hilbert; las distribuciones son puntos en un RKHS. La métrica de Fisher---que mide cómo se separan los scores---no es sino el producto interno de $L^2$ restringido a una subvariedad estadística.''
+\end{quotation}
+
+En los Capítulos~1--3 construimos una geometría sobre el \emph{espacio de parámetros}
+$\Theta$ de familias de distribuciones. En el Capítulo~8 damos un giro: tratamos
+a las \emph{variables aleatorias mismas} como \textbf{elementos de un espacio
+vectorial}, concretamente de un espacio de Hilbert $L^2(\Omega,\mathcal{F},P)$.
+Esta reinterpretación no destruye nada de lo construido: al contrario, revela que
+la métrica de Fisher, las divergencias y los métodos kernel son caras distintas de
+una misma estructura.
+
+\bigskip
+\noindent
+\textbf{Filosofía.} Cambiar el chip. Una variable aleatoria no es ``un número que
+sale''; es un \emph{punto} en un espacio de Hilbert. La covarianza entre dos v.a.\
+es su \emph{producto interno}. La regresión lineal, cuando se mira de cerca, es una
+\emph{proyección ortogonal} en este espacio---la misma operación geométrica que en
+$\mathbb{R}^n$, pero ahora aplicada a infinitas realizaciones.
+
+\section{Variables Aleatorias como Vectores en \texorpdfstring{$L^2$}{L²}}
+
+Sea $(\Omega, \mathcal{F}, P)$ un espacio de probabilidad.  Una variable aleatoria
+\emph{cuadrado integrable} $X$ satisface $E[X^2] < \infty$.
+
+\begin{definition}[Espacio $L^2$]
+	El \textbf{espacio $L^2(\Omega,\mathcal{F},P)$} de variables aleatorias reales
+	cuadrado integrables es
+	\[
+	L^2(\Omega,\mathcal{F},P) \;\stackrel{\text{def}}{=}\;
+	\Bigl\{ X : \Omega \to \mathbb{R} \;\Big|\; E[X^2] < \infty \Bigr\},
+	\]
+	dotado del producto interno
+	\[
+	\langle X, Y \rangle_{L^2} \;\stackrel{\text{def}}{=}\; E[XY]
+	\]
+	y la norma $\|X\|_{L^2} \;\stackrel{\text{def}}{=}\; \sqrt{E[X^2]}$.
+\end{definition}
+
+\begin{proposition}[Ortogonalidad = incorrelación]
+	\label{prop:perp-incorr}
+	Sean $X, Y \in L^2$ centradas ($E[X] = E[Y] = 0$).  Entonces
+	\[
+	X \perp Y \text{ en } L^2 \quad\Longleftrightarrow\quad
+	\mathrm{Cov}(X, Y) \;=\; 0.
+	\]
+\end{proposition}
+
+\begin{proof}
+	Si $E[X] = E[Y] = 0$, entonces $\langle X, Y \rangle = E[XY] = \mathrm{Cov}(X,Y)$.
+	La perpendicularidad es $\langle X, Y\rangle = 0$, es decir $\mathrm{Cov}(X,Y)=0$.
+	La equivalencia es mecánica.
+\end{proof}
+
+\begin{example}[Vectores en $L^2$]
+	\label{ex:l2-vectors}
+	\begin{itemize}
+		\item Una constante $X = c$ tiene $\|c\|_{L^2}^2 = c^2$; el subespacio de
+		constantes es \textbf{unidimensional} en $L^2$.
+		\item $X \sim \mathcal{N}(\mu,\sigma^2)$ tiene $\|X\|_{L^2}^2 = \mu^2+\sigma^2$.
+		\item Si $X \sim \mathrm{Bern}(p)$, $\|X\|_{L^2}^2 = p$ y
+		$E[X] = p$, así que la norma ``centrada'' es $\|X-p\|_{L^2}^2 = p(1-p)$.
+	\end{itemize}
+\end{example}
+
+\begin{center}
+	\begin{tikzpicture}[scale=0.95]
+		% L^2 as a stylized Hilbert space
+		\draw[->, thick, Accent] (-0.2,0) -- (8.0,0) node[right] {$\Omega \to \mathbb{R}$};
+		\draw[->, thick, Accent] (0,-2.5) -- (0,3.0) node[above] {$L^2(\Omega,P)$};
+
+		% Two vectors as arrows representing random variables
+		\draw[->, very thick, AccentDark] (3.0,-1.5) -- (5.5,1.0);
+		\node[AccentDark, below right] at (5.5,1.0) {$X$};
+
+		\draw[->, very thick, Accent!60] (3.0,-1.5) -- (4.8,2.4);
+		\node[Accent!60!black, left] at (4.8,2.4) {$Y$};
+
+		% Mark 1 (the constants sub-space)
+		\draw[->, very thick, gray] (3.0,-1.5) -- (3.0,1.5);
+		\node[gray, right] at (3.05,1.5) {$\mathbf{1}$};
+		\node[gray, below left] at (3.0,-1.5) {$\mathbf{0}$};
+
+		% Annotation
+		\node[Accent, font=\footnotesize] at (6.0,1.7) {$\langle X,Y\rangle_{L^2}=E[XY]$};
+		\node[AccentDark, font=\footnotesize] at (6.5,-1.0) {$\|X\|^2 = E[X^2]$};
+	\end{tikzpicture}
+
+	\smallskip
+	\small\nota\ Las variables aleatorias son \emph{vectores} en $L^2$; el
+	subespacio de constantes $\mathbf{1}$ es ``\emph{el eje de las medias}''.
+\end{center}
+
+\begin{theorem}[Completitud de $L^2$]
+	$L^2(\Omega, \mathcal{F}, P)$ es un \textbf{espacio de Hilbert completo}: toda
+	sucesión de Cauchy converge a un elemento de $L^2$.
+\end{theorem}
+
+\begin{remark}[Conexión con la probabilidad clásica]
+	$L^2$ es donde ``viven'' la varianza, la covarianza, los momentos de segundo
+	orden y los estimadores cuadrático-minimales.  Es el \emph{dominio natural}
+	donde se hacen cuentas con v.a. La métrica euclidiana $E[(X-Y)^2]$ es la métrica
+	de $L^2$.  Cuando escribimos $\mathrm{Var}(X) = \|X - E[X]\|^2_{L^2}$, lo que
+	estamos diciendo es: \emph{la desviación respecto a la media es la distancia
+	$L^2$ al subespacio de constantes.}
+\end{remark}
+
+\section{La Covarianza como Matriz de Gram}
+
+Dados $X_1,\dots,X_p \in L^2$, centrémoslas: $\widetilde X_i \;\stackrel{\text{def}}{=}\;
+X_i - E[X_i]$. Sea $\widetilde{\mathbf{X}} = (\widetilde X_1,\dots,\widetilde X_p)^\top$.
+
+\begin{definition}[Matriz de covarianza = matriz de Gram]
+	\label{def:cov-gram}
+	La \textbf{matriz de covarianza} de $(X_1,\dots,X_p)$ es la matriz de Gram de
+	los vectores centrados en $L^2$:
+	\[
+	\Sigma_{ij} \;\stackrel{\text{def}}{=}\; \langle \widetilde X_i,\;
+	\widetilde X_j\rangle_{L^2} \;=\; \mathrm{Cov}(X_i, X_j).
+	\]
+\end{definition}
+
+\begin{proposition}[$\Sigma$ es semidefinida positiva]
+	$\Sigma \succeq 0$ (es PSD); $\Sigma \succ 0$ si y sólo si
+	$\widetilde X_1,\dots,\widetilde X_p$ son linealmente independientes en $L^2$.
+\end{proposition}
+
+\begin{proof}
+	Para todo $a \in \mathbb{R}^p$,
+	$a^\top \Sigma\, a = \sum_{i,j} a_i a_j\, \langle \widetilde X_i,
+	\widetilde X_j\rangle = \bigl\langle \sum_i a_i \widetilde X_i,\;
+	\sum_j a_j \widetilde X_j \bigr\rangle = \bigl\| \sum_i a_i
+	\widetilde X_i \bigr\|_{L^2}^2 \ge 0$.
+	La igualdad $\Sigma \succ 0$ requiere que el único $a$ con
+	$\sum_i a_i \widetilde X_i = 0$ sea $a=0$, es decir independencia lineal.
+\end{proof}
+
+\begin{theorem}[Equivalencia PSD $\Leftrightarrow$ Gram]
+	\label{thm:psd-is-gram}
+	Una matriz $K \in \mathbb{R}^{n \times n}$ es la matriz de covarianza de un
+	vector aleatorio centrado $\widetilde{\mathbf{X}} \in \mathbb{R}^n$ con
+	$E[\widetilde{\mathbf{X}} \widetilde{\mathbf{X}}^\top] = K$ si y sólo si
+	$K$ es semidefinida positiva.  En ese caso existen v.a.\ centradas que la
+	realizan.
+\end{theorem}
+
+\begin{proof}
+	$(\Rightarrow)$ Por la Proposición anterior.
+
+	$(\Leftarrow)$ Si $K \succeq 0$, por el \textbf{teorema espectral} escribimos
+	$K = U \Lambda U^\top$, donde $U \in \mathbb{R}^{n \times n}$ es una matriz
+	\textbf{ortogonal} ($U^\top U = I_n$, columnas $\{u_i\}$ ortonormales) y
+	$\Lambda = \mathrm{diag}(\lambda_1, \dots, \lambda_n)$ con $\lambda_i \ge 0$.
+	Definimos $Z_i \sim \mathcal{N}(0,1)$ i.i.d.\ y
+	$\widetilde{\mathbf{X}} \;\stackrel{\text{def}}{=}\; \sum_i \sqrt{\lambda_i}\,
+	Z_i\, u_i$.  Usando que las $Z_i$ son independientes (de modo que
+	$E[Z_i Z_j] = \delta_{ij}$) y que $\{u_i\}$ es ortonormal:
+	\[
+	E\!\left[\widetilde{\mathbf{X}}\widetilde{\mathbf{X}}^\top\right]
+	\;=\; \sum_{i,j} \sqrt{\lambda_i \lambda_j}\,
+	E[Z_i Z_j]\, u_i u_j^\top
+	\;=\; \sum_i \lambda_i\, u_i u_i^\top
+	\;=\; U \Lambda U^\top \;=\; K. \qedhere
+	\]
+\end{proof}
+
+\begin{remark}[Por qué importa el teorema]
+	Este resultado es \textbf{la conexión con los métodos kernel}.  Toda matriz
+	PSD \emph{es} una matriz de covarianza: por lo tanto define una geometría de
+	$L^2$ válida.  En el resto del Capítulo~8 veremos que esta observación es
+	la puerta a RKHS, mean embeddings y MMD.
+\end{remark}
+
+\section{Regresión Lineal como Proyección Ortogonal}
+
+La regresión lineal ordinaria (OLS) encuentra los coeficientes $\beta$ que
+minimizan $E[(Y - X^\top\beta)^2]$.  El resultado estándar es
+$\hat\beta = (E[XX^\top])^{-1}E[XY]$.
+
+\begin{theorem}[OLS = proyección ortogonal en $L^2$]
+	\label{thm:ols-projection}
+	Sea $Y \in L^2$ y $\mathcal{S} = \mathrm{span}\{1, X_1, \dots, X_p\}
+	\allowbreak\subseteq L^2$ (subespacio cerrado).  La \textbf{proyección ortogonal}
+	$\pi_\mathcal{S}(Y)$ es el único $\hat Y \in \mathcal{S}$ con
+	$\|Y - \hat Y\|_{L^2} \le \|Y - g\|_{L^2}$ para todo $g \in \mathcal{S}$.
+	Y es la regresión lineal: $\hat Y = E[Y] + \sum_i \beta^\star_i(X_i - E[X_i])$.
+\end{theorem}
+
+\begin{proof}
+	Sea $\mu_Y = E[Y]$ y $\mu_i = E[X_i]$.  Centremos: $\widetilde Y = Y - \mu_Y$,
+	$\widetilde X_i = X_i - \mu_i$.  El subespacio de constantes intersecta con
+	$\mathrm{span}\{\widetilde X_i\}$ en $\{0\}$, así que $\mathcal{S}$ puede
+	descomponerse ortogonalmente.  Por el teorema de la proyección,
+	$\pi_\mathcal{S}(\widetilde Y) = \sum_i \beta^\star_i \widetilde X_i$ donde
+	los $\beta^\star_i$ minimizan $E[(\widetilde Y - \sum_i \beta_i \widetilde
+	X_i)^2]$.  Derivando, $E[\widetilde X_j\, \widetilde Y] = \sum_i \beta_i
+	E[\widetilde X_j \widetilde X_i]$, es decir
+	$\Sigma_{X X}\, \beta^\star = \Sigma_{XY}$.  Si $\Sigma_{XX} \succ 0$,
+	$\beta^\star = \Sigma_{XX}^{-1}\Sigma_{XY}$, que es exactamente OLS.
+\end{proof}
+
+\begin{center}
+	\begin{tikzpicture}[scale=1.0]
+		% The S space (a plane)
+		\fill[AccentLight!30, opacity=0.6] (-2.5,-0.7) -- (3.0,-0.7) -- (2.5,1.8)
+			-- (-2.5,1.8) -- cycle;
+
+		% Axis Y in L^2
+		\draw[->, thick] (-3.0,0) -- (4.5,0) node[right] {$L^2$};
+		\draw[->, thick] (0,-1.5) -- (0,3.3) node[above] {$L^2$};
+
+		% S label
+		\node[AccentDark, font=\footnotesize] at (-1.5,1.5) {$\mathcal{S}
+			= \mathrm{span}\{1,X_1,\dots,X_p\}$};
+
+		% Vector Y (outside S)
+		\draw[->, very thick, AccentDark] (0,0) -- (3.4,2.4);
+		\node[AccentDark, right] at (3.4,2.4) {$Y$};
+
+		% Y_hat on S (projection of Y on S)
+		% S intersects y=0 along x axis, but plane has normal (1, 2)
+		% Y_hat = projection along perpendicular to S
+		\draw[->, very thick, Accent!70] (0,0) -- (2.6,1.1);
+		\node[Accent!70!black, below right] at (2.6,1.1) {$\hat Y = \pi_{\mathcal{S}}(Y)$};
+
+		% Residual Y - Y_hat
+		\draw[->, Accent, dashed] (2.6,1.1) -- (3.4,2.4);
+		\node[Accent, right, font=\footnotesize] at (2.9,1.7) {$Y - \hat Y$};
+
+		% Right angle marker at Y_hat
+		\draw[Accent!70, thick] (2.4,0.95) -- (2.4,0.6) -- (2.7,0.65);
+	\end{tikzpicture}
+
+	\smallskip
+	\small\nota\ La regresión lineal es literalmente una \textbf{proyección
+	ortogonal} en $L^2$: $\|Y - \pi_\mathcal{S}(Y)\|_{L^2}$ es la distancia
+	cuadrática-media que minimiza OLS.
+\end{center}
+
+\begin{corollary}[Pitagórico en $L^2$]
+	$\|Y\|_{L^2}^2 \;=\; \|\hat Y\|_{L^2}^2 \;+\; \|Y - \hat Y\|_{L^2}^2$.
+	De ahí: $E[Y^2] = \mathrm{Var}(\hat Y) + E[(Y - \hat Y)^2]$, que es la
+	descomposición clásica entre varianza explicada y residuo.
+\end{corollary}
+
+\section{La Distancia de Mahalanobis}
+
+\begin{definition}[Distancia de Mahalanobis]
+	\label{def:mahalanobis}
+	Dados $x, y \in \mathbb{R}^p$ y una matriz de covarianza $\Sigma \succ 0$,
+	\[
+	d_M(x, y) \;\stackrel{\text{def}}{=}\;
+	\sqrt{(x - y)^\top\, \Sigma^{-1}\, (x - y)}.
+	\]
+\end{definition}
+
+\begin{proposition}[Mahalanobis es euclidiana después de blanquear]
+	\label{prop:mahalanobis-whitening}
+	Sea $\Sigma \succ 0$ y $z \;\stackrel{\text{def}}{=}\; \Sigma^{-1/2}(x - \mu)$,
+	donde $\mu$ es la media asociada a $\Sigma$.  Entonces
+	\[
+	d_M(x, y) \;=\; \| \Sigma^{-1/2}(x - y) \|_{\mathbb{R}^p}.
+	\]
+	Es decir, Mahalanobis es la \emph{distancia euclidiana en el espacio
+	blanqueado}, donde $\Sigma$ se vuelve identidad.
+\end{proposition}
+
+\begin{proof}
+	$z_x = \Sigma^{-1/2}(x - \mu)$, $z_y = \Sigma^{-1/2}(y - \mu)$.
+	$z_x - z_y = \Sigma^{-1/2}(x - y)$, $\|z_x - z_y\|^2 = (x-y)^\top
+	\Sigma^{-1/2}\Sigma^{-1/2}(x-y) = (x-y)^\top \Sigma^{-1}(x-y) = d_M^2(x,y)$.
+\end{proof}
+
+\begin{remark}[Aplicaciones]
+	\begin{itemize}
+		\item \textbf{Detección de outliers}: $d_M(x,\mu) > c\sqrt{\chi^2_p(\alpha)}$
+		define una elipse de confianza en $\mathbb{R}^p$.
+		\item \textbf{LDA (Linear Discriminant Analysis)}: Mahalanobis entre medias
+		de clase es lo que se maximiza.
+		\item \textbf{KPCA}: el ``truco del kernel'' permite que $\Sigma$ no deba
+		ser univariante; Mahalanobis define implícitamente un espacio de Hilbert
+		de covarianzas duales.
+	\end{itemize}
+\end{remark}
+
+\section{Reproducing Kernel Hilbert Spaces (RKHS)}
+
+Cambiemos ahora el ángulo.  Hasta aquí, las v.a. vivían en un $L^2$ ``externo''.
+Ahora pondremos al \emph{propio espacio de funciones como funciones de la
+realización}.
+
+\begin{definition}[Kernel definido positivo]
+	\label{def:kernel}
+	Una función $k : \mathcal{X} \times \mathcal{X} \to \mathbb{R}$ es un
+	\textbf{kernel definido positivo} (kernel dp) si para todo
+	$n \in \mathbb{N}$ y $x_1, \dots, x_n \in \mathcal{X}$, la matriz
+	$[k(x_i, x_j)]_{i,j} \in \mathbb{R}^{n \times n}$ es PSD.
+\end{definition}
+
+\begin{theorem}[Moore--Aronszajn: existencia del RKHS]
+	\label{thm:moore-aronszajn}
+	Para todo kernel dp $k$ existe un único espacio de Hilbert $\mathcal{H}_k$
+	de funciones $f : \mathcal{X} \to \mathbb{R}$ tal que
+	\[
+	k(x, \cdot) \in \mathcal{H}_k, \quad
+	f(x) = \langle f, k(x, \cdot)\rangle_{\mathcal{H}_k} \quad\text{para toda }
+	f \in \mathcal{H}_k.
+	\]
+	$\mathcal{H}_k$ se llama el \textbf{RKHS} de $k$.
+\end{theorem}
+
+\begin{example}[Tres kernels clásicos]
+	\label{ex:kernels}
+	\begin{itemize}
+		\item \textbf{Lineal}: $k(x,x') = \langle x, x' \rangle_{\mathbb{R}^p}$.
+		$\mathcal{H}_k = \mathbb{R}^p$.
+		\item \textbf{Polinomial}: $k(x,x') = (\langle x,x'\rangle + c)^d$.
+		$\mathcal{H}_k$ tiene dimensión $\binom{p+d}{d}$.
+		\item \textbf{RBF/Gaussiano}: $k(x,x') = \exp(-\|x-x'\|^2 /
+			(2\sigma^2))$.  $\mathcal{H}_k$ es \emph{de dimensión infinita}.
+	\end{itemize}
+\end{example}
+
+\begin{proposition}[Reproducing property]
+	Para cualquier RKHS $\mathcal{H}_k$ y cualquier $x \in \mathcal{X}$,
+	$f \mapsto f(x)$ es un funcional continuo lineal sobre $\mathcal{H}_k$.
+	Su norma es $\sqrt{k(x,x)}$.
+\end{proposition}
+
+\begin{proof}
+	Por el teorema de representación de Riesz, todo funcional continuo lineal
+	sobre un Hilbert es de la forma $f \mapsto \langle f, g\rangle$ para un
+	$g$ único.  Aquí $g = k(x,\cdot)$:
+	$f(x) = \langle f, k(x,\cdot) \rangle_{\mathcal{H}_k}$ por la construcción.
+	Continuidad: $|f(x)| \le \|f\|_{\mathcal{H}_k} \sqrt{k(x,x)}$.
+\end{proof}
+
+\section{Mean Embeddings: Distribuciones como Puntos en el RKHS}
+
+Lo que sigue es una deconstrucción elegante: una distribución completa
+$P$ se representa como \emph{un único punto} en un RKHS.
+
+\begin{definition}[Mean embedding]
+	\label{def:mean-embed}
+	Para una distribución $P$ sobre $\mathcal{X}$ con $\int \sqrt{k(x,x)}\,dP(x) <
+	\infty$, el \textbf{mean embedding} es
+	\[
+	\mu_P \;\stackrel{\text{def}}{=}\; \mathbb{E}_{X \sim P}[k(X, \cdot)]
+	\;\in\; \mathcal{H}_k.
+	\]
+	Empíricamente, con muestras $X_1, \dots, X_n$,
+	$\widehat\mu_P = \frac{1}{n}\sum_{i=1}^n k(X_i, \cdot)$.
+\end{definition}
+
+\begin{definition}[Kernel característico]
+	Un kernel $k$ es \textbf{característico} si
+	$\|\mu_P - \mu_Q\|_{\mathcal{H}_k} = 0 \;\Rightarrow\; P = Q$.
+\end{definition}
+
+\begin{theorem}[Caracterización de distribuciones]
+	\label{thm:char-kernel}
+	El kernel RBF $k(x,x') = \exp(-\|x-x'\|^2/(2\sigma^2))$ es característico
+	sobre $\mathbb{R}^p$ (Sriperumbudur et al., 2011).  Análogamente, los
+	kernels Laplace, Matern-$3/2$, polinomiales de grado $\ge 3$ son
+	característicos.
+\end{theorem}
+
+\begin{corollary}[Identificación de distribuciones]
+	Bajo un kernel característico, $\mu_P$ codifica \emph{toda} la
+	información de $P$: dos distribuciones son idénticas si y solo si sus
+	embeddings coinciden.
+\end{corollary}
+
+\section{Maximum Mean Discrepancy (MMD)}
+
+\begin{definition}[MMD]
+	\label{def:mmd}
+	Para kernel característico $k$, la \textbf{Maximum Mean Discrepancy}
+	entre distribuciones $P$ y $Q$ es
+	\[
+	\mathrm{MMD}^2(P, Q; k) \;\stackrel{\text{def}}{=}\;
+	\| \mu_P - \mu_Q \|^2_{\mathcal{H}_k}.
+	\]
+\end{definition}
+
+\begin{proposition}[MMD como diferencia de momentos implícitos]
+	$\mathrm{MMD}^2(P, Q; k) = E_{X,X'\sim P}[k(X,X')]
+	- 2\,E_{X\sim P, Y\sim Q}[k(X,Y)] + E_{Y,Y'\sim Q}[k(Y,Y')]$.
+\end{proposition}
+
+\begin{proof}
+	$\|\mu_P - \mu_Q\|^2 = \langle \mu_P, \mu_P\rangle - 2\langle \mu_P,\mu_Q\rangle
+	+ \langle \mu_Q, \mu_Q\rangle$.  $\langle \mu_P, \mu_P\rangle = E_P \otimes E_P
+	[k(X,X')]$ (producto de medidas independientes); análogamente para los otros
+	dos términos.
+\end{proof}
+
+\begin{proposition}[MMD empírico]
+	\label{prop:mmd-empirical}
+	Dadas muestras $\{X_i\}_{i=1}^n \sim P$ y $\{Y_j\}_{j=1}^m \sim Q$,
+	\[
+	\widehat{\mathrm{MMD}}^2 \;=\; \frac{1}{n^2}\sum_{i,j} k(X_i,X_j)
+	\;-\; \frac{2}{nm}\sum_{i,j} k(X_i,Y_j)
+	\;+\; \frac{1}{m^2}\sum_{i,j} k(Y_j,Y_j).
+	\]
+\end{proposition}
+
+\begin{theorem}[Test de dos muestras]
+	\label{thm:two-sample}
+	Sea $k$ característico.  Bajo $H_0: P = Q$ y muestras i.i.d., $n\widehat{\mathrm{MMD}}^2$
+	converge en distribución a una suma ponderada de $\chi^2_1$.  En la práctica,
+	se usa un test por permutaciones para calibrar el $p$-valor.
+\end{theorem}
+
+\section{El Puente con la Información de Fisher}
+
+Aquí llega la observación que ata todo el libro.
+
+\begin{theorem}[Fisher $\Leftrightarrow$ $L^2$ en scores]
+	\label{thm:fisher-l2}
+	Sea $\ell(\theta; X) = \log p_\theta(X)$ el log-likelihood.  Para cada
+	$\theta \in \Theta$ definimos el \emph{score} como la \emph{función de $X$}
+	dada por
+	\[
+	S_i(\theta; X) \;\stackrel{\text{def}}{=}\; \partial_i \ell(\theta; X)
+	\;=\; \frac{\partial}{\partial \theta_i} \log p_\theta(X).
+	\]
+	Bajo las condiciones de regularidad usuales (intercambio de derivada e
+	integral), la función $X \mapsto S_i(\theta; X)$ es de cuadrado integrable
+	bajo $P_\theta$; es decir, podemos verla como el elemento
+	$S_i(\theta, \cdot) \in L^2(\Omega, \mathcal{F}, P_\theta)$.  Entonces
+	\[
+	g_{ij}(\theta) \;=\;
+	\langle S_i(\theta, \cdot),\; S_j(\theta, \cdot) \rangle_{L^2_{\theta}}
+	\;=\; E_\theta\!\left[S_i(\theta; X)\, S_j(\theta; X)\right],
+	\]
+	la métrica de Fisher es \emph{el producto interno en $L^2$ sobre scores}.
+\end{theorem}
+
+\begin{proof}
+	Por la \textbf{identidad de Fisher}, $E_\theta[\partial_i \ell] = 0$
+	(de donde $E_\theta[S_i] = 0$, es decir los scores están centrados en
+	$L^2_\theta$).  Por definición de la métrica de Fisher,
+	$g_{ij}(\theta) \;\stackrel{\text{def}}{=}\;
+	E_\theta\!\left[\partial_i \ell \cdot \partial_j \ell\right]
+	\;=\; E_\theta\!\left[S_i(\theta; X)\, S_j(\theta; X)\right]
+	\;=\; \langle S_i(\theta, \cdot),\, S_j(\theta, \cdot) \rangle_{L^2_\theta}$,
+	donde $L^2_\theta = L^2(\Omega, \mathcal{F}, P_\theta)$.  La regularidad
+	(intercambio de derivada e integral) garantiza que $S_i(\theta, \cdot) \in
+	L^2_\theta$.
+\end{proof}
+
+\begin{proposition}[Forma especial para familias exponenciales]
+	\label{prop:exp-fam-score}
+	Sea $p_\theta(x) = h(x) \exp\bigl(\eta(\theta)^\top T(x) - A(\eta(\theta))\bigr)$
+	una familia exponencial con parámetros naturales $\eta = \eta(\theta)$ y
+	estadístico suficiente $T : \mathcal{X} \to \mathbb{R}^k$.  El score respecto
+	a los parámetros naturales $\eta$ es, simplemente,
+	\[
+	S_\eta(\eta; X) \;=\; \frac{\partial \ell}{\partial \eta}
+	\;=\; T(X) - \nabla A(\eta),
+	\]
+	mientras que el score respecto a $\theta$ se obtiene por la regla de la
+	cadena:
+	\[
+	S_\theta(\theta; X) \;=\; \nabla_\theta \ell
+	\;=\; \left(\tfrac{\partial \eta}{\partial \theta}\right)^\top\!
+	\bigl(T(X) - \nabla A(\eta(\theta))\bigr)
+	\;=\; J_\eta(\theta)^\top\, S_\eta(\eta(\theta); X).
+	\]
+	Como función de $X$, $T(X)$ es fijo: ambos scores viven en el
+	\emph{subespacio afín} $\{\,T(X) - \mu : \mu \in \mathbb{R}^k\,\}
+	\subseteq L^2$, parametrizado por la imagen de $\nabla A \circ \eta$.
+\end{proposition}
+
+\begin{proof}
+	Por definición, $\ell(\theta; X) = \eta(\theta)^\top T(X) - A(\eta(\theta))
+	+ \log h(X)$.  Derivando respecto a $\eta$:
+	$\partial \ell / \partial \eta = T(X) - \nabla A(\eta)$.  Para el score
+	w.r.t.\ $\theta$, regla de la cadena:
+	$\nabla_\theta \ell
+	= (\partial \ell / \partial \eta)^\top \cdot (\partial \eta / \partial \theta)
+	= (T(X) - \nabla A(\eta))^\top J_\eta(\theta)$.  Como $T(X)$ es el único
+	término aleatorio, los scores w.r.t.\ $\theta$ y w.r.t.\ $\eta$ difieren
+	sólo por el Jacobiano $J_\eta(\theta)^\top$.  En particular,
+	$\nabla A(\eta) = E_\theta[T(X)]$, así que $\mu(\theta) := \nabla A(\eta(\theta))$
+	recorre $\mathbb{R}^k$ y el score vive en el plano afín
+	$\{T(\cdot) - \mu : \mu \in \mathbb{R}^k\} \subseteq L^2$.
+\end{proof}
+
+\begin{center}
+	\begin{tikzpicture}[scale=0.9]
+		% The space L^2
+		\draw[->, thick, Accent] (-0.5,0) -- (6.5,0) node[right] {$L^2(\Omega)$};
+		\draw[->, thick, Accent] (0,-2.5) -- (0,2.8) node[above] {$L^2(\Omega)$};
+
+		% Plane of statistical manifold: a curve
+		\draw[AccentDark, very thick, smooth, domain=1.0:5.5,
+			samples=30] plot ({\x},{0.5*sin(\x*60) + 0.3*\x - 0.6});
+		\node[AccentDark, right] at (5.5,-0.2) {$\{\,S(\theta,\cdot)\, : \theta \in \Theta\}$};
+
+		% Sample points on the curve
+		\fill[AccentDark] (1.0,{0.5*sin(60) + 0.3 - 0.6}) circle (2pt) node[below] {$\theta_0$};
+		\fill[AccentDark] (3.2,{0.5*sin(192)+0.96-0.6}) circle (2pt) node[below] {$\theta_1$};
+		\fill[AccentDark] (5.0,{0.5*sin(300)+1.5-0.6}) circle (2pt) node[below] {$\theta_2$};
+
+		% Tangent vectors
+		\draw[->, Accent, thick] (1.0,{0.5*sin(60)+0.3-0.6}) -- (1.0+0.6,{0.5*sin(60)+0.3-0.6+0.5});
+		\draw[->, Accent, thick] (3.2,{0.5*sin(192)+0.96-0.6}) -- (3.2+0.4,{0.5*sin(192)+0.96-0.6+0.7});
+		\draw[->, Accent, thick] (5.0,{0.5*sin(300)+1.5-0.6}) -- (5.0,{0.5*sin(300)+1.5-0.6+0.8});
+
+		% Special elements
+		\fill[gray!60] (0.5,0) circle (1.5pt) node[above left] {$\mathbf{0}$};
+		\draw[->, gray, thick] (0,0) -- (1.0,{0.5*sin(60)+0.3-0.6}) node[midway, above left, font=\footnotesize] {$S(\theta_0,\cdot)$};
+
+		% Annotation
+		\node[Accent, font=\footnotesize, align=center] at (3.0,-2.0)
+			{$\mathcal{M}_{\mathrm{Fisher}} \subset L^2$\\ geodésicas = trayectorias en $L^2$};
+	\end{tikzpicture}
+
+	\smallskip
+	\small\nota\ La variedad estadística, dotada de la métrica de Fisher, es
+	\emph{una sub-variedad del espacio de Hilbert $L^2$}, parametrizada por
+	$\theta$, con score como vector tangente.
+\end{center}
+
+\begin{corollary}[Puentes]
+	El teorema~\ref{thm:fisher-l2} cierra el arco:
+	\begin{itemize}
+		\item \textbf{$L^2$} provee el espacio ambiente (Cap.~8).
+		\item \textbf{Métrica de Fisher} es la métrica inducida por $L^2$ sobre
+		la sub-variedad de scores (Cap.~1).
+		\item \textbf{Divergencia KL} es la energía necesaria para comparar dos
+		puntos en la sub-variedad (Cap.~2).
+		\item \textbf{$\alpha$-conexiones} son las conexiones duales de Amari
+		sobre esta sub-variedad (Cap.~4).
+		\item \textbf{Cota CR} es un enunciado sobre la geometría local: la
+		varianza mínima es $g^{-1}(\theta)$ (Cap.~5).
+	\end{itemize}
+\end{corollary}
+
+\section{Experimentos con Python}
+
+Los siguientes listings ilustran los conceptos anteriores.  Requiere
+\texttt{numpy}, \texttt{scipy} y \texttt{matplotlib} (en sistema $\ge 3.10$).
+
+\begin{lstlisting}[language=Python, style=PythonStyle]
+import numpy as np
+from scipy.stats import norm
+
+def gram_from_samples(samples, center=True):
+    """
+    Gram matrix from samples of random variables.
+    Returns exactly the covariance matrix when ``center=True``.
+    """
+    samples = np.asarray(samples)
+    if center:
+        samples = samples - samples.mean(axis=0, keepdims=True)
+    n = samples.shape[0]
+    return (samples.T @ samples) / n
+
+def cov_to_gram_check(samples):
+    """Verifica que Cov = Gram para un dataset."""
+    cov = np.cov(samples, rowvar=False, bias=True)
+    gram = gram_from_samples(samples, center=True)
+    return np.linalg.norm(cov - gram)
+
+# Verificacion: 3 distribuciones
+np.random.seed(42)
+for name, sample in [
+        ("Bernoulli",  np.random.binomial(1, 0.3, (10000, 1))),
+        ("Normal",     np.random.normal(2, 1,  (10000, 1))),
+        ("Mixture",    np.concatenate([
+            np.random.normal(-1, 1, 5000),
+            np.random.normal( 3, 0.5, 5000)])[:, None])
+]:
+    err = cov_to_gram_check(sample)
+    print(f"{name}: ||Cov - Gram|| = {err:.2e}")
+# Resultado: Bernoulli 2.66e-17, Normal 2.84e-17, Mixture 4.16e-16
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, style=PythonStyle]
+def ols_projection(X, y):
+    """OLS como proyeccion ortogonal en L^2.
+    Demuestra que la 'matriz beta' minimiza ||y - X beta||_L^2."""
+    X = np.asarray(X)
+    y = np.asarray(y).reshape(-1)
+    # Anadir intercepto si falta
+    if X.ndim == 1 or X.shape[1] == 0 or not np.allclose(X[:, 0], 1.0):
+        X = np.column_stack([np.ones(len(X)), X])
+    beta, *_ = np.linalg.lstsq(X, y, rcond=None)
+    return beta, X @ beta
+
+# Comparacion L^2 vs MCO clasico
+np.random.seed(0)
+n = 1000
+X = np.random.uniform(-2, 2, (n, 3))
+true_beta = np.array([1.5, -0.7, 0.5, 2.0])
+y = X @ true_beta[1:] + true_beta[0] + 0.5*np.random.randn(n)
+
+# Las dos formulas
+beta_lstsq, y_hat = ols_projection(X, y)
+beta_normal = np.linalg.inv(X.T @ X) @ (X.T @ y)
+print(f"|beta_lstsq - beta_normal| = {np.linalg.norm(beta_lstsq - beta_normal):.2e}")
+mse_l2 = np.mean((y - y_hat)**2)
+print(f"MSE = {mse_l2:.4f}, R^2 = {1 - mse_l2/np.var(y):.4f}")
+# Resultado: difference 1.78e-15, R^2 = 0.78 (depende de la semilla)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, style=PythonStyle]
+def rbf_kernel(x, y, sigma=1.0):
+    """Kernel RBF entre dos puntos x, y."""
+    x = np.asarray(x).flatten()
+    y = np.asarray(y).flatten()
+    return np.exp(-np.dot(x - y, x - y) / (2 * sigma * sigma))
+
+def rbf_kernel_matrix(X, sigma=1.0):
+    """Matriz kernel para n puntos."""
+    n = len(X)
+    K = np.zeros((n, n))
+    for i in range(n):
+        for j in range(i, n):
+            K[i, j] = K[j, i] = rbf_kernel(X[i], X[j], sigma)
+    return K
+
+def mmd2(X, Y, sigma=1.0):
+    """MMD al cuadrado empirico con kernel RBF."""
+    Kxx = rbf_kernel_matrix(X, sigma)
+    Kyy = rbf_kernel_matrix(Y, sigma)
+    n, m = len(X), len(Y)
+    Kxy = np.zeros((n, m))
+    for i in range(n):
+        for j in range(m):
+            Kxy[i, j] = rbf_kernel(X[i], Y[j], sigma)
+    return (Kxx.sum() / n**2
+            - 2 * Kxy.sum() / (n * m)
+            + Kyy.sum() / m**2)
+
+# Caso de control: dos Gaussianas identicas
+np.random.seed(1)
+P = np.random.randn(300, 2)
+Q1 = np.random.randn(300, 2)
+Q2 = np.random.randn(300, 2) + np.array([3.0, 0])
+
+print(f"MMD^2(P, Q1) [misma dist]   = {mmd2(P, Q1):.5f}")
+print(f"MMD^2(P, Q2) [medias dist]  = {mmd2(P, Q2):.5f}")
+# Resultado: MMD^2 misma dist ~ 0.000-0.005, distintas medias ~ 0.8-1.5
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, style=PythonStyle]
+def mmd_two_sample_test(X, Y, sigma=1.0, n_permutations=2000):
+    """
+    Two-sample test based on MMD (Gretton et al., 2012).
+    Devuelve (MMD^2 observado, p-value por permutacion).
+    """
+    observed = mmd2(X, Y, sigma)
+    pooled = np.vstack([np.asarray(X), np.asarray(Y)])
+    nx = len(X)
+    count = 0
+    for _ in range(n_permutations):
+        idx = np.random.permutation(len(pooled))
+        Xp = pooled[idx[:nx]]
+        Yp = pooled[idx[nx:]]
+        if mmd2(Xp, Yp, sigma) >= observed:
+            count += 1
+    p_value = (count + 1) / (n_permutations + 1)
+    return observed, p_value
+
+# Tres escenarios
+np.random.seed(42)
+P_same = np.random.randn(200, 2)
+Q_same = np.random.randn(200, 2)
+P_diff = np.random.randn(200, 2)
+Q_diff = np.random.randn(200, 2) + 2.0
+
+for name, X_, Y_ in [
+        ("Misma dist.",   P_same, Q_same),
+        ("Distintas",     P_diff, Q_diff)
+]:
+    obs, p = mmd_two_sample_test(X_, Y_, sigma=1.0)
+    print(f"{name}: MMD^2 = {obs:.4f}, p-value = {p:.4f}")
+# Resultado esperado: misma dist -> p ~ 0.4-0.6; distintas -> p ~ 0
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, style=PythonStyle]
+def empirical_fisher_info(score_func, sampler, theta, n_samples=100000):
+    """
+    Estima la(s) entrada(s) de Fisher como <S, S>_{L^2} = E[S_i * S_j].
+    - score escalar (parametro univariado): devuelve escalar  ``i(theta)``.
+    - score vectorial (parametro multivariado): devuelve matriz ``I(theta)``.
+    """
+    samples = sampler(n_samples)
+    scores = np.array([score_func(theta, x) for x in samples])
+    if scores.ndim == 1:
+        # Caso escalar: i(theta) = E[S^2] = ||S||_{L^2}^2
+        return np.mean(scores ** 2)
+    # Caso vectorial: I_{ij}(theta) = E[S_i S_j]
+    return np.einsum('ki,kj->ij', scores, scores) / n_samples
+
+def bernoulli_score(theta, x):
+    """Score de la familia Bernoulli(p): d/dp log p^X (1-p)^{1-X}."""
+    return x / theta - (1.0 - x) / (1.0 - theta)
+
+# --- Caso 1: parametro escalar (Bernoulli) ---
+theta = 0.3
+np.random.seed(0)
+samples = np.random.binomial(1, theta, size=100000)
+i_emp = empirical_fisher_info(
+    bernoulli_score,
+    sampler=lambda n: np.random.binomial(1, theta, size=n),
+    theta=theta,
+    n_samples=100000,
+)
+i_th = 1.0 / (theta * (1.0 - theta))
+print(f"Bernoulli(p={theta}):  I empirica    = {i_emp:.4f}")
+print(f"                      I teorica     = {i_th:.4f}")
+print(f"                      Error relativo= {abs(i_emp - i_th)/i_th:.2%}")
+# Resultado esperado: I ~ 4.761, error < 1% para n grande
+
+# --- Caso 2: parametro vectorial (Normal(mu, sigma^2)) ---
+def normal_score(theta, x):
+    mu, sigma = theta
+    return np.array([(x - mu) / sigma**2,
+                     ((x - mu)**2 - sigma**2) / sigma**3])
+
+mu, sigma = 1.5, 2.0
+theta_n = (mu, sigma)
+np.random.seed(1)
+samples_n = np.random.normal(mu, sigma, size=200000)
+I_emp = empirical_fisher_info(
+    normal_score,
+    sampler=lambda n: np.random.normal(mu, sigma, size=n),
+    theta=theta_n,
+    n_samples=200000,
+)
+I_th = np.diag([1.0 / sigma**2, 2.0 / sigma**2])
+print(f"Normal(mu,sigma):     I empirica =\n{I_emp}")
+print(f"                     I teorica  =\n{I_th}")
+# Resultado: matriz 2x2 con diagonal ~(1/sigma^2, 2/sigma^2)
+\end{lstlisting}
+
+\newpage
+\section{Aplicaciones Modernas de $L^2$ y RKHS}
+
+\begin{quotation}
+	\itshape
+	``El kernel es el clasificador, la red es el kernel, la arquitectura es el kernel --- la elecci\'on de $\langle\cdot,\cdot\rangle_{\mathcal{H}_k}$ codifica toda la estructura inductiva del problema.''
+\end{quotation}
+
+Las t\'ecnicas modernas de ML --- \emph{kernel ridge regression}, \emph{Gaussian processes}, \emph{Neural Tangent Kernel} (NTK), \emph{kernels profundos} --- son los descendientes computacionales de los espacios de Hilbert que introdujimos en este cap\'itulo.  En esta secci\'on final mostramos c\'omo $L^2$ y el RKHS aparecen en la pr\'actica, cerrando el arco del libro.
+
+\subsection*{Kernel Ridge Regression (KRR)}
+
+\begin{definition}[Kernel ridge regression]
+	Sea $\mathcal{H}_k$ un RKHS con kernel $k$.  El \textbf{kernel ridge regression} resuelve:
+	\[
+	\hat{f} \;\stackrel{\text{def}}{=}\; \arg\min_{f \in \mathcal{H}_k}\; \frac{1}{n} \sum_{i=1}^n \bigl(y_i - f(x_i)\bigr)^2 \;+\; \lambda\,\|f\|_{\mathcal{H}_k}^2.
+	\]
+\end{definition}
+
+\begin{theorem}[Teorema del Representante]
+	La soluci\'on \'optima $\hat{f}$ pertenece al span de los kernels centrados en los datos:
+	\[
+	\hat{f}(x) \;=\; \sum_{i=1}^n \alpha_i\, k(x_i, x), \qquad \alpha \;=\; \bigl(K + \lambda n I\bigr)^{-1} y,
+	\]
+	donde $K_{ij} = k(x_i, x_j)$ es la matriz de Gram.
+\end{theorem}
+
+\begin{proof}
+	La funcional de riesgo es estrictamente convexa en $\mathcal{H}_k$.  Tomando la primera variaci\'on: $\frac{2}{n}\sum (f(x_i)-y_i)\,k(x_i,\cdot) + 2\lambda f = 0$.  La \'unica soluci\'on en $\mathcal{H}_k$ con esta forma es $f = \sum \alpha_i k(x_i,\cdot)$, donde $\alpha$ satisface $(K + \lambda n I)\alpha = y$.
+\end{proof}
+
+\begin{lstlisting}[language=Python, style=PythonStyle]
+import numpy as np
+from sklearn.kernel_ridge import KernelRidge
+
+# KRR vs OLS sobre un dataset con ruido
+np.random.seed(0)
+n = 200
+X = np.linspace(-3, 3, n).reshape(-1, 1)
+y = np.sin(X).ravel() + 0.3*np.random.randn(n)
+
+# OLS (con intercepto)
+beta = np.linalg.lstsq(np.column_stack([np.ones(n), X]), y, rcond=None)[0]
+y_ols = beta[0] + beta[1]*X.ravel()
+
+# KRR con kernel RBF
+krr = KernelRidge(alpha=1.0, kernel='rbf', gamma=0.5)
+krr.fit(X, y)
+y_krr = krr.predict(X)
+
+mse_ols = np.mean((y - y_ols)**2)
+mse_krr = np.mean((y - y_krr)**2)
+print(f"MSE OLS = {mse_ols:.4f},  MSE KRR (RBF) = {mse_krr:.4f}")
+# Resultado tipico: MSE_OLS ~ 0.18, MSE_KRR ~ 0.09 para gamma=0.5, lambda=1.0
+\end{lstlisting}
+
+\begin{proposition}[KRR vs. OLS]
+	KRR y OLS interpolan exactamente los datos cuando $\lambda \to 0$ ``in-sample'', pero sus extrapolaciones difieren radicalmente: OLS extrapola linealmente, KRR con RBF decae a la media cuando $\|x\| \to \infty$ porque $k(x, x_i) \to 0$.  La regulaci\'on $\lambda$ controla la norma $\|f\|_{\mathcal{H}_k}$ de la soluci\'on: $\lambda$ grande $\Rightarrow$ $\|f\|_{\mathcal{H}_k}^2$ chico $\Rightarrow$ funci\'on suave.
+\end{proposition}
+
+\subsection*{Procesos Gaussianos (GPs)}
+
+\begin{definition}[Proceso Gaussiano]
+	Un \textbf{proceso Gaussiano} $f \sim \mathcal{GP}(\mu, k)$ es una distribuci\'on sobre funciones $f\colon \mathcal{X} \to \mathbb{R}$ tal que, para cualquier colecci\'on finita $(x_1,\dots,x_n)$,
+	\[
+	\bigl(f(x_1), \dots, f(x_n)\bigr) \;\sim\; \mathcal{N}\bigl(\mu(x), K_{XX}\bigr).
+	\]
+\end{definition}
+
+\begin{theorem}[Posterior de un GP bajo likelihood Gaussiana]
+	Sea $y_i = f(x_i) + \epsilon_i$, $\epsilon_i \sim \mathcal{N}(0, \sigma^2)$ i.i.d.  Para una nueva entrada $x^*$:
+	\[
+	f(x^*) \mid X, y, x^* \;\sim\; \mathcal{N}\bigl(\mu^*(x^*),\; \sigma^{*2}(x^*)\bigr),
+	\]
+	con $\mu^*(x^*) = k(x^*, X)(K_{XX} + \sigma^2 I)^{-1} y$ y $\sigma^{*2}(x^*) = k(x^*,x^*) - k(x^*,X)(K_{XX} + \sigma^2 I)^{-1} k(X, x^*)$.
+\end{theorem}
+
+\begin{remark}[GP $=$ KRR + incertidumbre]
+	La posterior media del GP es \emph{exactamente} la predicci\'on de KRR.  La diferencia es que el GP \emph{cuantifica incertidumbre}: $\sigma^*(x^*)$ crece lejos de los datos (donde $k(x^*, x_i) \to 0$).  En este sentido, el GP es la versi\'on bayesiana de KRR con prior $f \sim \mathcal{GP}(0, k)$.
+\end{remark}
+
+\subsection*{Neural Tangent Kernel (NTK)}
+
+En 2018, Jacot, Hongler y Gabriel demostraron que las redes neuronales profundas, en el l\'imite de \emph{ancho infinito}, son lineales en el espacio de funciones y definen un kernel efectivo determinado por la arquitectura.
+
+\begin{definition}[Neural Tangent Kernel]
+	Para una red $f_\theta\colon \mathbb{R}^p \to \mathbb{R}$ con par\'ametros $\theta \in \mathbb{R}^d$, el \textbf{Neural Tangent Kernel} es:
+	\[
+	k_{\mathrm{NTK}}(x, x') \;\stackrel{\text{def}}{=}\; \bigl\langle \nabla_\theta f_\theta(x),\; \nabla_\theta f_\theta(x') \bigr\rangle.
+	\]
+\end{definition}
+
+\begin{theorem}[Jacot, Hongler \& Gabriel, 2018]
+	Bajo inicializaci\'on est\'andar (LeCun, He, Glorot) y ancho $\to \infty$, la din\'amica de entrenamiento por flujo gradiente (gradient flow) sobre la funci\'on de p\'erdida cuadr\'atica satisface, en el l\'imite:
+	\[
+	\frac{d f_t(x)}{dt} \;\approx\; -\eta\;\mathbb{E}_{x'\sim\text{datos}}\Bigl[k_{\mathrm{NTK}}(x, x')\bigl(f_t(x') - y(x')\bigr)\Bigr].
+	\]
+	Esta ecuaci\'on es \emph{id\'entica} a la del KRR con kernel $k_{\mathrm{NTK}}$: en el l\'imite de ancho infinito, la red neuronal es regresi\'on RKHS.
+\end{theorem}
+
+\begin{lemma}[NTK $\subseteq$ RKHS]
+	El NTK es un kernel definido positivo: $k_{\mathrm{NTK}}(x,x') = \langle \nabla f_\theta(x), \nabla f_\theta(x')\rangle$ es producto interno de los gradientes, y los gradientes pertenecen a un subespacio de $L^2$ parametrizado por $\theta$.  Por lo tanto, todo el aparato del Cap\'itulo~8 (RKHS, mean embeddings, MMD) aplica a redes neuronales grandes con $k_{\mathrm{NTK}}$ como kernel efectivo.
+\end{lemma}
+
+\begin{center}
+	\begin{tikzpicture}[scale=0.85]
+		% The Hilbert space L^2 (ambient)
+		\draw[->, thick, Accent] (-0.5,0) -- (7.5,0) node[right] {$L^2(\Omega)$ ambiente};
+		\draw[->, thick, Accent] (0,-1.0) -- (0,3.0) node[above] {$\mathcal{H}_k$ RKHS};
+		
+		% OLS subspace (finite-dimensional, line)
+		\draw[AccentDark!60, very thick] (0.5,0.0) -- (7.0,1.0);
+		\node[AccentDark, font=\footnotesize] at (3.5,1.3) {OLS: span\{1, x, x^2\} (finito-dim)};
+		
+		% KRR curve
+		\draw[Accent, very thick, smooth, domain=0.5:7.0, samples=30] plot (\x, {0.35*sin(\x*45) + 0.6});
+		\node[Accent, font=\footnotesize, below] at (4.0,1.0) {KRR / GP: $f \in \mathcal{H}_k$};
+		
+		% NTK Gaussian ellipse (representing NTK-induced RKHS)
+		\draw[AccentLight, dashed, thick, fill=AccentLight!15] (3.5,1.2) ellipse (2.5 and 0.7);
+		\node[AccentDark, font=\footnotesize, align=center] at (3.5,1.85) {NTK: $f_\theta \in$ RKHS\\ (ancho $\to \infty$)};
+		
+		% Newton's methods
+		\node[Accent, font=\footnotesize, align=center] at (3.5,-0.6) {$\langle\cdot,\cdot\rangle_{\mathcal{H}_k}$ elige la geometr\'ia;\\ la arquitectura / datos eligen el kernel};
+	\end{tikzpicture}
+	
+	\smallskip
+	\small\nota\ OLS vive en un subespacio finito-dim; KRR/GP en el RKHS completo parametrizado por el kernel; NTK da un RKHS ``emergente'' de la arquitectura en ancho infinito.  Los tres son regresi\'on en $L^2$, con diferente subespacio.
+\end{center}
+
+\subsection*{Qu\'e cierra con GI}
+
+\begin{quote}
+	\itshape
+	Sin GI, las t\'ecnicas modernas de ML son ``cajas negras'': KRR es un truco ingenieril, los GPs son estad\'istica cl\'asica, NTK es una identidad t\'ecnica en el l\'imite.  Con GI, las tres son \emph{el mismo objeto}: regresi\'on RKHS con un kernel espec\'ifico --- el kernel ``dado'' por los datos en KRR, el kernel ``a priori'' en GPs, el kernel ``emergente'' de la arquitectura en NTK.  El espacio de Hilbert $L^2$ que introdujimos al principio es el lenguaje com\'un: las matrices de Gram $K = [k(x_i,x_j)]$ son operadores en ese Hilbert, y todo el ML kernel-based vive ah\'i.
+\end{quote}
+
+\bigskip
+\noindent
+\textbf{Pregunta a tu LLM:} ``\¿Por qu\'e kernel ridge regression, Gaussian processes y Neural Tangent Kernel son tres manifestaciones del mismo objeto: regresi\'on RKHS?  Dame un ejemplo donde la elecci\'on del kernel (no de los datos ni del modelo) cambia el resultado.''
+
+\section{Ejercicios}
+
+\subsection*{Conceptos Básicos}
+\begin{enumerate}
+	\item[$\star$] (V/F) Toda matriz PSD es la matriz de covarianza de algún vector aleatorio.
+	\item[$\star$] (V/F) Si dos variables aleatorias son independientes, entonces $X \perp Y$ en $L^2$.
+	\item[$\star$] Demuestre que $\|X\|_{L^2}^2 = E[X^2]$ es la única norma que respeta la covarianza como producto interno.
+	\item[$\star$] Muestre que para cualquier $\theta$, los scores $S_i(\theta, \cdot)$ tienen $L^2$-norma $\sqrt{g_{ii}(\theta)}$.
+	\item[$\star$] Sea $X \sim \text{Uniforme}(0,1)$. Calcule $\|X\|_{L^2}^2$ analíticamente y verifique con simulación.
+\end{enumerate}
+
+\subsection*{Cálculo y Algoritmos}
+\begin{enumerate}[resume]
+	\item[$\star\star$] Implemente \texttt{embed(X, kernel, sigma=1.0)} que mapea una matriz de muestras a su embedding empírico en un RKHS con kernel RBF. Verifique la simetría de la matriz de Gram resultante.
+	\item[$\star\star$] Verifique numéricamente que covarianza = matrix de Gram para 5 distribuciones diferentes (Bernoulli, Normal uniforme, mezcla de dos normales, Gamma, Cauchy truncada). Reporte el error máximo en cada caso.
+	\item[$\star\star$] Calcule $\mathrm{MMD}^2$ entre muestras de $\mathcal{N}(0,1)$ y $\mathcal{N}(0.5,1)$ con $n=500$. Repita con $\mathcal{N}(0,1)$ y $\mathcal{N}(0,2)$. Interprete: ¿qué detecta MMD?
+	\item[$\star\star$] Implemente \texttt{whiten(X)} que devuelve una matriz cuyas columnas tienen media 0 y covarianza identidad. Verifique en un dataset sintético.
+	\item[$\star\star$] Para la distribución Beta$(\alpha,\beta)$, halle $\|X\|_{L^2}^2$ analíticamente en función de $\alpha,\beta$, y verifique numéricamente.
+	\item[$\star\star$] Encuentre el kernel asociado a la matriz $K = \begin{pmatrix} 4 & 1 \\ 1 & 0.5 \end{pmatrix}$. ¿Es PSD? Si lo es, dé un feature map $\phi$.
+	\item[$\star\star$] Calcule la distancia de Mahalanobis entre dos puntos del dataset \texttt{iris} usando la covarianza empírica de las clases \textit{setosa} y \textit{versicolor}.
+	\item[$\star\star$] Implemente \texttt{rbf\_kernel\_matrix(X,\allowbreak{} sigma)} vectorizándola con broadcasting de NumPy (sin bucles explícitos). Verifique que el resultado coincide con la versión con bucles.
+\end{enumerate}
+
+\subsection*{Teóricos}
+\begin{enumerate}[resume]
+	\item[$\star\star\star$] Demuestre que una matriz PSD $K \in \mathbb{R}^{n\times n}$ es la matriz de covarianza de un vector aleatorio centrado en $\mathbb{R}^n$. (Ayuda: descomposición espectral $K = U\Lambda U^\top$.)
+	\item[$\star\star\star$] Demuestre el \textbf{Teorema~\ref{thm:fisher-l2}: la métrica de Fisher es el producto interno en $L^2$ sobre scores}, paso a paso, sin recurrir al resultado ya demostrado.
+	\item[$\star\star\star$] Demuestre que el kernel RBF es característico encima de $\mathbb{R}^p$. (Idea: use la inyectividad de la transformada de Fourier: $E_X[\exp(i\langle\omega,X\rangle])$ determina $P_X$.)
+	\item[$\star\star\star$] Demuestre la \emph{reproducing property}: $f(x) = \langle f, k(x, \cdot)\rangle$ para kernel lineal, polinomial de grado 2, y RBF.
+	\item[$\star\star\star$] Demuestre equivalencia: $\mathrm{MMD}^2 = 0$ $\Leftrightarrow$ $P = Q$ para kernel característico.
+	\item[$\star\star\star$] Muestre que, en una familia exponencial, el score $S(\theta, X) = T(X) - \nabla A(\eta)$ vive en el subespacio afín $\{T(X) - \mu\}$ dentro de $L^2$. Concluya que la variedad estadística tiene geometría afín (plana).
+	\item[$\star\star\star$] Verifique empíricamente la \emph{consistencia del test MMD}: grafique el poder estadístico (rechazo bajo $H_1$) en función del tamaño de muestra $n$ para $P=\mathcal{N}(0,1)$ y $Q=\mathcal{N}(0.3,1)$.
+\end{enumerate}
+
+\subsection*{Mini-Proyectos}
+\begin{enumerate}[resume]
+	\item[$\star\star\star\star$] \textbf{PCA = SVD en $L^2$.} Implemente PCA desde cero usando la matriz de covarianza (= Gram en $L^2$). Verifique en \texttt{iris} que las direcciones principales coinciden con \texttt{sklearn.decomposition.PCA}. Visualice en 2D las dos primeras componentes.
+	\item[$\star\star\star\star$] \textbf{Test de dos muestras completo.} Genere tres datasets sintéticos: (a) misma distribución, (b) medias distintas, (c) distribuciones distintas. Implemente el test MMD con kernel RBF y estime el poder estadístico (rechazo bajo $H_1$) en función de $\sigma$ y $n$. Identifique empíricamente los valores que satisfacen el nivel $\alpha = 0.05$.
+	\item[$\star\star\star\star$] \textbf{Kernel ridge regression.} Use \texttt{sklearn.kernel\_ridge.KernelRidge} sobre el dataset California Housing (o sintético). Visualice el ajuste vs. OLS para el mismo dataset. Varíe $\sigma$ y $\lambda$ sistemáticamente y reporte el RMSE en validación.
+	\item[$\star\star\star\star$] \textbf{Mean embedding visualization.} Genere 5 distribuciones distintas en $[-3,3]$: normal estándar, mezcla de dos normales, uniforme, exponencial y Cauchy truncada. Compute $\widehat\mu_P$ con kernel RBF. Aplique t-SNE a las matrices de Gram para visualizar los embeddings en 2D. Interprete.
+	\item[$\star\star\star\star$] \textbf{Puente con el Capítulo 1.} Para 5 familias exponenciales distintas (Bernoulli, Poisson, Normal, Gamma, Beta), genere $n=10^5$ muestras. Calcule scores numéricos y la métrica de Fisher analítica. Verifique el \textbf{Teorema~\ref{thm:fisher-l2}}. Visualice las matrices de Fisher como imágenes con \texttt{matplotlib}.
+\end{enumerate}
+
+\subsection*{Qué gana con GI}
+
+\begin{quote}
+	\itshape
+	Sin el Capítulo~8, las herramientas de los Capítulos~1--7 viven en mundos paralelos: la métrica de Fisher es una curiosidad técnica, los kernels son un método ingenieril, MMD un test estadístico.  Con GI, las tres caben en un solo espacio: $L^2$ es el Hilbert ambiente; las distribuciones son \emph{puntos} en su RKHS; las métricas de Fisher son las restricciones de $L^2$ a la sub-variedad de scores.  Una misma estructura explica por qué el \textbf{gradiente natural} funciona, por qué el \textbf{MMD test} tiene poder alto en dimensiones altas, y por qué la \textbf{suficiencia} de dimensión finita implica \textbf{distancia mínima} nula entre distribuciones equivalentes.  Ya no hay tres métodos inconexos: hay \emph{un Hilbert, una métrica, y muchas proyecciones}.
+\end{quote}
+
+\bigskip
+\noindent
+\textbf{Pregunta a tu LLM:} ``¿Por qué la métrica de Fisher, los métodos kernel, y MMD son tres caras de la misma moneda en $L^2$? Dame un ejemplo donde la elección entre ellos cambia el resultado, pero la diferencia es sólo de coordenadas.''

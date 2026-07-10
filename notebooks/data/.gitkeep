@@ -1,0 +1,6 @@
+# Marca este directorio como presente en git aunque aún no haya CSVs.
+# Los datasets versionados (small, ≤1MB) se guardan aquí:
+#   - iris_subsample.csv
+#   - credibility_table.csv
+#   - ...
+# Datasets grandes (>1MB) van en notebooks/.cache/ (GITIGNORED).

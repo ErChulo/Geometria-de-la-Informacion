@@ -15,14 +15,29 @@
 \usepackage{graphicx}
 \graphicspath{{assets/}}
 
-\begin{document}
-	
-	\frontmatter
+\begin{document}\frontmatter
 	\input{frontmatter/titlepage}
-	
-	\setcounter{tocdepth}{1}
-	\tableofcontents
+
+	% -----------------------------------------------------------------
+	% Blank verso page between cover and TOC.
+	% In twoside book class, the first page after the cover (page ii)
+	% can inherit a quirky \textheight from the titlepage's
+	% \newgeometry/\restoregeometry dance, which clips the TOC at the
+	% bottom edge. Inserting a blank verso pushes the TOC onto page iii
+	% (recto) where the geometry is clean. \thispagestyle{empty}
+	% suppresses the page number that would otherwise print on the
+	% otherwise-empty verso.
+	% -----------------------------------------------------------------
+	\thispagestyle{empty}\null\newpage
 	\cleardoublepage
+
+	\setcounter{tocdepth}{1}
+	\begingroup
+		\raggedbottom              % don't force TOC to stretch to bottom
+		\emergencystretch=4em      % give LaTeX room to reflow
+		\tableofcontents
+		\cleardoublepage
+	\endgroup
 	\markboth{}{}    % limpia marcas de TOC
 	\pagestyle{fancy}
 	
@@ -42,11 +57,14 @@
 	\include{capitulo5}
 	\include{capitulo6}
 	\include{capitulo7}
-	
-	\backmatter
+	\include{capitulo8}	\backmatter
 	% Bibliografía / apéndices (si aplica)
 	\include{respuestas}
 	\include{apendice_mathematica}
 	\include{bibliografia}
-	
+
+	% Back cover (eclipse solar con coqui-negro.jpg) — última página del libro
+	\cleardoublepage
+	\input{frontmatter/backcover}
+
 \end{document}
