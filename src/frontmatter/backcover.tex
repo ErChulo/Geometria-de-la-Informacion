@@ -1,16 +1,6 @@
 % src/frontmatter/backcover.tex
-% Back cover: estilo eclipse solar con coqui-negro.jpg como silueta
-% "lunar" central, halo radial dorado, jets radiales. Esta página cierra el libro.
-
-% Nota: este archivo usa el path "../coqui-negro.jpg" porque en
-% src/, mientras que Makefile compila desde src/.
-
-\definecolor{EclipseDark}   {HTML}{050505} % negro casi puro de fondo
-\definecolor{CoronaOuter}  {HTML}{FCD34D} % corona exterior amarillo-dorado
-\definecolor{CoronaMid}    {HTML}{F59E0B} % corona media naranja-ámbar
-\definecolor{CoronaInner}  {HTML}{FEF3C7} % corona interior pálido
-\definecolor{DiskBlack}    {HTML}{000000} % disco lunar oclusivo
-\definecolor{TypeGold}     {HTML}{FFFBEB} % texto crema claro
+% Back cover MINIMAL: pure #000 (negro absoluto) + coqui-negro.jpg centrada.
+% Sin texto, sin halo, sin corona, sin jets, sin filete, sin isotipo editorial.
 
 \begin{titlepage}
 	\hypersetup{pageanchor=false}
@@ -18,88 +8,13 @@
 
 	\begin{tikzpicture}[remember picture, overlay]
 
-		% --- FONDO: negro profundo ---
-		\fill[EclipseDark] (current page.south west) rectangle (current page.north east);
+		% --- Fondo negro absoluto (#000000) ---
+		\fill[black] (current page.south west) rectangle (current page.north east);
 
-		% --- CENTRO GEOMÉTRICO DEL ECLIPSE ---
-		\coordinate (DiskC) at ($(current page.center)+(0,1.0cm)$);
-		% Radios del diseño (todo proporcional a paperwidth)
-		\def\DR{1.85cm}   % radio del disco lunar
-		\def\CI{2.10cm}   % corona interior
-		\def\CM{3.10cm}   % corona media
-		\def\CO{5.20cm}   % corona exterior (extensa)
-
-		% --- CAPA 1: halo exterior amplio (mucho degradado, sutil) ---
-		\shade[shading=radial,
-		       inner color=CoronaOuter!45!CoronaMid,
-		       outer color=EclipseDark,
-		       opacity=0.75]
-			(DiskC) circle (\CO);
-
-		% --- CAPA 2: corona media (más intensa) ---
-		\shade[shading=radial,
-		       inner color=CoronaMid!70!white,
-		       outer color=CoronaOuter,
-		       opacity=0.85]
-			(DiskC) circle (\CM);
-
-		% --- CAPA 3: corona interna (anillo brillante pegado al disco) ---
-		\shade[shading=radial,
-		       inner color=CoronaInner!85!white,
-		       outer color=CoronaMid,
-		       opacity=0.95]
-			(DiskC) circle (\CI);
-
-		% --- CAPA 4: anillos concéntricos finos (rayos coronales) ---
-		\foreach \r in {1.95, 2.05, 2.20, 2.35, 2.55, 2.80, 3.05} {%
-			\draw[CoronaOuter, opacity=0.55, line width=0.4pt]
-				(DiskC) circle (\r cm);
-		}
-
-		% --- CAPA 5: jets radiales (lengüetas/plumas de la corona) ---
-		% Pattern: 24 jets, cada uno con longitud decreciente según rotación.
-		\foreach \a in {0,15,...,345} {%
-			\pgfmathsetmacro{\len}{1.2 + 0.6*abs(mod(\a,90)-45)/45}%
-			\pgfmathsetmacro{\opa}{0.18 + 0.18*(1 - abs(mod(\a,30)-15)/15)}%
-			\draw[CoronaOuter!60!white, opacity=\opa, line width=0.5pt,
-			      line cap=round]
-				(DiskC) ++(\a:\DR) -- ++(\a:\len cm);
-		}
-
-		% --- CAPA 6: el disco lunar (ocuye el centro) ---
-		\fill[DiskBlack] (DiskC) circle (\DR);
-		% Anillo dorado ceñido al disco (efecto "diamante")
-		\draw[CoronaInner, opacity=0.95, line width=0.7pt]
-			(DiskC) circle (\DR);
-
-		% --- CAPA 7: la silueta -- coqui-negro.jpg ---
-		% Mostramos el JPG modo "frame" centrado: el negro del JPG se funde
-		% con el EclipseDark y el sujeto queda recortado contra el disco lunar.
-		\node[anchor=center, inner sep=0pt, outer sep=0pt] at (DiskC)
-			{\includegraphics[width=3.3cm]{../coqui-negro.jpg}};
-
-		% --- CAPA 8: TEXTO INFERIOR (info del libro) ---
-		% Un filete dorado finísimo arriba del texto
-		\draw[CoronaOuter, line width=0.5pt, opacity=0.7]
-			($(current page.south)+(0,3.0cm)$) -- ++(8cm,0)
-			-- ++(-16cm,0) -- cycle;
-
-		\node[anchor=center, text=TypeGold, align=center]
-			at ($(current page.south)+(0,2.0cm)$) {%
-				\sffamily\bfseries\fontsize{14}{17}\selectfont
-				Geometría de la Información\\[4pt]
-				\fontsize{9}{11}\selectfont\mdseries
-				\textit{``Ojo sobre la incertidumbre.''}\\[2pt]
-				\fontsize{8}{10}\selectfont
-				Geometría de las distribuciones, métricas de Fisher--Rao,\\
-				divergencias de Bregman, $\alpha$-conexiones y RKHS.
-			};
-
-		% --- CAPA 9: marca de autor/año abajo (izquierda) ---
-		\node[anchor=west, xshift=1.4cm, yshift=1.4cm, text=CoronaOuter,
-		      font=\sffamily\scriptsize, align=left]
-			at (current page.south west)
-			{\itshape \BookDate{} $\;\cdot\;$ \BookVersion};
+		% --- Solamente la imagen del coqui, centrada ---
+		\node[anchor=center, inner sep=0pt, outer sep=0pt]
+			at (current page.center)
+			{\includegraphics[width=\paperwidth,keepaspectratio]{../coqui-negro.jpg}};
 
 	\end{tikzpicture}
 
