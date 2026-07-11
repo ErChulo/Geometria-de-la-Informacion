@@ -139,11 +139,13 @@ En familias exponenciales, la KL entre dos distribuciones de la familia tiene un
 	Para $p_{\eta_1}$ y $p_{\eta_2}$ en una familia exponencial:
 	\[
 	D_{\mathrm{KL}}(p_{\eta_1} \| p_{\eta_2}) \;=\; A(\eta_2) - A(\eta_1) - \langle \eta_2 - \eta_1,\; \nabla A(\eta_1) \rangle.
-	\]
-	Esto es exactamente la divergencia de Bregman generada por $A$:
+	\]Esto es exactamente la divergencia de Bregman generada por $A$, con un cruce crucial de subíndices:
 	\[
-	D_{\mathrm{KL}}(p_{\eta_1} \| p_{\eta_2}) \;=\; D_A(\eta_1 \| \eta_2).
+	D_{\mathrm{KL}}(p_{\eta_1} \| p_{\eta_2}) \;=\; D_A(\eta_2 \| \eta_1).
 	\]
+	\begin{remark}[Por qué se invierten los subíndices]
+		La asimetría no es error tipográfico: $D_{\mathrm{KL}}$ vive en el espacio de distribuciones y $D_A$ vive en el espacio de coordenadas naturales $\eta$. La transformada de Legendre $\eta \mapsto \mu = \nabla A(\eta)$ ``gira'' el orden al pasar del segundo al primero. Regla nemotécnica: \emph{``$D_{\mathrm{KL}}$ de $p_{\eta_1}$ a $p_{\eta_2}$ equivale a $D_A$ de $\eta_2$ a $\eta_1$''}. Compara letra por letra con el corolario siguiente y verás que el cómputo cierra sin truco.
+	\end{remark}
 \end{theorem}
 
 \begin{proof}
@@ -157,7 +159,7 @@ En familias exponenciales, la KL entre dos distribuciones de la familia tiene un
 \end{proof}
 
 \begin{corollary}[Asimetría de la KL]
-	La divergencia KL es asimétrica en general: $D_{\mathrm{KL}}(p_{\eta_1} \| p_{\eta_2}) = D_A(\eta_1 \| \eta_2)$ pero $D_{\mathrm{KL}}(p_{\eta_2} \| p_{\eta_1}) = D_A(\eta_2 \| \eta_1)$, y estas son distintas porque $D_A$ no es simétrica.
+	La divergencia KL es asimétrica en general: $D_{\mathrm{KL}}(p_{\eta_1} \| p_{\eta_2}) = D_A(\eta_2 \| \eta_1)$ y $D_{\mathrm{KL}}(p_{\eta_2} \| p_{\eta_1}) = D_A(\eta_1 \| \eta_2)$, y estas son distintas porque $D_A$ no es simétrica.
 \end{corollary}
 
 \begin{center}
@@ -180,7 +182,7 @@ En familias exponenciales, la KL entre dos distribuciones de la familia tiene un
 				-- (axis cs:2,{ln(1+exp(-0.5))+(exp(-0.5)/(1+exp(-0.5)))*(2+0.5)});
 			\node[AccentDark] at (axis cs:-0.5,0.2) {$\eta_1$};
 			\node[Accent] at (axis cs:1.2,2.0) {$\eta_2$};
-			\draw[Accent, thick] (E1) -- (E2) node[midway, above] {$D_A(\eta_1\|\eta_2)$};
+			\draw[Accent, thick] (E1) -- (E2) node[midway, above] {$D_A(\eta_2\|\eta_1)$};
 		\end{axis}
 	\end{tikzpicture}
 \end{center}
@@ -361,9 +363,9 @@ pois_decomp = exponential_family_decomposition("poisson", {"lambda": 3.0})
 \end{lstlisting}
 
 \begin{lstlisting}[language=Python, style=PythonStyle]
-# Divergencia KL como divergencia de Bregman
-def kl_as_bregman(eta1, eta2, dist_name):
-    """Calcula D_KL como D_A(eta1 || eta2) para familia exponencial."""
+# Divergencia KL como divergencia de Bregmandef kl_as_bregman(eta1, eta2, dist_name):
+	"""Calcula D_KL entre p_{eta1} y p_{eta2} como D_A(eta2 || eta1) en coords naturales.
+	El orden de los subíndices se invierte al pasar de distribuciones a coordenadas naturales (ver Cap. 3)."""
     if dist_name == "poisson":
         A1 = np.exp(eta1)  # A(eta) = e^eta para Poisson
         A2 = np.exp(eta2)

@@ -108,6 +108,14 @@ La geometría de la inferencia proporciona una interpretación visual de la esti
 \begin{proposition}[Geometría de la proyección]
 	La estimación de máxima verosimilitud es equivalente a la proyección $e$-exponencial de la distribución empírica sobre la familia paramétrica.
 \end{proposition}
+\begin{remark}[Convención de e--m--proyección en este libro]
+A lo largo del texto usamos la convención canónica de Amari (1985):
+\begin{itemize}
+	\item \textbf{e-proyección} de $p$ sobre $\mathcal{Q}$: minimiza $D_{\mathrm{KL}}(p\,\|\,q)$ sobre $q \in \mathcal{Q}$. Lo que fija el dato empírico son los momentos: la e-proyección \emph{preservando expectativas} (media, varianza). MLE, credibilidad clásica (Bühlmann--Straub) y cross-entropy en clasificación son e-proyecciones en este sentido.
+	\item \textbf{m-proyección} de $p$ sobre $\mathcal{Q}$: minimiza $D_{\mathrm{KL}}(q\,\|\,p)$ sobre $q \in \mathcal{Q}$. Lo que fija el dato empírico son los parámetros naturales: la m-proyección \emph{preservando la estadística suficiente $T(x)$}. Inferencia variacional, credibilidad bayesiana (con previa conjugada) y la actualización de un prior en coordenadas $\eta$ son m-proyecciones.
+\end{itemize}
+Regla nemotécnica: \textbf{``e''} preserva \textbf{e}xpectativas, \textbf{``m''} preserva \textbf{m}omentos en coordenadas naturales (es decir, suficiencia). Si dudas entre ambas, pregúntate: \emph{¿el dato empírico fija la media $\bar X$ o el parámetro natural $T$?} La primera es e-proyección, la segunda m-proyección.
+\end{remark}
 
 \begin{center}
 	\begin{tikzpicture}
@@ -127,7 +135,10 @@ La geometría de la inferencia proporciona una interpretación visual de la esti
 \end{theorem}
 
 \begin{example}[Curvatura en Bernoulli]
-	La curvatura escalar de la métrica de Fisher para $\mathrm{Bern}(p)$ es $R = 2$ (constante).  Esto indica que la geometría del espacio de Bernoulli es uniformemente curvada.
+	\emph{Cuidado con dos cosas distintas:}\;la cantidad escalar $g_{11}(p) = 1/(p(1-p))$ es la métrica de Fisher (sensibilidad local de la log-verosimilitud), \textbf{no} la curvatura escalar. En 1D el tensor de Riemann $R^1_{111}$ se anula idénticamente por la antisimetría del primer par de índices — toda variedad 1-dimensional es intrínsecamente plana, así que la curvatura escalar $R = g^{11} R_{1 1 1 1} = 0$. Para Bernoulli, las geodésicas $\alpha=1$ (rectas en $\eta$) y $\alpha=-1$ (rectas en $p$) son rectas en sus coordenadas respectivas; el espacio se ve ``curvo'' si confundes la métrica con la curvatura. Para curvatura real, sube a $\ge 2$D (Normal biparamétrica, Multinomial, Mezclas).
+\begin{remark}[Métrica vs.\ curvatura]
+La métrica de Fisher $g_{ij}(\theta)$ describe cuánto cuesta moverse infinitesimalmente. El tensor de Riemann $R^a_{bcd}$ requiere $\ge 2$ parámetros para tener un par antisimétrico $(b,d)$ no trivial que pueda ser no nulo. Cualquier familia 1D es \emph{geométricamente plana} por construcción.
+\end{remark}
 \end{example}
 
 \section{Información mutua y suficiencia}
