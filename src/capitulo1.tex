@@ -41,6 +41,8 @@ Bajo condiciones de regularidad, esto es equivalente a la esperanza del Hessiano
 	En el caso general, la matriz $[I_{ij}] = [g_{ij}]$ actúa como una métrica Riemanniana en el espacio de parámetros.
 \end{definition}
 
+Para anclar la fórmula en distribuciones concretas, veamos cuatro casos en los que la métrica captura intuiciones diferentes: en Bernoulli la información explota cerca de los bordes $p\approx 0$ o $p\approx 1$; en Poisson decae como $1/\lambda$ y en Exponencial como $1/\lambda^2$. El patrón general: distribuciones más \emph{concentradas} son más distinguibles; distribuciones más \emph{dispersas} se parecen entre sí.
+
 \subsection{Ejemplos de cálculo de la métrica de Fisher}
 
 \paragraph{Bernoulli.} Para $X \sim \mathrm{Bern}(p)$ con $p \in (0,1)$:
@@ -97,6 +99,8 @@ I(\mu, \sigma) = \begin{pmatrix} 1/\sigma^2 & 0 \\ 0 & 2/\sigma^2 \end{pmatrix}.
 		\end{axis}
 	\end{tikzpicture}
 \end{center}
+
+La figura anterior muestra cómo la información de Fisher se concentra en los bordes de la familia Bernoulli. Pero un solo número $I(p)$ en un punto no basta: para medir \emph{distancia} entre dos distribuciones necesitamos que Fisher defina un producto interno completo en el espacio tangente de la variedad. Eso es lo que sigue.
 
 \section{Interpretación Geométrica}
 
@@ -165,6 +169,8 @@ El elemento off-diagonal es cero: $\mu$ y $\sigma$ son \emph{ortogonales} bajo l
 
 Las distribuciones con $\sigma$ pequeño (poca varianza) están ``lejos'' de las distribuciones con $\sigma$ grande, aún si sus medias son idénticas. Esta es la geometría hiperbólica subyacente: el eje $\sigma = 0$ es ``el infinito'' de la variedad.
 
+Las cuatro familias de los ejemplos y la sorpresa hiperbólica del caso bivariante muestran que la fórmula \emph{funciona}. Falta explicar por qué funciona \emph{ESTA} fórmula y no cualquier otra. La respuesta viene de un teorema de unicidad ---y revela que la métrica de Fisher no se elige: se impone.
+
 \section{Invariancia y Unicidad}
 
 Un resultado fundamental debido a Chentsov \cite{chentsov1982statistical} establece que la métrica de Fisher es la \emph{única} métrica Riemanniana (salvo factor escalar) en una variedad estadística que es invariante bajo \textbf{estadísticos suficientes}.
@@ -176,6 +182,8 @@ Un resultado fundamental debido a Chentsov \cite{chentsov1982statistical} establ
 \textbf{Idea de la demostración.} Un \emph{map de Markov} $T : \mathcal{X} \to \mathcal{Y}$ transforma datos sin perder información: si $T(X)$ es suficiente para $\theta$, la geometría no debería cambiar. Chentsov muestra que existe un \emph{único} tensor simétrico positivo definido que es invariante bajo todos los maps de Markov suficientes. Dicho tensor es, necesariamente, la métrica de Fisher (hasta una constante).
 
 Esta propiedad de invariancia confirma que la métrica de Fisher captura la estructura intrínseca de la información, independiente de la representación de los datos o de la parametrización elegida.
+
+Y tiene una consecuencia práctica inmediata: si la métrica no depende de la parametrización elegida, tampoco deberían depender de ella las cotas inferiores sobre la varianza de cualquier estimador insesgado. Es exactamente lo que afirma la siguiente sección.
 
 \section{Conexión con la cota de Cramér--Rao}
 
