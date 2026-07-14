@@ -9,6 +9,10 @@
 
 En este capítulo exploramos extensiones y generalizaciones de la geometría de la información.  Vamos más allá de las familias exponenciales para estudiar \textbf{variedades estadísticas generales}, \textbf{geometría de información cuántica}, \textbf{aprendizaje de variedades} y \textbf{estructuras emergentes} como la geometría de información alpha-beta y las conexiones de Wasserstein.
 
+\bigskip
+\noindent
+Este capítulo abre el horizonte: lo que hemos construido hasta ahora ---Fisher, divergencias, familias exponenciales--- vive muy bien dentro de las distribuciones regulares; pero muchos modelos prácticos no son exponenciales. Cauchy, $t$-Student, mezclas pesadas de colas y Wasserstein son \emph{métricas distintas} sobre el mismo espacio, cada una útil en su contexto. Empezamos por el caso general ---variedades estadísticas sin estructura exponencial--- porque allí la métrica de Fisher sigue bien definida y eso basta para hablar con propiedad de distancia y covarianza.
+
 \section{Variedades estadísticas generales}
 
 Hasta ahora nos enfocamos en familias exponenciales, donde la geometría es particularmente limpia.  Pero la mayoría de distribuciones no son exponenciales.
@@ -69,6 +73,10 @@ La geometría de la información se extiende naturalmente al caso cuántico, don
 	Cuando los datos son muestras de una distribución, la variedad aprendida puede interpretarse como una \textbf{variedad estadística}, y los métodos de aprendizaje de variedades (Isomap, LLE, t-SNE) son aproximaciones de geodésicas en la métrica de Fisher.
 \end{proposition}
 
+\bigskip
+\noindent
+Isomap, LLE, t-SNE y UMAP ---los algoritmos de \emph{manifold learning}--- parecen herramientas de un cajón distinto; bajo el lente de la geometría de la información, son aproximaciones locales de geodésicas en la métrica de Fisher (o de una densidad subyacente). Esa reinterpretación explica por qué los grafos-\emph{$k$-NN} que construyen capturan ``intuitivamente la geometría: están trazando bordes del grafo de vecindad donde la métrica es alta. La siguiente generalización ---divergencias $\alpha$-$\beta$--- lleva la observación más lejos: hay un paraguas uniparamétrico que contiene KL, $f$-div y Bregman como casos extremos.
+
 \section[Geometria de information alpha-beta]{Geometría de information $\alpha$-$\beta$}
 
 \begin{definition}[$\alpha$-$\beta$-divergencia]
@@ -119,6 +127,10 @@ La geometría de la información se extiende naturalmente al caso cuántico, don
 \begin{example}[Transporte óptimo en imágenes]
 	En procesamiento de imágenes, el transporte óptimo se usa para comparar histogramas de color, transferir estilos y alinear registros médicos.
 \end{example}
+
+\bigskip
+\noindent
+El transporte óptimo es geometría del \emph{espacio muestral}, no del espacio de distribuciones: dos histogramas sobre $\mathbb{R}^d$ se acercan tanto como cueste mover masa de uno al otro por la métrica euclidiana $\|x-y\|^2$. Esta noción ---más física que estadística--- explica por qué Wasserstein es preferible a KL cuando los soportes se tocan parcialmente o no se superponen: la KL diverge a $\infty$ si un píxel tiene probabilidad positiva en $p$ y nula en $q$; Wasserstein, no. La conexión con la geometría de la información reaparece cuando el espacio de parámetros de una red neuronal se ve, localmente, como una variedad estadística:
 
 \section{Geometría de información y aprendizaje profundo}
 
@@ -190,6 +202,10 @@ for t in [0, 0.25, 0.5, 0.75, 1.0]:
     mu_t, sigma_t = gaussian_geodesic(mu0, sigma0, mu1, sigma1, t)
 # Result: t=0 => (0,1), t=0.5 => (1.5, 1.414), t=1 => (3,2)
 \end{lstlisting}
+
+\bigskip
+\noindent
+Los dos cuadernillos Python ---el primero (\texttt{earth\_movers\_distance\_1d}) confirma cuándo Wasserstein detecta diferencias que KL ignora; el segundo (\texttt{gaussian\_geodesic}) verifica que las geodésicas en la familia Normal son rectas en coordenadas naturales $\eta$--- cierran el capítulo con dos ilustraciones que vale la pena ejecutar. Los ejercicios que siguen llevan esta observación a las $\alpha$-$\beta$-divergencias, los kernels característicos y la dinámica de entrenamiento de redes profundas.
 
 \section{Ejercicios}
 

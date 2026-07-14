@@ -9,6 +9,10 @@
 
 En este capítulo cerramos el arco del libro mostrando cómo la maquinaria geométrica desarrollada en los capítulos anteriores se aplica a problemas reales.  Cuatro áreas convergen: la \textbf{teoría de seguros} (credibilidad), el \textbf{aprendizaje automático} (optimización y generalización), la \textbf{inferencia variacional} (aproximación bayesiana) y los \textbf{métodos de gradiente natural} (optimización en espacio estadístico).
 
+\bigskip
+\noindent
+Las cuatro áreas que cubren este capítulo ---credibilidad, aprendizaje automático, inferencia variacional y gradiente natural--- son \emph{el mismo teorema contado cuatro veces}: en cada una, una proyección KL (e o m) reemplazó un cálculo ad-hoc. Empezamos por la credibilidad porque allí la asimetría es más transparente: el asegurador mezcla experiencia individual y colectiva bajo factor $Z$, y la geometría dice exactamente cuál es el $Z$ invariante bajo reparametrización.
+
 \section{Credibilidad actuarial y geometría}
 
 \subsection{El problema de la credibilidad}
@@ -94,6 +98,10 @@ La siguiente tabla muestra cómo el mismo resultado se obtiene por dos caminos d
 
 \noindent La ventaja de GI: si reparametrizas el mismo problema (por ejemplo, de $\lambda$ a $\eta = \log\lambda$ en Poisson--Gamma), Bühlmann da un $K$ diferente pero la proyección geométrica \emph{siempre produce la misma prima}.  La geometría elimina la ambigüedad de coordenadas.
 
+\bigskip
+\noindent
+La tabla Bühlmann/Proyección geométrica que acabamos de exhibir no es un cotejo de métodos: es el mismo método contado con dos alfabetos ---algebraico y geométrico---. Bajo reparametrización del parámetro, las varianzas de la experiencia cambian, pero la prima de credibilidad no (por Chentsov). Esa es la diferencia práctica: GI \emph{fija} la prima independientemente del nombre que demos a $\theta$; la cuenta clásica ``pierde'' esa garantía en cada cambio de letra. La lección se traslada intacta al siguiente escenario ---el aprendizaje automático---:
+
 \section{Aprendizaje automático}
 
 \subsection{Pérdida y geometría}
@@ -164,6 +172,10 @@ En inferencia bayesiana, el posterior $p(\theta | x)$ es a menudo intratable.  L
 	\]
 	Si usamos VI con $q = \mathcal{N}(\mu, \sigma^2)$, la solución coincide con el posterior exacto (por conjugación).
 \end{example}
+
+\bigskip
+\noindent
+El truco de la conjugación ---posterior exacto \emph{es} VI exacta--- no se sostiene para la mayoría de los modelos prácticos: en redes neuronales profundas, mezclas o procesos de Dirichlet, el posterior exacto es intratable y la aproximación de campo medio es la única salida. Para que VI converja rápido y no oscile, la optimización debe respetar la geometría del espacio de parámetros: aquí entra el \textbf{gradiente natural}, que substituye el gradiente usual por $\widetilde{\nabla} L = G^{-1}(\theta)\nabla L(\theta)$.
 
 \section{Métodos de gradiente natural}
 
@@ -261,6 +273,10 @@ x_data = iris.data[:, 0]  # sepal length
 mu_q, var_q, elbo = variational_inference_normal(x_data)
 # Result: q_mu ~ media muestral, q_var ~ varianza muestral / n, ELBO calculado
 \end{lstlisting}
+
+\bigskip
+\noindent
+Los dos cuadernillos Python ---el primero (\texttt{natural\_gradient\_bernoulli}) verifica que el gradiente natural converge rápido bajo la métrica de Fisher; el segundo (\texttt{variational\_inference\_normal}) confirma que maximizar la ELBO y minimizar la KL están en optimalidad simultánea--- son la versión experimental del capítulo. Los ejercicios que siguen te llevan a escenarios no conjugados (red neuronal con softmax, mezcla de Gaussianas, LDA) donde la diferencia entre \emph{gradiente usual} y \emph{gradiente natural} se vuelve dramáticamente visible.
 
 \section{Ejercicios}
 

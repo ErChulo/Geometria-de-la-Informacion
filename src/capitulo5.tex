@@ -37,6 +37,10 @@ La geometría de la inferencia conecta tres ideas fundamentales: la \textbf{info
 	\end{itemize}
 \end{example}
 
+\bigskip
+\noindent
+Esos cuatro casos familiares ---Bernoulli, Poisson, Normal media-desconocida y Exponencial--- exhiben un patrón que conviene tener presente: la información de Fisher es alta donde la distribución está concentrada cerca de su máximo (Bernoulli en los bordes $\sim 0, 1$; Normal con $\sigma$ pequeño); baja donde está dispersa (Poisson con $\lambda$ grande). Falta precisar cómo esa misma información organiza la \emph{reducción de datos} ---cuál es el menor resumen que captura todo lo que el parámetro puede leer---: la respuesta es la estadística suficiente.
+
 \begin{center}
 	\begin{tikzpicture}
 		\begin{axis}[
@@ -98,8 +102,12 @@ La geometría de la inferencia conecta tres ideas fundamentales: la \textbf{info
 \end{proof}
 
 \begin{corollary}[Eficiencia asintótica]
-	Un estimador es \textbf{asintóticamente eficiente} si alcanza la cota de Cramér--Rao asintóticamente.  Los estimadores de máxima verosimilitud son asintóticamente eficientes bajo condiciones de regularidad.
+	Un estimador es \textbf{asintóticamente eficiente} si alcanza la cota de Cramér--Rao asintóticamente.	Los estimadores de máxima verosimilitud son asintóticamente eficientes bajo condiciones de regularidad.
 \end{corollary}
+
+\bigskip
+\noindent
+La cota $\operatorname{Var}(\widehat\theta) \ge 1/(nI(\theta))$ no es sólo una desigualdad asintótica: es literalmente la inversa de la métrica de Fisher, dividida por $n$. Bajo esta lente, el ``ancho mínimo'' de un estimador está determinado por la geometría local del modelo ---no por la pericia del analista---, y la geometría de la estimación se convierte en una geometría de proyecciones sobre subvariedades estadísticas, donde el MLE es la $e$-proyección canónica.
 
 \section{Geometría de la estimación}
 
@@ -137,9 +145,12 @@ Regla nemotécnica: \textbf{``e''} preserva \textbf{e}xpectativas, \textbf{``m''
 \begin{example}[Curvatura en Bernoulli]
 	\emph{Cuidado con dos cosas distintas:}\;la cantidad escalar $g_{11}(p) = 1/(p(1-p))$ es la métrica de Fisher (sensibilidad local de la log-verosimilitud), \textbf{no} la curvatura escalar. En 1D el tensor de Riemann $R^1_{111}$ se anula idénticamente por la antisimetría del primer par de índices — toda variedad 1-dimensional es intrínsecamente plana, así que la curvatura escalar $R = g^{11} R_{1 1 1 1} = 0$. Para Bernoulli, las geodésicas $\alpha=1$ (rectas en $\eta$) y $\alpha=-1$ (rectas en $p$) son rectas en sus coordenadas respectivas; el espacio se ve ``curvo'' si confundes la métrica con la curvatura. Para curvatura real, sube a $\ge 2$D (Normal biparamétrica, Multinomial, Mezclas).
 \begin{remark}[Métrica vs.\ curvatura]
-La métrica de Fisher $g_{ij}(\theta)$ describe cuánto cuesta moverse infinitesimalmente. El tensor de Riemann $R^a_{bcd}$ requiere $\ge 2$ parámetros para tener un par antisimétrico $(b,d)$ no trivial que pueda ser no nulo. Cualquier familia 1D es \emph{geométricamente plana} por construcción.
-\end{remark}
+La métrica de Fisher $g_{ij}(\theta)$ describe cuánto cuesta moverse infinitesimalmente. El tensor de Riemann $R^a_{bcd}$ requiere $\ge 2$ parámetros para tener un par antisimétrico $(b,d)$ no trivial que pueda ser no nulo. Cualquier familia 1D es \emph{geométricamente plana} por construcción.	\end{remark}
 \end{example}
+
+\bigskip
+\noindent
+La distinción entre \emph{métrica} ---cuánto cuesta moverse infinitesimalmente--- y \emph{curvatura} ---cuánto falla el paralelismo al rodear un lazo--- reaparecerá en cada capítulo que use geometría diferencial. Aquí la vimos en 1D ---donde el tensor de Riemann se anula por estructura---; subirá a 2D cuando la métrica de Fisher codifique anisotropía relevante, y a dimensiones mayores con mezclas y modelos jerárquicos. Lo que sobrevive en una sola dimensión no sobrevive siempre en dos: ahí empieza la diferencia entre distribuciones planas y curvas.
 
 \section{Información mutua y suficiencia}
 
@@ -211,6 +222,11 @@ n_vals = [10, 50, 100, 500, 1000]
 results = asymptotic_efficiency(0.5, n_vals)
 # Result: eficiencia\approx 1.0 para todos los n, confirmando eficiencia asintotica del MLE
 \end{lstlisting}
+
+\bigskip
+\noindent
+Los dos cuadernillos Python que acaban de correr ---uno para verificar la cota CR en Bernoulli, otro para confirmar la eficiencia asintótica del MLE--- son la versión computacional del teorema: cada predicción geométrica se traduce en números que la simulación puede falsar. Esa disciplina ---verificar empíricamente cada identidad que la teoría declara--- se mantiene en todos los capítulos siguientes, con magnitudes verificables sobre datos reales.
+
 
 \section{Ejercicios}
 

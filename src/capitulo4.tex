@@ -11,6 +11,10 @@ En los capítulos anteriores vimos que la métrica de Fisher define distancias i
 
 Shun--ichi Amari introdujo una familia uniparamétrica de conexiones, las \textbf{$\alpha$-conexiones}, que unifica bajo un solo marco las tres estructuras geométricas fundamentales: la conexión exponencial ($\alpha = 1$), la conexión de mixture ($\alpha = -1$) y la conexión de Levi--Civita ($\alpha = 0$, la ``media'' de las otras dos).  Las rutinas de Mathematica para calcular símbolos de Christoffel y tensores de Riemann se encuentran en el Apéndice~\ref{ap:mathematica}.
 
+\bigskip
+\noindent
+Antes de definir las conexiones, conviene revisar el idioma geométrico básico que ya usamos en los Capítulos~1--3: una variedad es un conjunto de distribuciones, el espacio tangente $T_\theta \mathcal{M}$ contiene los vectores de velocidades con que podemos movernos infinitesimalmente en $\theta$, y dos curvas distintas ---exponencial y de mixture--- definen dos maneras de ``arrastrar'' vectores a lo largo de una trayectoria. Esa diferencia de arrastres es, precisamente, lo que la familia $\alpha$ parametrizará:
+
 \section{Recordatorio: curvas y tangent spaces}
 
 Antes de definir conexiones, recordemos la geometría básica de variedades.
@@ -63,6 +67,10 @@ Los símbolos de Christoffel de una $\alpha$-conexión se expresan en función d
 	\end{itemize}
 \end{proposition}
 
+\bigskip
+\noindent
+La dualidad $\alpha \leftrightarrow -\alpha$ que vamos a enunciar es consecuencia directa de cómo se relacionan las dos conexiones extremas en una familia exponencial: la conexión exponencial ($\alpha = 1$) arrastra vectores en coordenadas naturales $\eta$, la de mixture ($\alpha = -1$) los arrastra en coordenadas de expectación $\mu$. Una vez entendida esa correspondencia ---y la torsión que las separa---, el camino natural es preguntarse por las trayectorias mismas: las geodésicas $\alpha$.
+
 \section[Dualidad de alpha-conexiones]{Dualidad de $\alpha$-conexiones}
 
 La familia $\alpha$-conexiones tiene una estructura dual: cada $\alpha$-conexión tiene una \textbf{$(-\alpha)$-conexión dual}.
@@ -82,6 +90,10 @@ La familia $\alpha$-conexiones tiene una estructura dual: cada $\alpha$-conexió
 		\item La $\alpha$-geodésica y la $(-\alpha)$-geodésica son ``direcciones opuestas'' en un cierto sentido.
 	\end{enumerate}
 \end{theorem}
+
+\bigskip
+\noindent
+La curvatura que aparece en una $\alpha$-conexión mide algo cuantitativo y útil: cuanto más alta, más ``tuerce'' el espacio al propagar vectores por una curva cerrada. Pero la observación fundamental ---que la única conexión métrica-compatible es Levi--Civita ($\alpha = 0$)--- merece su propia demostración, no suposición silenciosa:
 
 \section[Geodesicas alpha]{Geodésicas $\alpha$}
 
@@ -218,6 +230,10 @@ for alpha in [-1, 0, 1]:
     g = bernoulli_christoffel_alpha(p, alpha)
 # Result: Gamma^(alpha=-1)=4.0, Gamma^(alpha=0)=8.0, Gamma^(alpha=1)=12.0
 \end{lstlisting}
+
+\bigskip
+\noindent
+Las dos rutinas que acabamos de exhibir ---geodésica $\alpha$ en Bernoulli y símbolos de Christoffel numéricos--- convierten la teoría en evidencia experimental: ahora puedes verificar, para tu familia favorita, que la geodésica $\alpha=1$ es recta en $\eta$ y la $\alpha=-1$ es recta en $p$, y observar empíricamente cómo la métrica de Fisher corrige el gradiente de la log-verosimilitud. Esa verificación numérica ---lado a lado con la teoría--- va a ser la prueba de consistencia que los ejercicios siguientes te pedirán completar a mano.
 
 \section{Ejercicios}
 

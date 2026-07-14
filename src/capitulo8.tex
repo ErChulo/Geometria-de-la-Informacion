@@ -27,6 +27,12 @@ es su \emph{producto interno}. La regresión lineal, cuando se mira de cerca, es
 \emph{proyección ortogonal} en este espacio---la misma operación geométrica que en
 $\mathbb{R}^n$, pero ahora aplicada a infinitas realizaciones.
 
+
+
+\bigskip
+\noindent
+Cambiar el chip es la consigna: ya no tratamos al espacio de parámetros $\Theta$ como el objeto primario (Cap.~1--5), sino a las \emph{variables aleatorias mismas} como elementos de un espacio vectorial. Las dos geometrías del libro ---la métrica de Fisher sobre la variedad de distribuciones y el producto interno $\mathbb{E}[XY]$ sobre el espacio de Hilbert $L^2(\Omega)$--- están atadas por el teorema de Chentsov aplicado no ya a $\theta$, sino al \emph{score} como función de $X$.
+
 \section[Variables Aleatorias como Vectores en L2]{Variables Aleatorias como Vectores en \texorpdfstring{$L^2$}{L²}}
 
 Sea $(\Omega, \mathcal{F}, P)$ un espacio de probabilidad.  Una variable aleatoria
@@ -179,6 +185,10 @@ X_i - E[X_i]$. Sea $\widetilde{\mathbf{X}} = (\widetilde X_1,\dots,\widetilde X_
 	$L^2$ válida.  En el resto del Capítulo~8 veremos que esta observación es
 	la puerta a RKHS, mean embeddings y MMD.
 \end{remark}
+
+\bigskip
+\noindent
+La equivalencia ``$\Sigma$ PSD $\Leftrightarrow$ covarianza de algún vector aleatorio'' tiene una consecuencia operativa inmediata: todo método kernel es, literalmente, una regresión en $L^2$ con un producto interno definido por una matriz PSD. Esa es la puerta que la regresión lineal ---el ejemplo más familiar--- cruza sin aspavientos: encontrar los $\beta$ que minimizan $\|Y - X^\top\beta\|^2_{L^2}$ es exactamente la \emph{proyección ortogonal} de $Y$ sobre el subespacio generado por $1, X_1, \ldots, X_p$.
 
 \section{Regresión Lineal como Proyección Ortogonal}
 
@@ -379,6 +389,11 @@ $P$ se representa como \emph{un único punto} en un RKHS.
 	información de $P$: dos distribuciones son idénticas si y solo si sus
 	embeddings coinciden.
 \end{corollary}
+
+
+\bigskip
+\noindent
+Un mean embedding $\mu_P \in \mathcal{H}_k$ codifica la distribución completa $P$ en un punto del RKHS ---es un ``embedding de distribuciones como puntos. La pregunta operativa inmediata: \emph{¿cómo medimos distancia entre dos distribuciones a partir de sus embeddings?} La respuesta de Gretton et al. (2012) ---Maximum Mean Discrepancy--- es estructuralmente idéntica a una norma al cuadrado: $\|\mu_P - \mu_Q\|_{\mathcal{H}_k}^2$. Esa identidad es la que hace MMD un test de dos muestras con poder uniforme sobre el espacio de distribuciones, no restringido a ninguna familia paramétrica.
 
 \section{Maximum Mean Discrepancy (MMD)}
 
@@ -748,6 +763,11 @@ print(f"                     I teorica  =\n{I_th}")
 # Resultado: matriz 2x2 con diagonal ~(1/sigma^2, 2/sigma^2)
 \end{lstlisting}
 
+
+\bigskip
+\noindent
+El corolario de puentes cierra el arco del libro: Fisher (Cap.~1), Dualidades/Bregman (Cap.~2), $\alpha$-conexiones (Cap.~4), cota CR (Cap.~5) y la dualidad invariante de Chentsov (Cap.~1) son \emph{el mismo objeto visto desde coordenadas distintas}. Lo que queda por delante ---las aplicaciones modernas--- es la prueba operativa de que el aparato geométrico es \emph{computacional}, no sólo conceptual: kernels, procesos Gaussianos y NTK son objetos del mismo calibre que las distribuciones mismas, y todos viven en el Hilbert que aquí introdujimos.
+
 \newpage
 \section{Aplicaciones Modernas de $L^2$ y RKHS}
 
@@ -888,6 +908,12 @@ En 2018, Jacot, Hongler y Gabriel demostraron que las redes neuronales profundas
 \bigskip
 \noindent
 \textbf{Pregunta a tu LLM:} ``¿Por qu\'e kernel ridge regression, Gaussian processes y Neural Tangent Kernel son tres manifestaciones del mismo objeto: regresi\'on RKHS?  Dame un ejemplo donde la elecci\'on del kernel (no de los datos ni del modelo) cambia el resultado.''
+
+
+
+\bigskip
+\noindent
+El puente con la geometría de Hilbert ---el tema de este capítulo--- cierra el libro entero. Repasando el arco: el prólogo instala la pregunta sin geografía (Ana y Beto); el Cap.~1 instala la métrica única por Chentsov; el Cap.~2 construye las divergencias; el Cap.~3 identifica las familias exponenciales como caso plano de dualidad de Legendre; el Cap.~4 articula la familia $\alpha$ de conexiones; el Cap.~5 traduce todo a inferencia geométrica; el Cap.~6 aplica la teoría a credibilidad, ML, VI y gradiente natural; el Cap.~7 saca a Cauchy y Wasserstein del marco exponencial; y ahora el Cap.~8 muestra que \emph{todo el aparato geométrico vive en un único Hilbert}: el $L^2(\Omega, \mathcal{F}, P)$ que introdujimos al principio. Cada paso añadió una capa; ninguno contradijo al anterior; todos compartieron el mismo axioma de invariancia bajo estadísticos suficientes. \emph{Una sola geometría, muchos lenguajes, el mismo teorema}.
 
 \section{Ejercicios}
 
