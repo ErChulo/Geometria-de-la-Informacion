@@ -99,6 +99,8 @@ La divergencia de Bregman mide el ``exceso'' de $F$ sobre su aproximación linea
 	$\eta = \log\lambda$, $T(x) = x$, $A(\eta) = e^\eta$, $h(x) = 1/x!$.
 \end{example}
 
+Los tres ejemplos ---Bernoulli, Normal y Poisson--- exhiben una coincidencia estructural sospechosa: el término exponencial de la densidad se factoriza como $\eta\!\cdot T(x)-A(\eta)$, donde $\eta$ no es necesariamente el parámetro ``natural'' con el que uno llegó al modelo (es $\log(p/(1-p))$ para Bernoulli, $\mu/\sigma^2$ para la Normal media-desconocida, $\log\lambda$ para Poisson). La coordenada $\eta$ revela una geometría oculta: es la variable bajo la cual la función de partición $A$ resulta convexa, y la divergencia KL se reduce a una Bregman canónica. Falta entonces precisar la relación entre $\eta$ y el parámetro ``humano'' $p$, $\mu$, $\lambda$.
+
 \section{Dualidad de Legendre}
 
 La dualidad de Legendre es el corazón geométrico de las familias exponenciales.  Conecta dos ``versiones'' del espacio paramétrico: el de parámetros naturales $\eta$ y el de parámetros de expectación $\mu$.
@@ -130,6 +132,8 @@ La dualidad de Legendre es el corazón geométrico de las familias exponenciales
 	La conjugada: $A^*(\mu) = \mu \log(\mu/(1-\mu)) + \log(1-\mu) = -H(\mu)$ donde $H$ es la entropía negativa.
 	Verificación: $\nabla A^*(\mu) = \log(\mu/(1-\mu)) = \eta$.
 \end{example}
+
+Con la dualidad de Legendre establecida ---$\mu=\nabla A(\eta)$ y $\eta=\nabla A^*(\mu)$---, las coordenadas $\eta$ y $\mu$ son dos caras de la misma moneda convexa. Falta ahora el cálculo que motivó toda esta maquinaria: ¿cuánto vale la divergencia KL entre dos distribuciones $p_{\eta_1}$ y $p_{\eta_2}$ de la misma familia exponencial? El resultado es elegante, y un poco desconcertante la primera vez: la KL entre distribuciones equivale a una divergencia de Bregman entre \emph{coordenadas naturales}, pero los subíndices se invierten al cruzar la transformada de Legendre.
 
 \section{Divergencia KL en familias exponenciales}
 
@@ -208,10 +212,11 @@ La dualidad de Legendre revela una estructura geométrica profunda: las familias
 	\begin{itemize}
 		\item Coordenadas naturales: $\eta = \mu/\sigma^2$.
 		\item Coordenadas de expectación: $\mu = \mathbb{E}[X] = \mu$.
-		\item La transformada de Legendre: $A(\eta) = \sigma^2 \eta^2/2$, $A^*(\mu) = \mu^2/(2\sigma^2)$.
-		\item $D_{\mathrm{KL}}(\mathcal{N}(\mu_1,\sigma^2) \| \mathcal{N}(\mu_2,\sigma^2)) = (\mu_1-\mu_2)^2/(2\sigma^2)$, que es cuadrática en las coordenadas naturales.
-	\end{itemize}
+		\item La transformada de Legendre: $A(\eta) = \sigma^2 \eta^2/2$, $A^*(\mu) = \mu^2/(2\sigma^2)$.\item $D_{\mathrm{KL}}(\mathcal{N}(\mu_1,\sigma^2) \| \mathcal{N}(\mu_2,\sigma^2)) = (\mu_1-\mu_2)^2/(2\sigma^2)$, que es cuadrática en las coordenadas naturales.
+\end{itemize}
 \end{example}
+
+Las familias exponenciales son entonces \emph{dualmente planas}: las geodésicas son rectas en $\eta$ y en $\mu$, y la métrica de Fisher ($g_{ij}=\nabla^2 A(\eta)$, el Hessiano de $A$) es plana. La tentación es pensar que esta planitud es genérica. El teorema de Pitman--Koopman--Darmois ---que enunciamos y demostramos en la próxima sección--- revela lo opuesto: bajo condiciones muy razonables (suficiencia de dimensión fija e identificabilidad), las familias exponenciales son las \emph{únicas} con esta geometría dual plana. La planitud, lejos de ser trivial, es una rareza algebraica.
 
 \section{El teorema de Pitman--Koopman--Darmois}
 
@@ -328,6 +333,8 @@ La siguiente tabla recoge distribuciones comunes en estadística, inferencia y a
 
 \noindent La implicación práctica: si tu modelo es exponencial, la suficiencia es maximal y la inferencia tiene geometría plana (coordenadas naturales euclidianas).  Si no lo es, no hay atajos: la geometría es curva y la inferencia es intrínsecamente más costosa.
 
+La tabla anterior debería dejar una huella: casi todos los modelos que un estadístico o un ingeniero de machine learning maneja ---ocho de trece--- son familias exponenciales, y los que no lo son (Cauchy, $t$-Student, Uniforme $U(0,\theta)$, Weibull, log-normal) comparten una característica común: carecen de estadístico suficiente de dimensión fija en el sentido preciso de Pitman--Koopman--Darmois (recordemos §6: el máximo de $n$ uniformes $[0,\theta]$ es suficiente, pero la densidad no se factoriza en la forma exponencial). Verificar mecánicamente que tu modelo favorito es exponencial es, por tanto, una destreza práctica que conviene ejercitar. El siguiente código Python ofrece esa verificación ---factorizando la densidad en la forma $\eta\!\cdot T(x)-A(\eta)$--- y luego calcula la KL entre dos distribuciones de la misma familia reescribiéndola como Bregman sobre $A$, con el cruce de subíndices característico.
+
 \section{Código Python: descomposición exponencial}
 
 \begin{lstlisting}[language=Python, style=PythonStyle]
@@ -363,21 +370,22 @@ pois_decomp = exponential_family_decomposition("poisson", {"lambda": 3.0})
 \end{lstlisting}
 
 \begin{lstlisting}[language=Python, style=PythonStyle]
-# Divergencia KL como divergencia de Bregmandef kl_as_bregman(eta1, eta2, dist_name):
+# Divergencia KL como divergencia de Bregman
+def kl_as_bregman(eta1, eta2, dist_name):
 	"""Calcula D_KL entre p_{eta1} y p_{eta2} como D_A(eta2 || eta1) en coords naturales.
 	El orden de los subíndices se invierte al pasar de distribuciones a coordenadas naturales (ver Cap. 3)."""
-    if dist_name == "poisson":
-        A1 = np.exp(eta1)  # A(eta) = e^eta para Poisson
-        A2 = np.exp(eta2)
-        mu1 = np.exp(eta1)  # nabla A(eta) = e^eta
-        return A2 - A1 - (eta2 - eta1) * mu1
-    elif dist_name == "bernoulli":
-        A1 = np.log(1 + np.exp(eta1))
-        A2 = np.log(1 + np.exp(eta2))
-        mu1 = np.exp(eta1) / (1 + np.exp(eta1))
-        return A2 - A1 - (eta2 - eta1) * mu1
-    else:
-        raise ValueError(f"Unknown: {dist_name}")
+	if dist_name == "poisson":
+		A1 = np.exp(eta1)  # A(eta) = e^eta para Poisson
+		A2 = np.exp(eta2)
+		mu1 = np.exp(eta1)  # nabla A(eta) = e^eta
+		return A2 - A1 - (eta2 - eta1) * mu1
+	elif dist_name == "bernoulli":
+		A1 = np.log(1 + np.exp(eta1))
+		A2 = np.log(1 + np.exp(eta2))
+		mu1 = np.exp(eta1) / (1 + np.exp(eta1))
+		return A2 - A1 - (eta2 - eta1) * mu1
+	else:
+		raise ValueError(f"Unknown: {dist_name}")
 
 # Verificacion: Poisson(3) vs Poisson(5)
 eta1 = np.log(3.0)  # lambda=3
