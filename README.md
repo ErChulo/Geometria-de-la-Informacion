@@ -1,6 +1,7 @@
 # 🌈🌀 **Geometría de la Información**
 
 [![license: MIT](https://img.shields.io/badge/license-MIT-ff5fd2.svg)](./LICENSE)
+[![version: v0.2.0](https://img.shields.io/badge/version-v0.2.0-0F766E.svg)]()
 [![math](https://img.shields.io/badge/matemáticas-Riemann%2C%20Fisher%E2%80%93Rao-8a2be2.svg)]()
 ![vibe: psicodélico](https://img.shields.io/badge/vibe-psicodélico-%F0%9F%8C%88.svg)
 [![PRs welcome](https://img.shields.io/badge/contributions-welcome-00c2ff.svg)]()
