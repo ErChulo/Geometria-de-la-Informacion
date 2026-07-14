@@ -9,6 +9,15 @@
 *.fdb_latexmk
 *.dvi
 
+# BibTeX / biber build outputs (re-generated from .tex + bibliografia.tex)
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+
+# Latexmk safety-net output (when LaTeX crashes mid-run)
+texput.log
+
 # Editor files
 *.swp
 *~

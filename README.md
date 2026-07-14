@@ -14,6 +14,15 @@ Pensado para el lector que ya conoce cálculo, probabilidad básica y algo de á
 
 ---
 
+## 📝 Novedades de v0.2.0 (14-jul-2026)
+
+- **Capítulos 0–8 completamente reescritos** con *signposting* ensayístico: cada definición y cada teorema se conecta explícitamente con el resto del libro (motivación → invariantes → consecuencias → enlaces hacia capítulos siguientes).
+- **Pase de ortografía castellana** en tres entradas del TOC y cuerpo: `Definición` (cap4), `Geodésicas` (cap4), `Cramér–Rao` con em-dash (cap1, ejercicio final).
+- **Versión bumped** a `v0.2.0` (`src/version.tex`) con badge sincronizado en este README.
+- **Historial** mantenido en [`CHANGELOG.md`](./CHANGELOG.md); tag anotado `v0.2.0` en `origin`.
+
+---
+
 ## 🎯 ¿Para qué este libro?
 
 Cuando analistas y estudiantes aplican modelos probabilísticos (regresión logística, mezclas gaussianas, redes neuronales bayesianas, modelos de lenguaje), las preguntas centrales son:
