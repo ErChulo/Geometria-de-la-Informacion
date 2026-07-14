@@ -100,6 +100,8 @@ D_{\mathrm{KL}}(p_{\theta_1} \| p_{\theta_2}) \;=\; \mathbb{E}_{\theta_1}\!\left
 	Nota que $D_{\mathrm{KL}}(\lambda \| \mu) \ne D_{\mathrm{KL}}(\mu \| \lambda)$: la asimetría es evidente.
 \end{example}
 
+Las tres divergencias KL que hemos calculado ---entre dos Bernoulli paramétricas, dos Normales de igual varianza, dos Poisson--- responden a la misma fórmula abstracta $D_{\mathrm{KL}}(p\|q)=\int p\log(p/q)$, pero su estructura particular varía con cada familia: cuadrática en la Gaussiana, lineal-en-log en el parámetro de Poisson. La pregunta inmediata es si existe un paraguas que las abarque y muestre que \emph{desajuste} es un solo concepto con mil disfraces. La respuesta es sí: las \textbf{$f$-divergencias de Csiszár}, una sola función generadora $f$ parametrizará todas las divergencias ``convexas razonables'' en una fórmula común.
+
 \section{Divergencias $f$}
 
 \subsection{Definición unificada}
@@ -166,6 +168,8 @@ Las $f$-divergencias generalizan la KL y muchas otras divergencias en una sola f
 \end{theorem}
 
 Esto confirma que \emph{todas} las $f$-divergencias son ``localmente Fisher'': la geometría infinitesimal no depende de la divergencia elegida.  Las divergencias solo difieren en la estructura ``global'' (geodésicas, proyecciones, escalas de curvatura).
+
+Esa ``uniformidad infinitesimal'' es un punto fuerte ---pero también una limitación: las $f$-divergencias viven familia por familia, sin un marco algebraico común que las conecte. La geometría de Bregman subsana esto: en lugar de elegir $f$ libremente, exigimos que la divergencia provenga de la aproximación lineal de una función \emph{estrictamente convexa} $F$. Veremos que, en ese caso, recuperamos KL como caso particular y emergen gratuitamente las nociones de dualidad de Legendre, las dos proyecciones alternativas y el teorema pitagórico.
 
 \section{Las Divergencias de Bregman}
 
@@ -278,6 +282,8 @@ F^*(\eta) \;=\; \sup_p \left\{ \langle \eta, p \rangle - F(p) \right\}.
 	donde $\eta = \log(p/(1-p))$ es el logit (parámetro natural).  La divergencia KL en coordenadas primales $D_F(p \| q)$ equivale a $D_{F^*}(\eta_q \| \eta_p)$ en coordenadas duales.
 \end{example}
 
+La identidad dual anterior no es un ejercicio decorativo: anuncia que ``virar'' la divergencia equivale a invertir el orden de los argumentos al cambiar de coordenadas. Esta observación ---de apariencia inocente--- es el motor oculto del teorema pitagórico de la siguiente sección, porque reduce la comparación entre dos distribuciones al análisis en un sistema coordenado donde la convexidad de $A$ controla la ortogonalidad.
+
 \section{Teorema Pitagórico y Proyecciones}
 
 Una de las piezas centrales de la geometría de la información es que las proyecciones por KL satisfacen una descomposición ``pitagórica''.
@@ -364,6 +370,8 @@ Una de las piezas centrales de la geometría de la información es que las proye
 \end{proof}
 
 Este teorema es fundamental: muestra que la métrica de Fisher es la \emph{curvatura} de la divergencia KL.  Toda divergencia ``bien portada'' tiene la misma geometría infinitesimal; las diferencias son globales.
+
+Hemos pasado revista a tres familias de divergencias (KL, $f$-div, Bregman), a dos dualidades (Legendre y m/e-proyecciones) y a la conexión profunda de la KL con la métrica de Fisher. Antes de cerrar el capítulo, conviene ver todo esto en movimiento ---calcular con Python cuánto vale cada divergencia entre dos distribuciones ajustadas, y comprobar empíricamente la identidad dual $D_F(p\|q)=D_{F^*}(\eta_q\|\eta_p)$ recién establecida.
 
 \section{Código: Explorando Divergencias en Python}
 
