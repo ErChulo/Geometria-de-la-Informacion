@@ -1,5 +1,5 @@
 # 🌈🌀 **Geometría de la Información**
-
+[OBRA EN PROGRESO]
 [![license: MIT](https://img.shields.io/badge/license-MIT-ff5fd2.svg)](./LICENSE)
 [![version: v0.2.0](https://img.shields.io/badge/version-v0.2.0-0F766E.svg)]()
 [![math](https://img.shields.io/badge/matemáticas-Riemann%2C%20Fisher%E2%80%93Rao-8a2be2.svg)]()
